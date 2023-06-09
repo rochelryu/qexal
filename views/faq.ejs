@@ -1,0 +1,253 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <style>
+        .faq {
+            padding: 10px 5px;
+            background-color: #fff;
+            border-top: 10px solid #ff6873;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        }
+        
+        .faq ul {
+            width: 100% !important;
+        }
+        
+        .faq .transition,
+        .faq ul li i:before,
+        .faq ul li i:after,
+        .faq p {
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .faq .flipIn,
+        .faq ul li,
+        .faq h1 {
+            animation: flipdown 0.5s ease both;
+        }
+        
+        .faq .no-select,
+        .faq h2 {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .faq h1,
+        .faq h2 {
+            color: #ff6873;
+        }
+        
+        .faq h1 {
+            text-transform: uppercase;
+            font-size: 36px;
+            line-height: 42px;
+            letter-spacing: 3px;
+            font-weight: 100;
+        }
+        
+        .faq h2 {
+            font-size: 26px;
+            line-height: 34px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            display: block;
+            background-color: #fefffa;
+            margin: 0px 5px;
+            cursor: pointer;
+        }
+        
+        .faq p {
+            color: rgba(48, 69, 92, 0.8);
+            font-size: 17px;
+            line-height: 26px;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            max-height: 800px;
+            opacity: 1;
+            transform: translate(0, 0);
+            margin-top: 14px;
+            z-index: 2;
+        }
+        
+        .faq ul {
+            list-style: none;
+            perspective: 900;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .faq ul li {
+            position: relative;
+            padding: 0;
+            margin: 0;
+            padding-bottom: 4px;
+            padding-top: 18px;
+            border-top: 1px dotted #dce7eb;
+        }
+        
+        .faq ul li:nth-of-type(1) {
+            animation-delay: 0.5s;
+        }
+        
+        .faq ul li:nth-of-type(2) {
+            animation-delay: 0.75s;
+        }
+        
+        .faq ul li:nth-of-type(3) {
+            animation-delay: 1s;
+        }
+        
+        .faq ul li:nth-of-type(4) {
+            animation-delay: 1, 25s;
+        }
+        
+        .faq ul li:nth-of-type(5) {
+            animation-delay: 1, 5s;
+        }
+        
+        .faq ul li:nth-of-type(6) {
+            animation-delay: 1, 75s;
+        }
+        
+        .faq ul li:last-of-type {
+            padding-bottom: 0;
+        }
+        
+        .faq ul li i {
+            position: absolute;
+            transform: translate(-6px, 0);
+            margin-top: 16px;
+            right: 0;
+        }
+        
+        .faq ul li i:before,
+        .faq ul li i:after {
+            content: "";
+            position: absolute;
+            background-color: #ff6873;
+            width: 3px;
+            height: 9px;
+        }
+        
+        .faq ul li i:before {
+            transform: translate(-2px, 0) rotate(45deg);
+        }
+        
+        .faq ul li i:after {
+            transform: translate(2px, 0) rotate(-45deg);
+        }
+        
+        .faq ul li input[type=checkbox] {
+            position: absolute;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+        }
+        
+        .faq ul li input[type=checkbox]:checked~p {
+            margin-top: 0;
+            max-height: 0;
+            opacity: 0;
+            transform: translate(0, 50%);
+        }
+        
+        .faq ul li input[type=checkbox]:checked~i:before {
+            transform: translate(2px, 0) rotate(45deg);
+        }
+        
+        .faq ul li input[type=checkbox]:checked~i:after {
+            transform: translate(-2px, 0) rotate(-45deg);
+        }
+        
+        @keyframes flipdown {
+            0% {
+                opacity: 0;
+                transform-origin: top center;
+                transform: rotateX(-90deg);
+            }
+            5% {
+                opacity: 1;
+            }
+            80% {
+                transform: rotateX(8deg);
+            }
+            83% {
+                transform: rotateX(6deg);
+            }
+            92% {
+                transform: rotateX(-3deg);
+            }
+            100% {
+                transform-origin: top center;
+                transform: rotateX(0deg);
+            }
+        }
+    </style>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="faq">
+                    <h1>Hi To You and welcome to QEXAL</h1>
+                    <ul>
+                        <li>
+                            <input type="checkbox" checked>
+                            <i></i>
+                            <h2>_WHO ARE WE ?_</h2>
+                            <p>Trova trova VIP is the Department of icore that works in the field of Finance, exchanges and investments based on cryptocurrency (more explicitly Ethereum which is the second most widespread cryptocurrency on Earth.) Audit
+                                👉 <a href="/">QEXAL HOME PAGE</a></p>
+                        </li>
+                        <li>
+                            <input type="checkbox" checked>
+                            <i></i>
+                            <h2>_WHY QEXAL NEEDS ME AND WHAT DO I EARN ? _</h2>
+                            <p>👨 🏫 QEXAL is looking to gain more and more share in the Ethernet stock market. And for that it needs a smart contract signed by Internet users attesting that these Internet users are members of the QEXAL community.
+                                So it's rating goes up in the MLM and smart contract market. <br> Now what you earn by signing a contract with TROVA 👉🏾, you Receive every week at least 35% of the amount invested which is on your contract and that for
+                                up to 5 or 6 weeks. (that's the equivalent of 1 month 2 weeks max). Your return of investment is a thank you and a commitment that QEXAL makes for the contract signed with them.</p>
+                        </li>
+                        <li>
+                            <input type="checkbox" checked>
+                            <i></i>
+                            <h2>_ Contract CLAUSE and due DATE _</h2>
+                            <p>👩 🎓 Any contract signed with QEXAL has a lifespan of 5 weeks, beyond this free choice period, it is up to you to restart the contract with the same investment, to increase the investment, or to terminate the contract.
+                                It's 5 weeks represent the cycle of a subscription. The only clause in QEXAL which is imposed on you is the following: <br> After having received for your first two times, your account is temporarily blocked, to unblock
+                                it you will have to send a number of people whose sum of their share (smart contract signed ) is greater than or equal to the amount you invested. You can have referrals as soon as you enter the system after signing your
+                                smart contract.</p>
+                        </li>
+
+                        <li>
+                            <input type="checkbox" checked>
+                            <i></i>
+                            <h2>_ What is the TROVA Matrix ? _</h2>
+                            <p>🤵 It's a game. Yes yes a game that allows you to increase your weekly income. This game consists of inviting more people through your affiliate link, that its people sign their contract and when your referrals have unlocked
+                                their account, they will be part of your matrix. If one of your referrals has just been unlocked and he has an action lower than yours, you immediately receive 10% of his action. Parcontre if this last chosen has an action
+                                greater than or equal to yours this godson is placed in your matrix section, and once you reach 3 godchildren of this kind you benefit from a generous week (the 6th week).
+                                <br> NB: if you had only 1 or 2 people in your matrix section and your contract ended before, these referrals who are in your matrix section make you earn 10% each, suddenly even if you did not succeed in benefiting from
+                                a generous week you will be able to earn 10% on each of your referrals who are in your matrix section.
+                            </p>
+                        </li>
+                        <li>
+                            <input type="checkbox" checked>
+                            <i></i>
+                            <h2>_ HOW TO WITHDRAW YOUR MONEY ? _</h2>
+                            <p>At Qexal Investiment, withdrawals are made every weekend, you must have at least your capital invested as a gain balance on trova before being able to make a withdrawal. You can withdraw all of your winnings or part of
+                                your winnings through a partial withdrawal (minimum amount to be withdrawn is ($ 50).
+                                <br> withdrawal requests are made in two steps, first you must make the request on Qexal then come and confirm the request on your email which was used to create an account.
+                                <br> N.B: make sure that you are connected to trova vip on your browser and that the account that is currently connected is the one that you will confirm the withdrawal request by email.</p>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- content-wrapper ends -->
+            </div>
+        </div>
+        <%- include('partials/_footer'); %>
+
+            </body>
+
+            </html>

@@ -1,0 +1,139 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="exchange main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="../Inter/admin/images/picture_illustration_pm.png" alt="logo" class="width-100 m-0">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mt-4">
+                                    <form id="perfectmoneyfinalvalidation">
+                                        <ol>
+
+                                            <li>
+                                                <p>Enter the reference code of the transaction of perfect money (Number for Order) <br></p>
+                                                <input type="hidden" id='type' value="4">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+
+                                                        <span class="input-group-text bg-primary text-white">N° Order</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="refExchangePerfect" placeholder="Order Id" class="form-control" required />
+
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-sm-flex flex-row">
+                                                    <input type="radio" name="sendTrovaAccount" value="1" id="sendTrovaAccount">
+                                                    <label for="sendTrovaAccount"> Send directly to my Trova account</label>
+                                                </div>
+                                                <br>
+                                                <div class="d-sm-flex flex-row">
+                                                    <input type="radio" name="sendTrovaAccount" value="2" id="sendTrovaAccountSecond">
+                                                    <label for="sendTrovaAccount"> Send to my cryptocurrency wallet</label>
+                                                </div>
+                                                <div class="form-group" id='selectOtherAccount'>
+                                                    <p>Enter your Crypto address to receive<br></p>
+                                                    <input type="text" id="adress" placeholder="............" class="form-control" style="border: 1px solid #555;" required value="<%= user.addressCrypto %>" />
+                                                </div>
+                                                <button class="btn btn-rounded submit-btn" type="submit" id="validateExchange">Validate</button>
+
+                                            </li>
+                                        </ol>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script src="../Inter/admin/js/select2.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('input:radio[name="sendTrovaAccount"]').change(
+                    function() {
+                        if ($(this).is(':checked') && $(this).val() == '2') {
+                            $('#selectOtherAccount').fadeIn(1500);
+                        } else {
+                            $('#selectOtherAccount').hide();
+                        }
+                    });
+
+                $('#validateExchange').click(function(e) {
+                    e.preventDefault();
+                    const typeInfo = $('#type').val();
+                    const ref = $('#refExchangePerfect').val();
+                    const address = $('#adress').val();
+                    const typeAccount = $('#sendTrovaAccountSecond').is(':checked') ? 2 : 1;
+                    if (parseInt(typeInfo, 10).toString() !== 'NaN' && ref.length > 4) {
+                        const url = '/exchange/validateMobilePayement',
+                            type = 'post';
+                        $.notify({
+                            position: 3,
+                            type: 'info',
+                            duration: 5000,
+                            message: 'In Wait. Please Wait....',
+
+                        });
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                type: typeInfo,
+                                ref,
+                                address,
+                                typeAccount
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: 'Great, our Team is moving on to the verification phase. please wait a few minutes.',
+
+                                    });
+                                    window.setTimeout(function() {
+
+                                        location.href = location.origin + '/exchange';
+                                    }, 5000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error,
+                                    });
+
+                                }
+                            }
+                        });
+
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Enter validate information please',
+                        });
+                    }
+                });
+
+            })
+        </script>
+        </body>
+
+        </html>

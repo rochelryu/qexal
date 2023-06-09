@@ -1,0 +1,377 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <section class="forms" style="min-width: 100%;">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Ajouter Crypto</h3>
+                                <form id="addForfait" action="/exchange/createCryptoCurrencie" method="post">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <label for="name" required class="input__label">Nom</label>
+                                            <input type="text" class="form-control input-style" id="name" name="name">
+                                        </div>
+                                        <div class="form-group col-md-1">
+                                            <label for="symbol" required class="input__label">Symbol</label>
+                                            <input type="text" class="form-control input-style" id="symbol" name="symbol">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="reserve" required class="input__label">Reserve</label>
+                                            <input type="number" class="form-control input-style" id="reserve" name="reserve">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="minimum" required class="input__label">Min Buy</label>
+                                            <input type="number" class="form-control input-style" id="minimum" name="minimum">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="frais" required class="input__label">Frais</label>
+                                            <input type="number" class="form-control input-style" id="frais" name="frais" step=0.00001>
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="addressDestination" required class="input__label">Adresse</label>
+                                            <input type="text" class="form-control input-style" id="addressDestination" name="addressDestination">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="iconUrl" required class="input__label">Icon</label>
+                                            <input type="text" class="form-control input-style" id="iconUrl" name="iconUrl">
+                                        </div>
+
+                                        <div class="form-group col-md-1">
+                                            <label for="categorie" required class="input__label">Categorie</label>
+                                            <input type="number" class="form-control input-style" id="categorie" name="categorie">
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="categorie" required class="input__label">coinMarketIdCrypto</label>
+                                            <input type="number" value="0" class="form-control input-style" id="coinMarketIdCrypto" name="coinMarketIdCrypto">
+                                        </div>
+
+                                        <div class="form-group col-md-1">
+                                            <button type="submit" class="btn btn-primary btn-style mt-4">Enregistrer</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="cards__heading">
+                                <h3>Toutes les Cryptos Pour Exchange <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="container">
+
+                                    <!--BLOCK ROW START-->
+                                    <div class="row">
+
+                                        <% infos.getAllCrypto.forEach(function(crypto, index){ %>
+                                            <div class="col-md-3">
+                                                <div class="card d-flex flex-center p-3">
+                                                    <div class="badge badge-outline-primary badge-pill">
+                                                        <%= crypto.symbol %>
+                                                    </div>
+                                                    <p>
+                                                        <%= crypto.name %>
+                                                    </p>
+                                                    <p>
+                                                        <img src="<%= crypto.iconUrl %>" alt="<%= crypto.name %>" class="img-64">
+                                                    </p>
+                                                    <br>
+                                                    <p class="text-small word-break">
+                                                        <%= crypto.addressDestination %>
+                                                            <br>
+                                                            <% if ( crypto.categorie === 0 ) { %>
+                                                                <span class="text-secondary">altCoin</span>
+                                                                <% }  else if (crypto.categorie === 1) { %>
+                                                                    <span class="text-secondary">StableCoin</span>
+                                                                    <% }  else if (crypto.categorie === 2) { %>
+                                                                        <span class="text-secondary">ShitCoin</span>
+                                                                        <% } %>
+                                                    </p>
+                                                    <hr>
+                                                    <div class="container-fluid">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <div class="input-group">
+                                                                    <input type="number" class="form-control input-style" id="reserve<%= crypto.id %>" value="<%= crypto.reserve %>">
+                                                                    <input type="hidden" class="form-control input-style" value="<%= crypto.id %>">
+                                                                    <div class="input-group-append validateCrypto">
+                                                                        <span class="input-group-text bg-primary text-white"><i class="link-icon icon-like"></i> </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <% }); %>
+                                    </div>
+                                    <!--//BLOCK ROW END-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="forms" style="min-width: 100%;">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>List Exchange In Waiting</h3>
+
+                            </div>
+
+                            <div class="card-body">
+                                <div class="container">
+                                    <!--BLOCK ROW START-->
+                                    <div class="">
+                                        <table class="table table-responsive table-hover display">
+                                            <thead class="black white-text shadow-lg">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Nom</th>
+                                                    <th>Ref</th>
+                                                    <th>Crypto</th>
+                                                    <th>Usd In</th>
+                                                    <th>Usd Out</th>
+                                                    <th>Type</th>
+                                                    <th>Account</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% infos.getAllReceptions.forEach(function(value){ %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= value.id %>
+                                                                <br>
+                                                                <% if (value.typeAccount === 2){ %>
+                                                                    <button class="btn btn-sm btn-success ValidateExchange" data-type="1" data-ref="<%= value.id %>">Success Other</button>
+                                                                    <% } else { %>
+                                                                        <button class="btn btn-sm btn-success ValidateExchange" data-type="2" data-ref="<%= value.id %>">Success Trova</button>
+                                                                        <% } %>
+                                                                            <br>
+                                                                            <a class="btn btn-sm btn-primary" type="button" target="_blank" href="/users/viewAllInfo?id=<%= value.users.id %>">Suivie</a>
+                                                                            <br>
+                                                                            <button class="btn btn-sm btn-outline-warning annuleExchange" data-ref="<%= value.id %>">Drop</button>
+                                                        </td>
+                                                        <td>
+                                                            <%= value.users.name %><br />
+
+                                                        </td>
+                                                        <td>
+                                                            <% if (value.ref.indexOf('0x') != -1){ %>
+                                                                <a href="https://etherscan.io/tx/<%= value.ref %>" target="_blank">
+                                                                    <%= value.ref.substring(0, 10) %>
+                                                                </a>
+                                                                <% } else { %>
+                                                                    <a href="https://blockchair.com/<%= value.currencies.name.toLowerCase() %>/transaction/<%= value.ref %>" target="_blank">
+                                                                        <%= value.ref.substring(0, 10) %>
+                                                                    </a>
+
+                                                                    <% } %>
+
+                                                        </td>
+                                                        <td>
+                                                            <%= value.montant_eth %> <br>
+                                                                <%= value.currencies.name %>
+                                                        </td>
+                                                        <td>
+                                                            <%= value.montant_usd_payement %>
+                                                                <br>
+                                                                <%= value.montantCurrencie %>
+                                                                    <%= value.currencie %>
+                                                        </td>
+                                                        <td>
+                                                            <%= value.montant_usd %>
+                                                        </td>
+                                                        <td>
+                                                            <% if ( value.type === 0 ) { %>
+                                                                <span>PAYPAL</span>
+                                                                <% }  else if (value.type === 1) { %>
+                                                                    <span>Orange Money</span>
+                                                                    <% }  else if (value.type === 2) { %>
+                                                                        <span>Mtn Money</span>
+                                                                        <% }  else if (value.type === 3) { %>
+                                                                            <span>Moov Money</span>
+                                                                            <% }  else if (value.type === 4) { %>
+                                                                                <span>Perfect Money</span>
+                                                                                <% }  else if (value.type === 5) { %>
+                                                                                    <span>Wave</span>
+                                                                                    <% } %>
+
+                                                        </td>
+                                                        <td>
+                                                            <% if ( value.typeAccount === 1 ) { %>
+                                                                <span>TROVA</span>
+                                                                <% }  else if (value.typeAccount === 2) { %>
+                                                                    <span>Other Wallet</span>
+
+                                                                    <% } %>
+
+                                                        </td>
+                                                        <td>
+                                                            <script>
+                                                                formatDate("<%= value.updated_at %>")
+                                                            </script>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--//BLOCK ROW END-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "info": "Showing page _PAGE_ of _PAGES_",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+                $('body').on('click', '.annuleExchange', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+                    const focus = $(this);
+
+                    const url = '/exchange/annuleExchange',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                                focus.parent().parent().hide();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+
+                $('body').on('click', '.ValidateExchange', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+                    const typeDoc = $(this).attr('data-type');
+                    const focus = $(this);
+
+                    const url = '/exchange/ValidateExchange',
+                        type = 'post';
+                    $.notify({
+                        position: 3,
+                        type: 'info',
+                        duration: 5000,
+                        message: 'In Wait. Please Wait....',
+
+                    });
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id,
+                            type: typeDoc
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                                focus.parent().parent().hide();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+
+                $('body').on('click', '.validateCrypto', function(e) {
+                    e.preventDefault();
+                    const id = $(this).prev().val();
+                    const reserve = $('#reserve' + id).val();
+
+                    const url = '/exchange/updateReserve',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id,
+                            reserve
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: "Modifié avec succès"
+                                });
+
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+        </body>
+
+        </html>

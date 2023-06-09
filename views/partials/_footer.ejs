@@ -1,0 +1,119 @@
+<footer class="footer">
+    <div class="w-100 clearfix">
+        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © <script>document.write(new Date().getFullYear())</script> Qexal. All rights reserved.</span>
+    </div>
+</footer>
+
+</div>
+
+<div id="body">
+    <% if (countNotif.etat) { %>
+        <div id="chat-circle" class="btn-raised btn--shockwave is-active notificationBell">
+            <div id="chat-overlay"><span class="bellNotif"><i class="icon-speech"></i></span></div>
+            <% } else { %>
+                <div id="chat-circle" class="btn-raised btn--shockwave">
+                    <% } %>
+
+                        <img src="../Inter/admin/images/icore.png" alt="icore_bot_simple_action" class="boot_by_icore">
+                </div>
+
+                <div class="chat-box">
+                    <div class="chat-box-header">
+                        Bot By ICORE
+                        <span class="chat-box-toggle"><i class="icon-close"></i></span>
+                    </div>
+                    <div class="chat-box-body">
+                        <div class="chat-box-overlay">
+                        </div>
+                        <div class="chat-logs">
+                            <% notifications.result.forEach(function(value){ %>
+                                <% if (value.isOpen) { %>
+                                    <div class="chat-msg user">
+                                        <% } else { %>
+                                            <div class="chat-msg user new">
+                                                <% } %>
+                                                    <span class="msg-avatar">
+                    <% if (value.type === 0) { %>
+                      <img src="../Inter/admin/images/congratulations.png" alt="congratulations.png">
+                    <% } else if (value.type === 1) { %>
+                      <img src="../Inter/admin/images/subscription.png" alt="subscription.png">
+                    <% } else if (value.type === 2) { %>
+                      <img src="../Inter/admin/images/share.png" alt="share.png">
+                    <% } else if (value.type === 3) { %>
+                      <img src="../Inter/admin/images/invite.png" alt="invite.png">
+                    <% } else if (value.type === 4) { %>
+                      <img src="../Inter/admin/images/info.png" alt="info.png">
+                    <% } else if (value.type === 5) { %>
+                      <img src="../Inter/admin/images/invite.png" alt="invite.png">
+                    <% } else if (value.type === 6) { %>
+                      <img src="../Inter/admin/images/security.png" alt="security.png">
+                    <% } else { %>
+                      <img src="../Inter/admin/images/info.png" alt="info.png">
+                    <% } %>
+                    </span>
+                                                    <div class="cm-msg-text">
+                                                        <p>
+                                                            <%= value.content %>
+                                                        </p>
+                                                        <span class="position-absolute horaire-chat"><script>formatDate("<%= value.create_at %>")</script></span>
+                                                    </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+        </div>
+        <!-- container-scroller -->
+
+        <!-- plugins:js -->
+        <script src="../Inter/admin/js/socket.io.js"></script>
+        <script src="../Inter/admin/vendors/js/vendor.bundle.base.js"></script>
+        <script src="../Inter/admin/vendors/js/vendor.bundle.addons.js"></script>
+        <script src="../Inter/admin/js/popper.js"></script>
+        <script src="../Inter/admin/js/bootstrap.min.js"></script>
+        <script src="../Inter/admin/js/mdb.js"></script>
+        <script src="../Inter/admin/js/jquery.notify.js"></script>
+        <script src="../Inter/admin/js/datatables.min.js"></script>
+        <script src="../Inter/admin/js/main.js"></script>
+        <script src="../Inter/admin/js/template.js"></script>
+        <script src="../Inter/admin/js/flipclock.js"></script>
+        <script>
+            $(document).ready(function() {
+
+                $(".navbottom .bottom-tabs").click(function() {
+                    const attributFor = $(this).attr("for");
+                    if (attributFor === "1b") {
+                        location.href = location.origin + "/users/matrix"
+                    } else if (attributFor === "1c") {
+                        location.href = location.origin + "/other-game"
+                    } else if (attributFor === "1d") {
+                        location.href = location.origin + "/exchange"
+                    } else {
+                        location.href = location.origin + "/users"
+                    }
+                })
+
+
+
+
+                $("#chat-circle").click(function() {
+                    $(this).removeClass("is-active");
+                    $(this).find("#chat-overlay").hide();
+                    $("#chat-circle").toggle('scale');
+                    $(".chat-box").toggle('scale');
+                    $(".chat-logs").animate({
+                        scrollTop: $(".chat-logs")[0].scrollHeight
+                    }, 1000);
+                })
+
+                $(".chat-box-toggle").click(function() {
+                    $("#chat-circle").toggle('scale');
+                    $(".chat-box").toggle('scale');
+                })
+            })
+        </script>

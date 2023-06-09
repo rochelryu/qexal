@@ -1,0 +1,401 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="exchange main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mt-4">
+                                    <ul class="nav nav-tabs navbottom tab-simple-styled flex-space-between" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="tab-3-1" data-toggle="tab" href="#home-3-1" role="tab" aria-controls="home-3-1" aria-selected="true"><i class="icon-credit-card"></i>Buy</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tab-3-2" data-toggle="tab" href="#home-3-2" role="tab" aria-controls="home-3-2" aria-selected="true"><i class="icon-credit-card"></i>Sell</a>
+                                        </li>
+
+
+                                    </ul>
+                                    <div class="tab-content tab-content-basic">
+                                        <div class="tab-pane fade show active" id="home-3-1" role="tabpanel" aria-labelledby="tab-3-1">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <p class="card-description">
+                                                                Choose the cryptocurrency you want to buy
+                                                            </p>
+                                                            <div class="input-group">
+                                                                <select name="cryptoBuy" id="cryptoBuy" class="js-example-basic-single w-100" required>
+                                                                    <option value="" disabled selected>Select your Crypto</option>
+                                                                    
+                                                                    <% getAllCrypto.forEach(function(value){ %>
+                                                                        <option value="<%= value.symbol %> - <%= value.id %>"> <img src="../Inter/admin/images/Orange-money.jpeg" alt="money orange" class="icon-logo-exchange" data-type="1" /> <%= value.name.toUpperCase() %> | <%= value.symbol.toUpperCase() %></option>
+                                                                   
+                                                                    <% }); %>
+                                                                      
+                                                                    </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <p class="card-description">
+                                                                How much money do you have to buy (Qexal Exchange, this without no transaction fees. Just the net amount you have)
+                                                            </p>
+                                                            <div class="input-group">
+
+                                                                <input type="number" class="form-control" id="amount_pay" placeholder="Amount (to the nearest dollar)">
+                                                                <div class="input-group-append">
+
+                                                                    <span class="input-group-text bg-primary text-white"><%= user.currencies %></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <hr>
+                                                    <p class="card-description">ESTMATION CASH IN</p>
+                                                    <div class="col-md-12 bt-2">
+                                                        <div class="d-flex">
+                                                            <div class="flex-1 direction-left">
+                                                                <p><span id="crypto_value">0</span> <span id="crypto_symbol"></span></p>
+                                                            </div>
+                                                            <div class="flex-1 direction-right">
+                                                                <p><span id="usd_value">0</span> USD</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="d-flex flex-center">
+                                                            <button type="button" class="btn btn-outline-dark btn-rounded" id="continueExchangee">CONTINUE</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="home-3-2" role="tabpanel" aria-labelledby="tab-3-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p class="card-description">
+                                                            Choose the cryptocurrency you want to sell
+                                                        </p>
+                                                        <div class="input-group">
+                                                            <select name="cryptoSell" id="cryptoSell" class="js-example-basic-single w-100" required>
+                                                                <option value="" disabled selected>Select your Crypto</option>
+                                                                
+                                                                <% getAllCrypto.forEach(function(value){ %>
+                                                                    <option value="<%= value.symbol %> - <%= value.id %>"><%= value.name.toUpperCase() %> | <%= value.symbol.toUpperCase() %></option>
+                                                               
+                                                                <% }); %>
+                                                                  
+                                                                </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <p class="card-description">
+                                                                how much crypto are you selling
+                                                            </p>
+                                                            <div class="input-group">
+
+                                                                <input type="number" class="form-control" id="amount_sell" placeholder="Amount ">
+                                                                <div class="input-group-append">
+
+                                                                    <span class="input-group-text bg-primary text-white" id="symbol_sell">...</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <hr>
+                                                    <p class="card-description">ESTMATION CASH OUT</p>
+                                                    <div class="col-md-12 bt-2">
+                                                        <div class="d-flex">
+                                                            <div class="flex-1 direction-left">
+                                                                <p><span id="currencie_value">0</span>
+                                                                    <%= user.currencies %>
+                                                                </p>
+                                                            </div>
+                                                            <div class="flex-1 direction-right">
+                                                                <p><span id="usd_sell_value">0</span> USD</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="d-flex flex-center">
+                                                            <button type="button" class="btn btn-outline-dark btn-rounded" id="continueExchangeeSell">CONTINUE</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="../Inter/admin/images/cryptoExchange.svg" alt="logo" class="width-100 m-0">
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+
+        <script src="../Inter/admin/js/select2.js"></script>
+        <script>
+            $(document).ready(function() {
+                var cryptoBuy = '';
+                var cryptoSell = '';
+                if ($('#vertical-left').length) {
+                    $('#vertical-left').pwstabs({
+                        effect: 'slideleft',
+                        defaultTab: 1,
+                        containerWidth: '600px',
+                        tabsPosition: 'vertical',
+                        verticalPosition: 'left'
+                    });
+                }
+                $('#cryptoBuy').on('change', function() {
+                    if (cryptoBuy !== $(this).val()) {
+                        cryptoBuy = $(this).val();
+                        $('#amount_pay').val(0);
+                        $('#crypto_value').text(0);
+                        $('#usd_value').text(0);
+                        $('#crypto_symbol').text($(this).val().split(' - ')[0]);
+                    }
+                });
+                $('#cryptoSell').on('change', function() {
+                    if (cryptoSell !== $(this).val()) {
+                        cryptoSell = $(this).val();
+                        $('#amount_sell').val(0);
+                        $('#currencie_value').text(0);
+                        $('#usd_sell_value').text(0);
+                        $('#symbol_sell').text($(this).val().split(' - ')[0]);
+                    }
+                });
+                $('#amount_pay').on('change paste keyup', function() {
+                    const montant = parseFloat($(this).val());
+                    if (cryptoBuy !== '') {
+                        if (montant !== "" && montant.toString() !== "NaN") {
+                            const url = '/exchange/calculateMontantOnlyExchange',
+                                type = 'post';
+                            $.ajax({
+                                url,
+                                type,
+                                data: {
+                                    montant,
+                                    cryptoBuy: cryptoBuy.split(' - ')[0],
+                                    cryptoId: cryptoBuy.split(' - ')[1],
+                                },
+                                success: function(datas) {
+                                    if (datas.etat) {
+                                        $('#crypto_value').text(datas.result.eth_value.toFixed(4));
+                                        $('#usd_value').text(datas.result.dollar_value.toFixed(2));
+                                    } else {
+                                        $.notify({
+                                            position: 3,
+                                            type: 'error',
+                                            duration: 4000,
+                                            message: datas.error ? datas.error : 'Error please try later or verified your internet connection'
+                                        });
+
+                                    }
+                                }
+                            });
+                        } else {
+                            $('#crypto_value').text(0);
+                            $('#usd_value').text(0);
+                        }
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'warning',
+                            duration: 4000,
+                            message: 'Please select a cryptocurrency first for the robot to face the estimate.'
+                        });
+                    }
+
+                });
+
+
+                $('#amount_sell').on('change paste keyup', function() {
+                    const montant = parseFloat($(this).val());
+                    if (cryptoSell !== '') {
+                        if (montant !== "" && montant.toString() !== "NaN") {
+                            const url = '/exchange/calculateMontantSellOnlyExchange',
+                                type = 'post';
+                            $.ajax({
+                                url,
+                                type,
+                                data: {
+                                    montant,
+                                    cryptoSell: cryptoSell.split(' - ')[0],
+                                    cryptoId: cryptoSell.split(' - ')[1],
+                                },
+                                success: function(datas) {
+                                    if (datas.etat) {
+                                        $('#currencie_value').text(datas.result.currencie_value.toFixed(2));
+                                        $('#usd_sell_value').text(datas.result.usd_sell_value.toFixed(2));
+                                    } else {
+                                        $.notify({
+                                            position: 3,
+                                            type: 'error',
+                                            duration: 4000,
+                                            message: datas.error ? datas.error : 'Error please try later or verified your internet connection'
+                                        });
+
+                                    }
+                                }
+                            });
+                        } else {
+                            $('#currencie_value').text(0);
+                            $('#usd_sell_value').text(0);
+                        }
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'warning',
+                            duration: 4000,
+                            message: 'Please select a cryptocurrency first for the robot to face the estimate.'
+                        });
+                    }
+
+                });
+
+                $('#continueExchangee').on('click', function() {
+                    const montant = parseFloat($('#amount_pay').val());
+                    const usd_value = parseFloat($('#usd_value').text());
+                    const eth_value = parseFloat($('#crypto_value').text());
+                    if (usd_value.toString() !== "NaN" && usd_value >= 10 && montant.toString() !== "NaN" && montant !== 0) {
+                        $.notify({
+                            position: 3,
+                            type: 'info',
+                            duration: 4000,
+                            message: 'Next Step, please Waiting'
+                        });
+                        const url = '/exchange/choiceOptionPaymement',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                montant,
+                                usd_value,
+                                eth_value,
+                                cryptoBuy: cryptoBuy.split(' - ')[0],
+                                cryptoId: cryptoBuy.split(' - ')[1],
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: 'You will go to payment now. 😊'
+                                    });
+                                    window.setTimeout(function() {
+
+                                        location.href = location.origin + location.pathname;
+                                    }, 5000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error ? datas.error : 'Error please try later'
+                                    });
+
+                                }
+                            }
+                        });
+                    } else {
+                        $('#amount_pay').val(0);
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Please enter available amount \n minimum amount is 10 USD'
+                        });
+                    }
+
+
+                });
+
+                $('#continueExchangeeSell').on('click', function() {
+                    const montant = parseFloat($('#amount_sell').val());
+                    const usd_sell_value = parseFloat($('#usd_sell_value').text());
+                    const currencie_value = parseFloat($('#currencie_value').text());
+                    if (usd_sell_value.toString() !== "NaN" && parseFloat(usd_sell_value) >= 10 && montant.toString() !== "NaN") {
+                        $.notify({
+                            position: 3,
+                            type: 'info',
+                            duration: 4000,
+                            message: 'Next Step, please Waiting'
+                        });
+                        const url = '/exchange/choiceOptionPaymementSell',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                montant,
+                                usd_sell_value,
+                                currencie_value,
+                                cryptoSell: cryptoSell.split(' - ')[0],
+                                cryptoId: cryptoSell.split(' - ')[1],
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: 'You will go to payment now. 😊'
+                                    });
+                                    window.setTimeout(function() {
+
+                                        location.href = location.origin + location.pathname;
+                                    }, 5000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error ? datas.error : 'Error please try later'
+                                    });
+
+                                }
+                            }
+                        });
+                    } else {
+                        $('#amount_pay').val(0);
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Please enter available amount \n minimum amount is 10 USD'
+                        });
+                    }
+
+
+                });
+
+            })
+        </script>
+        </body>
+
+        </html>

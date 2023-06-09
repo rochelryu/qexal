@@ -1,0 +1,80 @@
+<%- include('partials/_horizontal-navbar'); %>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#">Accueil</a></li>
+							<li class="breadcrumb-item active">Administration Matrix</li>
+						</ol>
+					</nav>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="/users/createMatrixAdmin" method="post">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="icon-folder-alt"></i></span>
+                                                        </div>
+                                                        <input type="number" name="nbreClient" class="form-control" placeholder="Number User">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="icon-tag"></i></span>
+                                                        </div>
+                                                        <input type="number" name="level" class="form-control" placeholder="Level">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="icon-pie-chart"></i></span>
+                                                        </div>
+                                                        <input type="text" name="percentage" class="form-control" placeholder="Percentage">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary submit-btn" type="submit"> <i class="icon-arrow-down-circle"></i> Save</button>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-5">
+                        <h4 class="card-title">Liste Matrix</h4>
+                        <div class="card-columns">
+                        <% allMatrixFinal.forEach(function(value){ %>
+                            <div class="card">
+                                
+                                <div class="card-body">
+                                    <h4 class="card-title">Level Of Matrix: <span class="text-primary"><%= value.level %></span> </h4>
+                                    <p class="card-text">Number useful of users for this matrix is <span class="text-secondary"><%= value.nbreClient %></span>.<br>  Taxe Gain : <span class="text-secondary"><%= value.percentage %> %</span>. <br>    Total User this step : <%= value.usersInStep %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                        </div>
+
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+<%- include('partials/_footer'); %>
+</body>

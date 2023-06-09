@@ -1,0 +1,127 @@
+<%- include('partials/_horizontal-navbar'); %>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="position-absolute progress-matrix">
+                                    <div id="circleProgress2" class="progressbar-js-circle p-3"></div>
+                                </div>
+                                <h4 class="card-title">Matrix</h4>
+                                <p class="card-description">Nbe Total to invite <span class="text-secondary"><%= infos.numberTotal %></span><br>You have invited <span class="text-secondary"><%= infos.numberFilleuil%></span>
+                                </p>
+                                <div class="mt-5">
+                                    <div class="vertical-timeline">
+                                        <% infos.filleuilInMatrix.forEach(function(value, index){ %>
+                                            <% if (index % 2 === 0) { %>
+                                                <div class="timeline-wrapper timeline-wrapper-warning">
+                                                    <div class="timeline-badge"></div>
+                                                    <div class="timeline-panel">
+                                                        <div class="timeline-heading">
+                                                            <h6 class="timeline-title">
+                                                                <%= value.name %>
+                                                                    <%= value.firstname %> <img class="img-flag" src="https://cdn-icons-png.flaticon.com/512/560/560216.png" alt="flag of <%= value.country %> " /></h6>
+                                                        </div>
+                                                        <div class="timeline-body mb-3">
+                                                            <p>
+                                                                <i class="icon-envelope-letter text-primary mr-2"></i>
+                                                                <%= value.email %>
+                                                                    <br>
+                                                                    <i class="icon-call-in text-primary mr-2"></i>
+                                                                    <%= value.prefix %>
+                                                                        <%= value.numberClient %>
+                                                            </p>
+                                                        </div>
+                                                        <div class="timeline-footer d-flex align-items-center">
+                                                            <i class="icon-check text-success mr-1"></i>
+                                                            <span class="ml-auto font-weight-bold"><script>formatDate("<%= value.validEntryInSysteme %>")</script></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } else { %>
+
+                                                    <div class="timeline-wrapper timeline-inverted timeline-wrapper-warning">
+                                                        <div class="timeline-badge"></div>
+                                                        <div class="timeline-panel">
+                                                            <div class="timeline-heading">
+                                                                <h6 class="timeline-title">
+                                                                    <%= value.name %>
+                                                                        <%= value.firstname %> <img class="img-flag" src="https://cdn-icons-png.flaticon.com/512/560/560216.png" alt="flag of <%= value.country %> " /></h6>
+                                                            </div>
+                                                            <div class="timeline-body mb-3">
+                                                                <p>
+                                                                    <i class="icon-envelope-letter text-primary mr-2"></i>
+                                                                    <%= value.email %>
+                                                                        <br>
+                                                                        <i class="icon-call-in text-primary mr-2"></i>
+                                                                        <%= value.prefix %>
+                                                                            <%= value.numberClient %>
+                                                                </p>
+                                                            </div>
+                                                            <div class="timeline-footer d-flex align-items-center">
+                                                                <i class="icon-check text-success mr-1"></i>
+                                                                <span class="ml-auto font-weight-bold"><script>formatDate("<%= value.validEntryInSysteme %>")</script></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                                        <% }) %>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                var bar = new ProgressBar.Circle('#circleProgress2', {
+                    color: '#fdbab1',
+                    // This has to be the same size as the maximum width to
+                    // prevent clipping
+                    strokeWidth: 4,
+                    trailWidth: 4,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    text: {
+                        autoStyleContainer: false
+                    },
+                    from: {
+                        color: '#fdbab1',
+                        width: 4
+                    },
+                    to: {
+                        color: '#1EBBD7',
+                        width: 4
+                    },
+                    // Set default step function for all animate calls
+                    step: function(state, circle) {
+                        circle.path.setAttribute('stroke', state.color);
+                        circle.path.setAttribute('stroke-width', state.width);
+
+                        var value = Math.round(circle.value() * 100);
+                        if (value === 0) {
+                            circle.setText('0%');
+                        } else {
+                            circle.setText(value + "%");
+                        }
+
+                    }
+                });
+
+                bar.text.style.fontSize = '1rem';
+                bar.animate(<%= infos.numberFilleuil%> / <%= infos.numberTotal%>); // Number from 0.0 to 1.0
+            })
+        </script>
+
+        </body>
+
+        </html>

@@ -1,0 +1,353 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+
+                    <div class="col-md-6 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Gain</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= users.soldeGain %>
+                                            </h2>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-warning px-4 py-2 rounded">
+                                            <i class="icon-wallet text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Estimation</h4>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <h5>
+                                            <%= users.soldeGain%> $</h5>
+                                        <h4 class="card-title">List Retrait</h4>
+                                        <div class="">
+                                            <table id="table_id" class="table table-responsive table-hover display">
+                                                <thead class="black white-text shadow-lg">
+                                                    <tr>
+                                                        <th>Rang</th>
+                                                        <th>Etat</th>
+                                                        <th>montant</th>
+                                                        <th>Address</th>
+                                                        <th>ref</th>
+                                                        <th>Date </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% infos.allRetraitInfo.forEach(function(value){ %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= value.id %>
+                                                            </td>
+                                                            <td>
+                                                                <% if ( value.etatid === 1 ) { %>
+                                                                    <span>Payement en Attente</span>
+                                                                    <% }  else if (value.etatid === 3) { %>
+                                                                        <span>Payement Terminé</span>
+                                                                        <% } %>
+
+                                                            </td>
+                                                            <td>
+                                                                <%= value.monatnt %>
+                                                            </td>
+                                                            <td><button class='btn btn-sm btn-outline-primary' data-toggle="modal" data-target="#basicExampleModal<%= value.id %>">Voir</button></td>
+                                                            <td>
+                                                                <% if (value.ref !== '' && value.ref.length === 66) {%>
+                                                                    <a href="https://etherscan.io/tx/<%= value.ref %>" target="_blank">Voir Ref</a>
+                                                                    <% } else if (value.ref !== '' && value.ref.length === 64) { %>
+                                                                        <a href="https://blockchair.com/bitcoin/transaction/<%= value.ref %>" target="_blank">Voir Ref</a>
+                                                                        <% } else { %>
+                                                                            <a href="https://etherscan.io/tx/<%= value.ref %>" target="_blank">Voir Ref</a>
+                                                                            <% } %>
+                                                            </td>
+                                                            <td>
+                                                                <script>
+                                                                    formatDate("<%= value.updated_at %>")
+                                                                </script>
+                                                            </td>
+                                                        </tr>
+                                                        <div class="modal fade" id="basicExampleModal<%= value.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                                            <%= value.addressDestinate %>
+                                                                        </h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																	</button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% }); %>
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 grid-margin">
+
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ml-3">
+                                        <h4>
+                                            <%= users.name %>
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p class="mt-4 card-text">
+                                    By Crypto Monnaie. <br> Address Crypto:
+                                    <%= users.addressCrypto %>
+                                        <br> Montant Net à
+                                        <input type="text" id="valueForCrypto" disabled value="<%= inWait.monatnt %>" />
+
+                                </p>
+                                <div>
+                                    <% if (inWait.ref === "") { %>
+                                        <input id="idtraitement" type="hidden" disabled readonly value="<%= inWait.id %>" />
+                                        <input id="ref" type="text" placeholder="Enter code of transaction" required />
+                                        <button type="button" class="btn btn-outline-success btn-sm videCompte" data-ref="<%= users.id %>">Vider le compte</button>
+                                        <% } else { %>
+                                            <input type="text" disabled readonly value="<%= inWait.ref %>" />
+                                            <% } %>
+                                </div>
+
+                                <br>
+                                <h4 class="card-title">My request list</h4>
+                                <div class="">
+                                    <table id="table_id" class="table table-responsive table-hover display">
+                                        <thead class="black white-text shadow-lg">
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>montant</th>
+                                                <th>State</th>
+                                                <th>Purpose</th>
+                                                <th>Date of request</th>
+                                                <th>Date of response</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% infos.mesDemandes.forEach(function(value){ %>
+                                                <tr>
+                                                    <td>
+                                                        <%= value.id %>
+                                                    </td>
+                                                    <td>
+                                                        <%= value.montant_usd_subcription %>
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.etatid === 1 ) { %>
+                                                            <span>Pending Request</span>
+                                                            <% }  else if (value.etatid === 2) { %>
+                                                                <span>Waiting for confirmation</span>
+                                                                <% }  else { %>
+                                                                    <span>Valid</span>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.finality === 0 ) { %>
+                                                            <p class="color-grey">Locked</p>
+                                                            <% }  else if (value.finality === 1) { %>
+                                                                <p class="color-grey">Unlocked</p>
+                                                                <% }  else { %>
+                                                                    <p class="color-grey">Other</p>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            formatDate("<%= value.create_at %>")
+                                                        </script>
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            formatDateToPay("<%= value.updated_at %>")
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="border-top pt-3">
+                                    <div class="row">
+                                        <div class="col-4 pt-2">
+                                            <h6>
+                                                <%= users.name %>
+                                            </h6>
+                                            <p>Name</p>
+                                        </div>
+
+                                        <div class="col-4 pt-2">
+                                            <h6>
+                                                <%= users.email %>
+                                            </h6>
+                                            <p>Email</p>
+                                        </div>
+
+
+
+                                        <div class="col-3 pt-2">
+                                            <h6>
+                                                <%= users.recovery %>
+                                            </h6>
+                                            <p>Lien</p>
+                                        </div>
+                                        <div class="col-9 pt-2">
+                                            <h6>
+                                                <%= users.addressCrypto %>
+                                            </h6>
+                                            <p>Adresse Crypto</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 grid-margin">
+
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <% infos.filleul.forEach(function(value){ %>
+                                            <div class="col-md-4 col-xs-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="d-flex flex-row">
+                                                            <div class="ml-3">
+                                                                <h6>
+                                                                    <%= value.name %>
+                                                                </h6>
+                                                                <p class="text-muted">
+                                                                    <%= value.email %><br>
+                                                                </p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- content-wrapper ends -->
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            (function($) {
+                'use strict';
+                $(function() {
+                    $('table').addClass('nowrap').DataTable({
+                        responsive: true,
+                        buttons: [
+                            'copy', 'excel', 'pdf'
+                        ],
+                    });
+                    $('body').on('click', '.videCompte', function(e) {
+                        e.preventDefault();
+                        const id = $(this).attr('data-ref');
+                        const ref = $("#ref").val();
+                        const idtraitement = $("#idtraitement").val();
+                        const montant = $("#valueForCrypto").val();
+
+                        const focus = $(this);
+                        focus.hide()
+
+                        const url = '/users/videCompteBillionary',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                id,
+                                ref,
+                                idtraitement,
+                                montant
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: datas.result
+                                    });
+
+                                } else {
+                                    focus.show()
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                }
+                            }
+                        });
+                    });
+                    if ($('#vertical-left').length) {
+                        $('#vertical-left').pwstabs({
+                            effect: 'slideleft',
+                            defaultTab: 1,
+                            containerWidth: '600px',
+                            tabsPosition: 'vertical',
+                            verticalPosition: 'left'
+                        });
+                    }
+
+                });
+            })(jQuery);
+        </script>
+        </body>
+
+        </html>

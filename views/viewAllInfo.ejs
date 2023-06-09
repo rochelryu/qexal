@@ -1,0 +1,321 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-3 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Client</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= users.name %>
+                                            </h2>
+                                            <% if (!users.isActive) { %>
+                                                <div class="d-flex align-items-center ml-md-2 mt-2 mt-md-0">
+                                                    <i class="icon-lock text-muted"></i>
+                                                    <small class=" ml-1 mb-0"><script>formatDate("<%= users.updated_at %>")</script></small>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-success px-4 py-2 rounded">
+                                            <i class="icon-layers text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Gain</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= users.soldeGain %>
+                                            </h2>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-warning px-4 py-2 rounded">
+                                            <i class="icon-wallet text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Cummul RSI</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= infos.soldeCumul %>
+                                            </h2>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-success px-4 py-2 rounded">
+                                            <i class="icon-cloud-download text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Cummul Windraw</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= infos.retraitCumul %>
+                                            </h2>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-warning px-4 py-2 rounded">
+                                            <i class="icon-cloud-upload text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Estimation</h4>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        
+                                        <h4 class="card-title">List Retrait</h4>
+                                        <div class="">
+                                            <table id="table_id" class="table table-responsive table-hover display">
+                                                <thead class="black white-text shadow-lg">
+                                                    <tr>
+                                                        <th>Rang</th>
+                                                        <th>Etat</th>
+                                                        <th>montant</th>
+                                                        <th>Address</th>
+                                                        <th>ref</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% infos.allRetraitInfo.forEach(function(value){ %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= value.id %>
+                                                            </td>
+                                                            <td>
+                                                                <% if ( value.etatid === 1 ) { %>
+                                                                    <span>Payement en Attente</span>
+                                                                    <% }  else if (value.etatid === 3) { %>
+                                                                        <span>Payement Terminé</span>
+                                                                        <% } %>
+
+                                                            </td>
+                                                            <td>
+                                                                <%= value.monatnt %>
+                                                            </td>
+                                                            <td><button class='btn btn-sm btn-outline-primary' data-toggle="modal" data-target="#basicExampleModal<%= value.id %>">Voir</button></td>
+                                                            <td>
+                                                                <% if (value.ref !== '' && value.ref.length === 66) {%>
+                                                                    <a href="https://etherscan.io/tx/<%= value.ref %>" target="_blank">Voir Ref</a>
+                                                                    <% } else if (value.ref !== '' && value.ref.length === 64) { %>
+                                                                        <a href="https://blockchair.com/bitcoin/transaction/<%= value.ref %>" target="_blank">Voir Ref</a>
+                                                                        <% } %>
+                                                            </td>
+                                                            <td>
+                                                                <script>
+                                                                    formatDate("<%= value.updated_at %>")
+                                                                </script>
+                                                            </td>
+                                                        </tr>
+                                                        <div class="modal fade" id="basicExampleModal<%= value.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                                            <%= value.addressDestinate %>
+                                                                        </h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																	</button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% }); %>
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <h4 class="card-title">Quick Update</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 grid-margin">
+
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/560/560216.png" class="img-flag rounded-circle mb-2" alt="profile image" />
+                                    <div class="ml-3">
+                                        <h4>
+                                            <%= users.name %>
+                                            <br>
+                                                <%= users.email %>
+                                        </h4>
+                                        <p class="text-muted mb-0">Motif:
+                                            <%= users.motif %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <h4 class="card-title">My request list</h4>
+                                <div class="">
+                                    <table id="table_id" class="table table-responsive table-hover display">
+                                        <thead class="black white-text shadow-lg">
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Solde</th>
+                                                <th>State</th>
+                                                <th>Accord</th>
+                                                <th>Date create</th>
+                                                <th>Date activate</th>
+                                                <th>Last date withdray</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% infos.mesDemandes.forEach(function(value){ %>
+                                                <tr>
+                                                    <td>
+                                                        <a href="/users/viewAllContrat?id=<%= value.id %>"><%= value.id %></a>
+                                                    </td>
+                                                    <td>
+                                                        <%= value.soldeGain %>
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.etatid === 1 ) { %>
+                                                            <span>Pending Request</span>
+                                                            <% }  else if (value.etatid === 2) { %>
+                                                                <span>Waiting for confirmation</span>
+                                                                <% }  else { %>
+                                                                    <span>Valid</span>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.accord === 0 ) { %>
+                                                            <p class="color-grey">No action</p>
+                                                            <% }  else if (value.accord === 1) { %>
+                                                                <p class="color-grey">Withdray Possible</p>
+                                                                <% }  else { %>
+                                                                    <p class="color-grey"><%= value.accord %></p>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            formatDate("<%= value.create_at %>")
+                                                        </script>
+                                                    </td>
+                                                    <td>
+                                                        <p><%= value.dateActivate %></p>
+                                                    </td>
+                                                    <td>
+                                                        <p><%= value.dateRetry %></p>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- content-wrapper ends -->
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            (function($) {
+                'use strict';
+                $(function() {
+                    $('table').addClass('nowrap').DataTable({
+                        responsive: true,
+
+                        buttons: [
+                            'copy', 'excel', 'pdf'
+                        ],
+                        "language": {
+                            "lengthMenu": "Display _MENU_ records per page",
+                            "zeroRecords": "Nothing found - sorry",
+                            "info": "Showing page _PAGE_ of _PAGES_",
+                            "infoEmpty": "No records available",
+                            "infoFiltered": "(filtered from _MAX_ total records)"
+                        }
+                    });
+
+
+                    if ($('#vertical-left').length) {
+                        $('#vertical-left').pwstabs({
+                            effect: 'slideleft',
+                            defaultTab: 1,
+                            containerWidth: '600px',
+                            tabsPosition: 'vertical',
+                            verticalPosition: 'left'
+                        });
+                    }
+
+                });
+            })(jQuery);
+        </script>
+        </body>
+
+        </html>

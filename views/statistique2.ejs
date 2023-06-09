@@ -1,0 +1,489 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="">
+                <div class="row">
+
+
+                    <section class="forms">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Tous les Utilisateurs <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <table id="table_id2" class="table table-responsive table-hover display">
+                                    <thead class="black white-text shadow-lg">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nom</th>
+                                            <th>Type</th>
+                                            
+                                            <th>Etat</th>
+                                            <th>motif</th>
+                                            <th>Date d'adhesion</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% infos.allUsers.forEach(function(value){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= value.id %>
+                                                </td>
+                                                <td>
+                                                    <%= value.name %><br />
+                                                        <a href="mailto:<%= value.email %>"><%= value.email %></a>
+                                                </td>
+                                                <td>
+                                                    <% if (value.isNewSystem == 1) { %>
+                                                        <p class="color-grey">New System</p>
+                                                        <% }  else { %>
+                                                            <p class="color-grey">Old System</p>
+                                                            <% } %>
+                                                </td>
+                                                
+                                                <td>
+                                                    <% if (!value.isActive) { %>
+                                                        <p class="color-grey">Bloqué</p>
+                                                        <% }  else { %>
+                                                            <p class="color-grey">Actif</p>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <p><%= value.motif %></p>
+                                                        
+                                                </td>
+                                                
+                                                <td>
+                                                    <script>
+                                                        formatDate("<%= value.create_at %>")
+                                                    </script>
+                                                </td>
+                                                <td>
+                                                    <% if (!value.isActive ) { %>
+                                                        <button class="btn btn-sm btn-outline-success unlockuser" data-ref="<%= value.id %>">Debloquer</button>
+                                                        <% } else { %>
+                                                            <button class="btn btn-sm btn-outline-danger lockuser" data-ref="<%= value.id %>">Bloquer</button>
+                                                            <% } %>
+                                                                <br>
+                                                                <button class="btn btn-sm btn-outline-info generateDemande" data-ref="<%= value.id %>">Generate Demande</button>
+                                                                <br>
+                                                                <a class="btn btn-sm btn-primary" type="button" target="_blank" href="/users/viewAllInfo?id=<%= value.id %>">Suivie</a>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+
+
+                    <section class="forms">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Validations TxHash <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <table id="table_id4" class="table table-responsive table-hover display">
+                                    <thead class="black white-text shadow-lg">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Ref</th>
+                                            <th>montant</th>
+                                            <th>Client</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% infos.allFinalSteps.forEach(function(value){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= value.id %>
+                                                </td>
+                                                <td><a href="https://blockchair.com/bitcoin/transaction/<%= value.ref %>" target="_blank">Voir Ref</a></td>
+                                                <td>
+                                                    <%= value.montant %>
+                                                </td>
+                                                <td>
+                                                    <a target="_blank" href="/users/viewAllInfo?id=<%= value.client.id %>">
+                                                        <%= value.client.name %>
+                                                        <br>
+                                                            <%= value.client.email %>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <script>
+                                                        formatDate("<%= value.create_at %>")
+                                                    </script>
+                                                </td>
+
+                                            </tr>
+                                            <% }); %>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+
+
+                    <section class="forms">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Ajouter Numero</h3>
+                                <form id="addNumero">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-8">
+                                            <label for="inputRef" class="input__label">Contenu</label>
+                                            <input type="text" class="form-control input-style" id="inputRef" placeholder="+225 XXXXXXXX">
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label for="inputType" class="input__label">Type</label>
+                                            <select name="inputType" id="inputType">
+                                                <option value="0" selected>Investment</option>
+                                                <option value="1" >Orange</option>
+                                                <option value="2" >Mtn</option>
+                                                <option value="3" >Moov</option>
+                                                <option value="5" >Wave</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <button type="submit" class="btn btn-primary btn-style mt-4">Enregistrer</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="cards__heading">
+                                <h3>Tous les Numéros <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <table id="table_id3" class="table table-responsive table-hover display">
+                                    <thead class="black white-text shadow-lg">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Content</th>
+                                            <th>Type</th>
+                                            <th>Actif</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% infos.allNumber.forEach(function(value){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= value.id %>
+                                                </td>
+                                                <td>
+                                                    <%= value.content %>
+                                                </td>
+                                                <td>
+                                                    <% if ( value.type === 0 ) { %>
+                                                        <span>Investment</span>
+                                                        <% }  else if (value.type === 1) { %>
+                                                            <span>Orange Money</span>
+                                                            <% }  else if (value.type === 2) { %>
+                                                                <span>Mtn Money</span>
+                                                                <% }  else if (value.type === 3) { %>
+                                                                    <span>Moov Money</span>
+                                                                    <% }  else if (value.type === 5) { %>
+                                                                        <span>Wave</span>
+                                                                        <% } %>
+
+                                                </td>
+                                                <td>
+                                                    <% if ( value.isActive ) { %>
+                                                        <span>Déjà Activé</span>
+                                                        <% }  else { %>
+                                                            <span>Pas encore Activé</span>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if (value.isActive) { %>
+                                                        <button class="desactiveNumber btn btn-dark" data-ryu="<%= value.id %>">Desactiver</button>
+                                                        <% }  else { %>
+                                                            <button class="activeNumber btn btn-success" data-ryu="<%= value.id %>">Activer</button>
+                                                            <% } %>
+                                                </td>
+
+                                            </tr>
+                                            <% }); %>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "info": "Showing page _PAGE_ of _PAGES_",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+
+
+                $('body').on('click', '.activeNumber', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ryu');
+
+                    const url = '/users/activeNumber',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.lockuser', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+                    const focus = $(this);
+
+                    const url = '/users/lockuser',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                                focus.parent().parent().hide();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.generateDemande', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+                    const focus = $(this);
+                    focus.hide();
+                    const url = '/users/generateDemande',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                                focus.show();
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.viderReserve', function(e) {
+                    e.preventDefault();
+
+                    const url = '/users/viderReserve',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.unlockuser', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+                    const focus = $(this);
+
+                    const url = '/users/unlockuser',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                                focus.parent().parent().hide();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+
+                $('#addNumero').submit(function(e) {
+                    e.preventDefault();
+                    const content = $('#inputRef').val();
+                    const info = $('#inputType').val();
+
+                    const url = '/users/createNumber',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            content,
+                            type: info
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.desactiveNumber', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ryu');
+
+                    const url = '/users/desactiveNumber',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+            });
+        </script>
+        </body>
+
+        </html>

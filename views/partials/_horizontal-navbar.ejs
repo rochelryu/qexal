@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#1EBBD7" />
+    <meta name="og:description" content="Social network of financial assistance based on the collaborative principle of financing. Buy and sell ethereum at a lower cost. Bet on all stadiums and without limit.">
+    <meta name="keywords" content="Trova, Trova.vip, VIP, RSI, Social network, financial, investment, exchange, BTC, ETH, Buy ETH, Sell ETH, entraide financière, réseau social, paris sportif">
+    <meta name="author" content="ICORE">
+    <meta name="og:url" content="https://trova.vip">
+    <meta name="og:title" content="Qexal Web | <%= user.name %> ">
+    <meta property="og:image" content="https://trova.vip/Inter/admin/images/favicon.png">
+    <meta property="og:type" content="BIG BUSINESS">
+    <title>TROVA |
+        <%= user.name %>
+    </title>
+    <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/simple-line-icon/css/simple-line-icons.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.addons.css">
+
+    <link rel="stylesheet" href="../Inter/admin/css/bootstrap.css">
+    <link rel="stylesheet" href="../Inter/admin/css/mdb.css">
+    <link rel="stylesheet" href="../Inter/admin/css/style.css">
+    <link rel="stylesheet" href="../Inter/admin/css/datatables.min.css">
+    <link rel="stylesheet" href="../Inter/admin/css/jquery.notify.css">
+    <link rel="stylesheet" href="../Inter/admin/css/flipclock.css">
+    <link href="../Inter/admin/images/favicon.png" rel="icon">
+    <link rel="shortcut icon" href="../Inter/admin/images/favicon.png" />
+    <script src="../Inter/admin/js/jquery.js"></script>
+    <script>
+        function formatDate(date) {
+            const data = new Date(date);
+            document.write(`${data.toLocaleDateString()} ${data.toLocaleTimeString()}`)
+        }
+
+        function formatDateToPay(date) {
+            const oldDate = new Date(date);
+            const numberOldDate = oldDate.setDate(oldDate.getDate() + 7);
+            const data = new Date(numberOldDate);
+            document.write(`${data.toLocaleDateString()} ${data.toLocaleTimeString()}`)
+        }
+
+        function convertEthToUsd(ethprice, selector) {
+            $.ajax({
+                url: 'https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8',
+                type: 'get',
+                success: function(data) {
+                    const dollars = parseFloat(data.result.ethusd);
+                    const montant = parseFloat(ethprice)
+
+                    const montantDisplay = montant * dollars;
+                    $(selector).prepend(montantDisplay.toFixed(2))
+                }
+            })
+        }
+
+        function copieText() {
+            /* Get the text field */
+            var copyText = document.getElementById("myInput");
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+            document.querySelector(".copieCode").setAttribute("title", "copied address: " + copyText.value)
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container-scroller">
+
+
+        <nav class="navbar horizontal-layout col-lg-12 col-12 p-0">
+            <div class="nav-top flex-grow-1">
+                <div class="container d-flex flex-row h-100 align-items-center">
+                    <div class="text-center navbar-brand-wrapper d-flex align-items-center">
+                        <a class="navbar-brand brand-logo" href="/users"><img src="../Inter/admin/images/logo-blanc-sans-fond.png" class="logo" alt="logo" /></a>
+                        <a class="navbar-brand brand-logo-mini" href="/users"><img src="../Inter/admin/images/logo-blanc-sans-fond.png" class="logo" alt="logo" /></a>
+                    </div>
+                    <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1" style="justify-content: flex-end !important;">
+
+                        <ul class="navbar-nav navbar-nav-right" style="display: flex; justify-content: flex-end;">
+
+                            <li class="nav-item nav-profile">
+                                <span class="soldeGain text-white">
+                      <i class="icon-wallet text-white mr-2"></i>
+                        <%= user.soldeGain.toFixed(1) %> $<span clss="pin"></span>
+                                </span>
+                            </li>
+
+                            <li class="nav-item nav-profile dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/560/560216.png" class="flag-rofil" alt="profile" />
+                                    <span class="nav-profile-name"><%= user.name %> <%= user.firstname %></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                                    <div class="dropdown-divider"></div>
+                                    <% if (user.roleid === 3) { %>
+                                        
+                                        <a href="/users/startRetrait" class="dropdown-item">
+                                            <i class="icon-settings text-primary mr-2"></i> Retrait SUI
+                                        </a>
+                                        <a href="/users/statistique" class="dropdown-item">
+                                            <i class="icon-settings text-primary mr-2"></i> Statistique SUI
+                                        </a>
+                                        <a href="/exchange/cryptoGestion" class="dropdown-item">
+                                            <i class="icon-eye text-primary mr-2"></i> Gestion Crypto
+                                        </a>
+                                        
+                                        <% } %>
+                                            
+                                                            <!--a href="mailto:trovavip@gmail.com" class="dropdown-item">
+                                        <i class="icon-earphones-alt text-primary mr-2"></i> Help
+                                    </a-->
+                                                            <a href="/users/logout" class="dropdown-item">
+                                                                <i class="icon-logout text-primary mr-2"></i> Logout
+                                                            </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <% if (user.inscription === 1) { %>
+                <div class="nav-bottom">
+                    <div class="container">
+                        <ul class="nav page-navigation">
+                            <li class="nav-item">
+                                <a href="/users" class="nav-link"><i class="link-icon icon-screen-desktop"></i><span class="menu-title">Dashboard</span></a>
+                            </li>
+                            <% if (user.roleid === 3) { %>
+                                <li class="nav-item mega-menu">
+                                    <a href="#" class="nav-link"><i class="link-icon icon-book-open"></i><span class="menu-title">Gestion</span><i class="menu-arrow"></i></a>
+                                    <div class="submenu">
+                                        <div class="col-group-wrapper row">
+                                            <div class="col-group col-md-3">
+                                                <p class="category-heading">Investissement</p>
+                                                <ul class="submenu-item">
+                                                    <li class="nav-item"><a class="nav-link" href="/users/statistique">Statistique</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="/users/retrait">Retrait</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="/users/forfaittaxe">Forfaits & Taxe</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="/users/envoiereception">Admissibilité</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-group col-md-3">
+                                                <p class="category-heading">Matrix</p>
+                                                <ul class="submenu-item">
+                                                    <li class="nav-item"><a class="nav-link" href="/users/matrixAdmin">Listing</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="/users/updateUserMatrix">Update User</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-group col-md-3">
+                                                <p class="category-heading">Echange Monnaitaire</p>
+                                                <ul class="submenu-item">
+                                                    <li class="nav-item"><a class="nav-link" href="/exchange/cryptoGestion">Gestion Crypto</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-group col-md-3">
+                                                <p class="category-heading">RETRAIT OTHER</p>
+                                                <ul class="submenu-item">
+                                                    <li class="nav-item"><a class="nav-link" href="/users/startRetrait">Start</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="/users/billionaryRetrait">Billion</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <% } %>
+                                    <li class="nav-item ">
+                                        <a href="/users/matrix" class="nav-link"><i class="link-icon icon-trophy"></i><span class="menu-title">Matrix</span></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/other-game" class="nav-link"><i class="link-icon icon-control-play"></i><span class="menu-title">Betting Games</span></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/exchange" class="nav-link"><i class="link-icon icon-wallet"></i><span class="menu-title">Exchange</span></a>
+                                    </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <% } %>
+        </nav>
+
+        <div class="modal fade" id="basicExampleModalFinishedContrat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Migration to BTC</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>you will migrate to our new BTC employee. Advantage: no sponsorship, 35% weekly</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal">Back</button>
+                        <a href="/users/finishContrat" class="btn btn-danger">I agree</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% if (user.inscription === 1) { %>
+            <div class="bottom navbottom">
+                <label class="bottom-tabs waves-effet" for="1a">
+          <input type="radio" id="1a" name="bottomtabs" required>
+        <% if (title.indexOf("Accueil") !== - 1 ) { %>
+          <div class="check activateCheck">
+              <img src="../Inter/admin/images/house.svg" alt="icon-dash" class="width-32p">
+        <% } else { %>
+          <div class="check">
+            <img src="../Inter/admin/images/house (1).svg" alt="icon-dash" class="width-32p">
+        <% } %>
+        
+            <p class="caption">Dashboard</p>
+          </div>
+      </label>
+                <label class="bottom-tabs waves-effet" for="1b">
+        <input type="radio" id="1b" name="bottomtabs" required>
+        <% if (title.indexOf("Matrix") !== - 1 ) { %>
+            <div class="check activateCheck">
+                <img src="../Inter/admin/images/network.svg" alt="icon-dash" class="width-32p">
+          <% } else { %>
+            <div class="check">
+              <img src="../Inter/admin/images/network (2).svg" alt="icon-dash" class="width-32p">
+        <% } %>
+          
+          <p class="caption">Matrix</p>
+        </div>
+      </label>
+                <label class="bottom-tabs waves-effet" for="1c">
+        <input type="radio" id="1c" name="bottomtabs" required>
+        <% if (title.indexOf("OtherGame") !== - 1 ) { %>
+            <div class="check activateCheck">
+                <img src="../Inter/admin/images/bet_enable_icon.svg" alt="icon-betting" class="width-32p">
+          <% } else { %>
+            <div class="check">
+              <img src="../Inter/admin/images/bet_disable_icon.svg" alt="icon-betting" class="width-32p">
+        <% } %>
+          
+          <p class="caption">Betting</p>
+        </div>
+      </label>
+                <label class="bottom-tabs waves-effet" for="1d">
+        <input type="radio" id="1d" name="bottomtabs" required>
+        <% if (title.indexOf("Exchange") !== - 1 ) { %>
+            <div class="check activateCheck">
+                <img src="../Inter/admin/images/ethereum.svg" alt="icon-dash" class="width-32p">
+          <% } else { %>
+            <div class="check">
+              <img src="../Inter/admin/images/ethereum (2).svg" alt="icon-dash" class="width-32p">
+        <% } %>
+          
+          <p class="caption">Exchange</p>
+        </div>
+      </label>
+            </div>
+            <% } %>

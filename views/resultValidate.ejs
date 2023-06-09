@@ -1,0 +1,70 @@
+<%- include('partials/_horizontal-navbar'); %>
+
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+
+            <div class="content-wrapper">
+
+                <div class="container-fluid z-depth-1 my-5 pt-5 pb-3 px-3">
+
+                    <!-- Section -->
+                    <section>
+
+
+
+
+                        <div class="row align-items-center">
+
+                            <div class="col-lg-6 mb-4">
+                                <div>
+                                    <% if (infos.error) { %>
+                                        <img src="../Inter/admin/images/denied.svg" alt="logo" class="width-100 m-0" />
+                                        <% } else { %>
+                                            <img src="../Inter/admin/images/success.svg" alt="logo" class="width-100 m-0" />
+                                            <% } %>
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-4">
+
+                                <p>
+                                    <%= infos.message %>
+                                </p>
+
+
+                            </div>
+
+                        </div>
+
+                    </section>
+                    <!-- Section -->
+
+                </div>
+            </div>
+
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script src="../Inter/admin/js/multi-countdown.js"></script>
+        <script>
+            $(document).ready(function() {
+
+                $('#play').on('click', function(e) {
+                    e.preventDefault();
+                    $('#modal1 iframe').attr("src", "https://www.youtube.com/embed/zKPTPsId__8");
+                    $("#player")[0].src += "?autoplay=1";
+                    $('#player').show();
+                    $('#video-cover').hide();
+                })
+                $('#modal1').on('hidden.bs.modal', function(e) {
+                    $('#modal1 iframe').attr("src", "");
+                });
+            })
+        </script>
+        </body>
+
+        </html>

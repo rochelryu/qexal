@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#1EBBD7" />
+    <meta name="description" content="Social network of financial assistance based on the collaborative principle of financing. Buy and sell ethereum at a lower cost.">
+    <meta name="keywords" content="Trova, Trova.vip, VIP, RSI, Social network, financial, investment, exchange, BTC, ETH, Buy ETH, Sell ETH, entraide financière, réseau social">
+    <meta name="author" content="ICORE">
+    <meta name="og:url" content="https://trova.vip">
+    <meta name="og:title" content="Qexal Web">
+    <title>TROVA |
+        <%= title %>
+    </title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/simple-line-icon/css/simple-line-icons.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.addons.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../Inter/admin/css/style.css">
+    <link rel="stylesheet" href="../Inter/admin/css/jquery.notify.css">
+    <script src="../Inter/admin/js/jquery.js"></script>
+
+    <link rel="icon" href="../Inter/admin/images/favicon.png" />
+    <link rel="shortcut icon" href="../Inter/admin/images/favicon.png" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <div class="content-wrapper auth p-0 theme-two">
+                <div class="row d-flex align-items-stretch">
+                    <div class="col-md-4 banner-section d-none d-md-flex align-items-stretch justify-content-center">
+                        <div class="slide-content bg-2">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 h-100 bg-white">
+                        <div class="auto-form-wrapper d-flex align-items-center justify-content-center flex-column">
+                            <div class="nav-get-started">
+                                <p>Already have an account?</p>
+                                <a class="btn get-started-btn" href="/other-game/login">SIGN IN</a>
+                            </div>
+                            <form action="/other-game/signup" method="post">
+                                <input type="hidden" name="prefix" value="+93" id="prefix" />
+                                <input type="hidden" name="iso639_1" value="ps" id="iso639_1" />
+                                <input type="hidden" name="region" value="Asia" id="region" />
+                                <input type="hidden" name="flag" value="noflag" id="flag" />
+                                <input type="hidden" name="language" value="Pashto" id="language" />
+                                <input type="hidden" name="alpha2code" value="AF" id="alpha2code" />
+                                <input type="hidden" name="subregion" value="Southern Asia" id="subregion" />
+                                <input type="hidden" name="currencies" value="AFN" id="currencies" />
+                                <input type="hidden" name="parrainid" value="" />
+                                <h3 class="mr-auto">Register</h3>
+                                <p class="mb-5 mr-auto">Enter your details below.</p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                        </div>
+                                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                        </div>
+                                        <input type="text" name="firstname" class="form-control" placeholder="Your firstname" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-user"></i></span>
+                                        </div>
+                                        <input type="text" name="pseudo" class="form-control" placeholder="Username" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">@</span>
+                                        </div>
+                                        <input type="email" name="email" class="form-control" placeholder="Your Email" aria-label="email" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <select name="country" id="country" class="js-example-basic-single w-100" required>
+                    <option value="" disabled>Select your country</option>
+                    <script>
+                      $.ajax({
+                          url: 'http://localhost:5001/api/v1/countries',
+                          type: 'get',
+                          success: function(data) {
+                            data.map(value => {
+                              $("#country").append('<option value="'+ value.name +'">'+ value.name +'</option>')
+                            })
+                            
+                          }});
+                    </script>
+                      
+                    </select>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white" id="prefixSpan">+93</span>
+                                        </div>
+                                        <input type="number" name="numero" class="form-control" placeholder="Your phone number" required>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-lock"></i></span>
+                                        </div>
+                                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-eye"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-check form-check-warning">
+                                    <input type="checkbox" required class="form-check-input" id="materialUnchecked">
+                                    <label class="form-check-label" for="materialUnchecked">By pressing Sign up, you agree to our <a href="#" data-toggle="modal" data-target="#basicExampleModal">Terms and Conditions</a>.</label>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary submit-btn">SIGN UP</button>
+                                </div>
+                                <div class="wrapper mt-5 text-gray">
+                                    <p class="footer-text">Copyright ©
+                                        <script>
+                                            document.write(new Date().getFullYear())
+                                        </script> Qexal. All rights reserved.</p>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Terms and Conditions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                </div>
+                <div class="modal-body">
+                    <ol>
+                        <li>TROVA is a member-to-member financial self-help platform that offers its members the opportunity to invest and have a return on investment of at least 50% within a very short period of time compared to other systems.</li>
+                        <li>The delay of reception of the RSI varies according to the activities of the members.</li>
+                        <li>Each member of TROVA pays a membership fee, which varies according to the level of membership chosen by the member.</li>
+                        <li>TROVA levies 5% on each Return On Investment (ROI)</li>
+                        <li>Each member has the opportunity to increase his or her earning commission through the Matrix. This matrix remains optional.</li>
+                        <li>After receiving your first two RSIs, your account is blocked to search for a godchild who will allow you to be unblocked in order to continue in the system.</li>
+                        <li>Each person has two types of balances, the investment balance and the winning balance. only the winning balance can be withdrawn. the investment balance is used as a bet in the system.</li>
+                        <li>After 6 requests received, your subscription expires, your Investment balance is set to 0, you must redo another subscription to continue in the system and the fees to be paid are deducted from your earned balance if it can contain
+                            the membership fee + the amount of the request.</li>
+                        <li>You can withdraw your Winning balance only if your account is active (not currently blocked). If you are blocked you can only withdraw your winnings balance if you are waiting for a referrals to unblock.</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="../Inter/admin/vendors/js/vendor.bundle.base.js"></script>
+    <script src="../Inter/admin/vendors/js/vendor.bundle.addons.js"></script>
+    <script src="../Inter/admin/js/popper.js"></script>
+    <script src="../Inter/admin/js/bootstrap.min.js"></script>
+    <script src="../Inter/admin/js/mdb.js"></script>
+    <script src="../Inter/admin/js/select2.js"></script>
+    <script src="../Inter/admin/js/jquery.notify.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#country").on("change", function() {
+                const value = $(this).val();
+                $.ajax({
+                    url: 'http://localhost:5001/api/v1/detailsCountries/' + value,
+                    type: 'get',
+                    success: function(data) {
+                        $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));
+                        $("#region").val(data.region);
+                        $("#subregion").val(data.subregion);
+                        $("#language").val(data.languages[0].name);
+                        $("#iso639_1").val(data.languages[0].iso639_1);
+                        $("#currencies").val(data.currencies[0].code);
+                        $("#alpha2code").val(data.alpha2Code);
+                        $("#prefix").val("+" + data.callingCodes[0].replace("00", ""));
+
+                    }
+                });
+            })
+            $(".input-group-append").on("click", function() {
+                const type = $(this).prev().attr("type")
+                if (type === "password") {
+                    $(this).prev().attr("type", "text")
+                    $(this).find("span").html('<i class="icon-close"></i>')
+                } else {
+                    $(this).prev().attr("type", "password")
+                    $(this).find("span").html('<i class="icon-eye"></i>')
+                }
+            })
+            <% message.forEach(function(value){ %>
+            $.notify({
+                position: 2,
+                type: 'error',
+                autoClose: false,
+                message: "<%= value %>"
+            });
+            <% }); %>
+        })
+    </script>
+</body>
+
+</html>

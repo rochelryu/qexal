@@ -1,0 +1,12 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "oeildufaucon225R#",
+    "database": "qexal",
+    "entities": ["dist/**/*.entity.js"],
+    "synchronize": true,
+    "migrationRun": true,
+    "logging": true
+}

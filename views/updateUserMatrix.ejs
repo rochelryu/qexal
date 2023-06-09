@@ -1,0 +1,248 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="">
+                <div class="row">
+
+
+                    <section class="forms">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Tous les Utilisateurs <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <table id="table_id2" class="table table-responsive table-hover display">
+                                    <thead class="black white-text shadow-lg">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nom</th>
+                                            <th>Niveau matrix</th>
+                                            <th>Numéro</th>
+                                            <th>Niveau taxe</th>
+                                            <th>Date Matrix</th>
+                                            <th>Action 1</th>
+                                            <th>Action 2</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% infos.allUsers.forEach(function(value){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= value.id %>
+                                                </td>
+                                                <td>
+                                                    <%= value.name %><br />
+                                                        <%= value.firstname %>
+                                                </td>
+                                                <td>
+                                                    <%= value.matrixid %>
+                                                </td>
+                                                <td>
+                                                    <%= value.prefix %>
+                                                        <%= value.numberClient %>
+                                                </td>
+                                                <td>
+                                                    <p>
+                                                        <%= value.taxeid %>
+                                                    </p>
+                                                </td>
+
+                                                <td>
+                                                    <script>
+                                                        formatDate("<%= value.dateMatrixCount %>")
+                                                    </script>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-success updateMatrixTaxe" data-ref="<%= value.id %>">Up Matrix</button>
+
+                                                    <br>
+                                                    <button class="btn btn-sm btn-outline-info moveDownDateMatrix" data-ref="<%= value.id %>">Retro one Day</button>
+                                                    <br>
+                                                    <button class="btn btn-sm btn-outline-danger upDateMatrixDay" data-ref="<%= value.id %>">This Day</button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-danger updateForfaitInRetrograde" data-ref="<%= value.id %>">Retro in Forfait</button>
+
+
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "info": "Showing page _PAGE_ of _PAGES_",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+
+
+
+
+                $('body').on('click', '.updateForfaitInRetrograde', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+
+
+                    const url = '/users/updateForfaitInRetrograde',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+
+                $('body').on('click', '.updateMatrixTaxe', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+
+
+                    const url = '/users/updateMatrixTaxe',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.moveDownDateMatrix', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+
+                    const url = '/users/moveDownDateMatrix',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '.upDateMatrixDay', function(e) {
+                    e.preventDefault();
+                    const id = $(this).attr('data-ref');
+
+                    const url = '/users/upDateMatrixDay',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+
+            });
+        </script>
+        </body>
+
+        </html>

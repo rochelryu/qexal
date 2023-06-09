@@ -1,0 +1,48 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="container">
+
+
+                </div>
+            </div>
+        </div>
+        <%- include('partials/_footer'); %>
+            <script>
+                $(document).ready(function() {
+                    $('body').on('click', '.changeLink', function(e) {
+                        e.preventDefault();
+
+                        const url = '/users/changeLink',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    const link = window.location.origin + "/signup/" + datas.result;
+                                    $("#myInput").val(link);
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: "Changed with Success"
+                                    });
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                }
+                            }
+                        });
+                    });
+                })
+            </script>
+
+            </body>
+
+            </html>

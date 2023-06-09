@@ -1,0 +1,380 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <style>
+        .faq {
+            padding: 10px 5px;
+            background-color: #fff;
+            border-top: 10px solid #ff6873;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        }
+        
+        .faq ul {
+            width: 100% !important;
+        }
+        
+        .faq .transition,
+        .faq ul li i:before,
+        .faq ul li i:after {
+            transition: all 0.25s ease-in-out;
+        }
+        
+        .faq .flipIn,
+        .faq ul li,
+        .faq h1 {
+            animation: flipdown 0.5s ease both;
+        }
+        
+        .faq .no-select {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .faq h1 {
+            color: #ff6873;
+        }
+        
+        .faq h1 {
+            text-transform: uppercase;
+            font-size: medium;
+            line-height: 42px;
+            letter-spacing: 3px;
+            font-weight: 100;
+        }
+        
+        .faq ul {
+            list-style: none;
+            perspective: 900;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .faq ul li {
+            position: relative;
+            padding: 0;
+            margin: 0;
+            padding-bottom: 4px;
+            padding-top: 18px;
+            border-top: 1px dotted #dce7eb;
+        }
+        
+        .faq ul li:nth-of-type(1) {
+            animation-delay: 0.5s;
+        }
+        
+        .faq ul li:last-of-type {
+            padding-bottom: 0;
+        }
+        
+        .faq ul li i {
+            position: absolute;
+            transform: translate(-6px, 0);
+            margin-top: 16px;
+            right: 0;
+        }
+        
+        .faq ul li i:before,
+        .faq ul li i:after {
+            content: "";
+            position: absolute;
+            background-color: #ff6873;
+            width: 3px;
+            height: 9px;
+        }
+        
+        .faq ul li i:before {
+            transform: translate(-2px, 0) rotate(45deg);
+        }
+        
+        .faq ul li i:after {
+            transform: translate(2px, 0) rotate(-45deg);
+        }
+        
+        .faq ul li input[type=checkbox] {
+            position: absolute;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+        }
+        
+        .faq ul li input[type=checkbox]:checked~p {
+            margin-top: 0;
+            max-height: 0;
+            opacity: 0;
+            transform: translate(0, 50%);
+        }
+        
+        .faq ul li input[type=checkbox]:checked~i:before {
+            transform: translate(2px, 0) rotate(45deg);
+        }
+        
+        .faq ul li input[type=checkbox]:checked~i:after {
+            transform: translate(-2px, 0) rotate(-45deg);
+        }
+        
+        @keyframes flipdown {
+            0% {
+                opacity: 0;
+                transform-origin: top center;
+                transform: rotateX(-90deg);
+            }
+            5% {
+                opacity: 1;
+            }
+            80% {
+                transform: rotateX(8deg);
+            }
+            83% {
+                transform: rotateX(6deg);
+            }
+            92% {
+                transform: rotateX(-3deg);
+            }
+            100% {
+                transform-origin: top center;
+                transform: rotateX(0deg);
+            }
+        }
+    </style>
+    <div class="container-fluid page-body-wrapper game-page">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card bg-transparent">
+                            <div class="card-title p-2">
+                                <h4 class="text-title">Last draw (winners <span class="color-info">34</span> ) : </h4>
+                                <div class="flex-center">
+                                    <span class="boule">34</span>
+                                    <span class="boule">34</span>
+                                    <span class="boule">34</span>
+                                    <span class="boule">34</span>
+                                    <span class="boule">34</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mt-2">
+                        <div class="card bg-transparent">
+                            <div class="card-title">
+                                <div class="faq">
+                                    <h1>My history of game</h1>
+                                    <ul>
+                                        <li>
+                                            <input type="checkbox">
+                                            <i></i>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Bet</th>
+                                                        <th>Draw</th>
+                                                        <th>Earnings</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="card bg-transparent">
+                            <div class="card-title p-2">
+
+
+                                <% if (isPossibleToPlay) { %>
+
+                                    <h4 class="text-title">The Numbers</h4>
+                                    <p>Choose your numbers in the grid below</p>
+                                    <div class="flex-center position-relative flex-wrap game-choice">
+                                        <span class="boule">1</span>
+                                        <span class="boule">2</span>
+                                        <span class="boule">3</span>
+                                        <span class="boule">4</span>
+                                        <span class="boule">5</span>
+                                        <span class="boule">6</span>
+                                        <span class="boule">7</span>
+                                        <span class="boule">8</span>
+                                        <span class="boule">9</span>
+                                        <span class="boule">10</span>
+                                        <span class="boule">11</span>
+                                        <span class="boule">12</span>
+                                        <span class="boule">13</span>
+                                        <span class="boule">14</span>
+                                        <span class="boule">15</span>
+                                        <span class="boule">16</span>
+                                        <span class="boule">17</span>
+                                        <span class="boule">18</span>
+                                        <span class="boule">19</span>
+                                        <span class="boule">20</span>
+                                        <span class="boule">21</span>
+                                        <span class="boule">22</span>
+                                        <span class="boule">23</span>
+                                        <span class="boule">24</span>
+                                        <span class="boule">25</span>
+                                        <span class="boule">26</span>
+                                        <span class="boule">27</span>
+                                        <span class="boule">28</span>
+                                        <span class="boule">29</span>
+                                        <span class="boule">30</span>
+                                        <span class="boule">31</span>
+                                        <span class="boule">32</span>
+                                        <span class="boule">33</span>
+                                        <span class="boule">34</span>
+                                        <span class="boule">35</span>
+                                        <span class="boule">36</span>
+                                        <span class="boule">37</span>
+                                        <span class="boule">38</span>
+                                        <span class="boule">39</span>
+                                        <span class="boule">40</span>
+                                        <span class="boule">41</span>
+                                        <span class="boule">42</span>
+                                        <span class="boule">43</span>
+                                        <span class="boule">44</span>
+                                        <span class="boule">45</span>
+                                        <span class="boule">46</span>
+                                        <span class="boule">47</span>
+                                        <span class="boule">48</span>
+                                        <span class="boule">49</span>
+                                        <span class="boule">50</span>
+                                        <span class="boule">51</span>
+                                        <span class="boule">52</span>
+                                        <span class="boule">53</span>
+                                        <span class="boule">54</span>
+
+
+                                    </div>
+                                    <hr size="100%">
+                                    <div class="flex-center position-relative flex-wrap">
+                                        <h4>Your selected numbers:</h4>
+                                    </div>
+                                    <div class="flex-center position-relative flex-wrap game-display">
+
+                                    </div>
+                                    <div class="flex-center position-relative">
+                                        <button class="btn btn-rounded btn-dark validateGame">Validate</button>
+                                    </div>
+
+
+
+                                    <% } else { %>
+                                        <p>Coutdown</p>
+                                        <div class="clock"></div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end container -->
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                const choice = [];
+                var clock;
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "info": "Showing page _PAGE_ of _PAGES_",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+
+                $('.game-choice span.boule').on('click', function(e) {
+
+                    if ($(this).hasClass('active')) {
+                        $(this).removeClass('active');
+                        choice.splice(choice.indexOf($(this).text()), 1);
+                    } else {
+                        if (choice.length < 5) {
+                            $(this).addClass('active');
+                            choice.push($(this).text());
+                        }
+                    }
+
+                    const formatDisplay = choice.map(value => {
+                        return '<span class="boule active">' + value + '</span>'
+                    }).join('');
+                    $('.game-display').html(formatDisplay);
+                    if (choice.length >= 1) {
+                        $('.validateGame').fadeIn();
+                    } else {
+                        $('.validateGame').hide();
+                    }
+
+                });
+
+
+                $('.validateGame').click(function(e) {
+                    const url = '/other-game/gameLoto',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            choice
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                console.log(choice)
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error,
+                                });
+
+                            }
+                        }
+                    });
+
+                })
+
+
+
+                if ($('.clock').length) {
+                    clock = $('.clock').FlipClock({
+                        clockFace: 'HourlyCounter',
+                        autoStart: false,
+                        callbacks: {
+                            stop: function() {
+                                window.setTimeout(function() {
+                                    location.href = location.origin + location.pathname;
+                                }, 2000);
+                            }
+                        }
+                    });
+
+                    clock.setTime(<%= timesInWait %>);
+                    clock.setCountdown(true);
+                    clock.start();
+                }
+            })
+        </script>
+        </body>
+
+        </html>

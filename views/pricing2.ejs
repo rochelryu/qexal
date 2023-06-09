@@ -1,0 +1,342 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <section class="forms" style="min-width: 100%;">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Ajouter Forfait</h3>
+                                <form id="addForfait" action="/users/addForfait" method="post">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-3">
+                                            <label for="inputRef" required class="input__label">Nom</label>
+                                            <input type="text" class="form-control input-style" id="name" name="name">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="inputRef" required class="input__label">Montant</label>
+                                            <input type="text" class="form-control input-style" id="montant" name="montant">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="inputRef" required class="input__label">Inscription</label>
+                                            <input type="text" class="form-control input-style" id="inscription" name="inscription">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="favcolor" class="input__label">Couleur</label>
+                                            <input type="color" id="favcolor" name="color" value="#ECDB01">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <button type="submit" class="btn btn-primary btn-style mt-4">Enregistrer</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="cards__heading">
+                                <h3>Tous les Forfaits <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="container">
+
+                                    <!--BLOCK ROW START-->
+                                    <div class="row">
+                                        <section class="pricing-section">
+                                            <div class='pricing pricing-palden'>
+                                                <% infos.forEach(function(value, index){ %>
+                                                    <% if (index === 1 || index === 4 ) { %>
+                                                        <div class='pricing-item pricing__item--featured'>
+                                                            <div class='pricing-deco' style="background-color: <%= value.color %>">
+                                                                <svg class='pricing-deco-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'
+                                                                    y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729&#x000A;	c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729&#x000A;	c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716&#x000A;	H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428&#x000A;	c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                          </svg>
+                                                                <div class='pricing-price'><span class='pricing-currency'>$ </span>
+                                                                    <%= value.nextGenForfaitMontant %>
+                                                                        <span class='pricing-period'>investment</span> <br>
+                                                                        <h3 class='pricing-title'>+</h3>
+                                                                </div>
+                                                                <h3 class='pricing-title'><span class='pricing-currency'>$ </span>
+                                                                    <%= value.inscription %> membership fees</h3>
+                                                            </div>
+                                                            <ul class='pricing-feature-list'>
+                                                                <li class='pricing-feature'><span class='pricing-currency'>$ </span>
+                                                                    <% const rsi = value.nextGenForfaitMontant * value.commission %>
+                                                                        <%= rsi.toFixed(2) %> come back in investment</li>
+                                                                <li class='pricing-feature'>
+                                                                    <%= value.limit %> new investment possible today</li>
+                                                                <li class='pricing-feature'>
+                                                                    <%= value.nextGenForfaitMontant %> For nextGenForfaitMontant</li>
+                                                                <li class='pricing-feature'>
+                                                                    <%= value.montant %> For prevGenForfaitMontant</li>
+                                                            </ul>
+                                                            <button class='pricing-action' style="background-color: <%= value.color %>" data-toggle="modal" data-target="#basicExampleModal<%= value.id %>"><%= value.name %></button>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div class='pricing-item'>
+                                                                <div class='pricing-deco' style="background-color: <%= value.color %>">
+                                                                    <svg class='pricing-deco-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'
+                                                                        y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729&#x000A;	c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729&#x000A;	c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716&#x000A;	H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428&#x000A;	c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                          </svg>
+                                                                    <div class='pricing-price'><span class='pricing-currency'>$ </span>
+                                                                        <%= value.nextGenForfaitMontant %>
+                                                                            <span class='pricing-period'>investment</span> <br>
+                                                                            <h3 class='pricing-title'>+</h3>
+                                                                    </div>
+                                                                    <h3 class='pricing-title'><span class='pricing-currency'>$ </span>
+                                                                        <%= value.inscription %> membership fees</h3>
+                                                                </div>
+                                                                <ul class='pricing-feature-list'>
+                                                                    <li class='pricing-feature'><span class='pricing-currency'>$ </span>
+                                                                        <% const rsi = value.nextGenForfaitMontant * value.commission %>
+                                                                            <%= rsi.toFixed(2) %> come back in investment</li>
+                                                                    <li class='pricing-feature'>
+                                                                        <%= value.limit %> new investment possible today</li>
+                                                                    <li class='pricing-feature'>
+                                                                        <%= value.nextGenForfaitMontant %> For nextGenForfaitMontant</li>
+                                                                    <li class='pricing-feature'>
+                                                                        <%= value.montant %> For prevGenForfaitMontant</li>
+                                                                </ul>
+                                                                <button class='pricing-action' style="background-color: <%= value.color %>" data-toggle="modal" data-target="#basicExampleModal<%= value.id %>"><%= value.name %></button>
+                                                            </div>
+                                                            <% } %>
+                                                                <div class="modal fade" id="basicExampleModal<%= value.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="exampleModalLabel">Package
+                                                                                    <%= value.name %>
+                                                                                </h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>Limite</p>
+                                                                                <input type="number" class="limit" value="<%= value.limit %>">
+                                                                                <p>Next Generation</p>
+                                                                                <input type="number" class="nextGenForfaitMontant" value="<%= value.nextGenForfaitMontant %>">
+                                                                                <input type="hidden" class="ident" value="<%= value.id %>">
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn" data-dismiss="modal">Back</button>
+                                                                                <button type="button" data-ref="<%= value.id %>" class="btn btn-dark renewLimit">Save</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <% }); %>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <!--//BLOCK ROW END-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="row">
+                    <section class="forms" style="min-width: 100%;">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Ajouter Action Billionary</h3>
+                                <form id="addAction" action="/users/addAction" method="post">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <label for="name" required class="input__label">Nom</label>
+                                            <input type="text" class="form-control input-style" id="name" name="name">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="nameAbrege" required class="input__label">Nom Abregé</label>
+                                            <input type="text" class="form-control input-style" id="nameAbrege" name="nameAbrege">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="min" required class="input__label">Min</label>
+                                            <input type="text" class="form-control input-style" id="min" name="min">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="max" required class="input__label">Max</label>
+                                            <input type="text" class="form-control input-style" id="max" name="max">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="percentage" required class="input__label">Percentage</label>
+                                            <input type="text" class="form-control input-style" id="percentage" name="percentage">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="timesInDay" required class="input__label">TimesInDay</label>
+                                            <input type="text" class="form-control input-style" id="timesInDay" name="timesInDay">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="percentageForFirstVersement" required class="input__label">PercentageForFirstVersement</label>
+                                            <input type="text" class="form-control input-style" id="percentageForFirstVersement" name="percentageForFirstVersement">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <button type="submit" class="btn btn-primary btn-style mt-4">Enregistrer</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="cards__heading">
+                                <h3>Toutes les Actions <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="container">
+
+                                    <!--BLOCK ROW START-->
+                                    <div class="row">
+                                        <div id="generic_price_table">
+                                            <section>
+
+                                                <div class="container">
+
+                                                    <!--BLOCK ROW START-->
+                                                    <div class="row">
+                                                        <% billionaryAction.forEach(function(value, index){ %>
+                                                            <div class="col-md-4">
+
+                                                                <!--PRICE CONTENT START-->
+                                                                <div class="generic_content clearfix">
+
+                                                                    <!--HEAD PRICE DETAIL START-->
+                                                                    <div class="generic_head_price clearfix">
+
+                                                                        <!--HEAD CONTENT START-->
+                                                                        <div class="generic_head_content clearfix">
+
+                                                                            <!--HEAD START-->
+                                                                            <div class="head_bg"></div>
+                                                                            <div class="head">
+                                                                                <span><%= value.name %></span>
+                                                                            </div>
+                                                                            <!--//HEAD END-->
+
+                                                                        </div>
+                                                                        <!--//HEAD CONTENT END-->
+
+                                                                        <!--PRICE START-->
+                                                                        <div class="generic_price_tag clearfix">
+                                                                            <span class="price">
+                                                                        <span class="currency"><%= value.percentage * 100 %></span>
+                                                                            <span class="month">%</span>
+                                                                            </span>
+                                                                        </div>
+                                                                        <!--//PRICE END-->
+
+                                                                    </div>
+                                                                    <!--//HEAD PRICE DETAIL END-->
+
+                                                                    <!--FEATURE LIST START-->
+                                                                    <div class="generic_feature_list">
+                                                                        <ul>
+                                                                            <li><span>Min</span>
+                                                                                <%= value.min %>
+                                                                            </li>
+                                                                            <li><span>Max</span>
+                                                                                <%= value.max %>
+                                                                            </li>
+                                                                            <li><span>Days</span>
+                                                                                <%= value.timesInDay %>
+                                                                            </li>
+                                                                            <li><span>First Versement Percentage</span>
+                                                                                <%= value.percentageForFirstVersement * 100 %> %
+                                                                            </li>
+                                                                            <li><span>Percentage Quotidien</span> 1 %
+                                                                            </li>
+                                                                            <li><span>Abre</span>
+                                                                                <%= value.nameAbrege %>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <!--//FEATURE LIST END-->
+
+                                                                    <!--BUTTON START-->
+                                                                    <div class="generic_price_btn clearfix">
+                                                                        <a class="" href="">Edit</a>
+                                                                    </div>
+                                                                    <!--//BUTTON END-->
+
+                                                                </div>
+                                                                <!--//PRICE CONTENT END-->
+
+                                                            </div>
+                                                            <% }); %>
+
+
+                                                    </div>
+                                                    <!--//BLOCK ROW END-->
+
+                                                </div>
+                                            </section>
+
+                                        </div>
+                                    </div>
+                                    <!--//BLOCK ROW END-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                $('body').on('click', '.renewLimit', function(e) {
+                    e.preventDefault();
+                    const limit = $(this).parent().prev().find(".limit").val();
+                    const nextGenForfaitMontant = $(this).parent().prev().find(".nextGenForfaitMontant").val();
+                    const id = $(this).parent().prev().find(".ident").val();
+                    const focus = $(this);
+
+                    const url = '/users/renewLimit',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            id,
+                            limit,
+                            nextGenForfaitMontant
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: datas.result
+                                });
+                                focus.parent().hide()
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+        </body>
+
+        </html>

@@ -1,0 +1,158 @@
+<%- include('partials/_horizontal-navbar'); %>
+
+    <% if (user.nextGenForfait === 0) { %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+
+                <div class="content-wrapper">
+
+                    <div class="container-fluid z-depth-1 my-5 pt-5 pb-3 px-3">
+
+                        <!-- Section -->
+                        <section>
+
+
+
+
+                            <div class="row align-items-center">
+
+                                <div class="col-lg-6 mb-4">
+                                    <div class="view z-depth-1-half rounded">
+                                        <img src="../Inter/admin/images/denied.svg" alt="logo" class="width-100 m-0" />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 mb-4">
+
+                                    <p>You are in Old System. Please <a href="/users/finishContrat">Click this for to Breack Contrat and to enter in New System</a></p>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+                        <!-- Section -->
+
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <% } else { %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+
+                    <div class="content-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-custom">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Choice Package</span></li>
+                            </ol>
+                        </nav>
+
+                        <div class="row">
+
+                            <section class="pricing-section">
+                                <div class='pricing pricing-palden'>
+                                    <% infos.forEach(function(value, index){ %>
+                                        <% if (index > 0) { %>
+                                            <% if (index === 2 || index === 5 || index === 8 ) { %>
+                                                <div class='pricing-item pricing__item--featured'>
+                                                    <div class='pricing-deco' style="background-color: <%= value.color %>">
+                                                        <svg class='pricing-deco-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'
+                                                            y='0px'>
+                                                        <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729&#x000A;	c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                                                        <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729&#x000A;	c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                                                        <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716&#x000A;	H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                                                        <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428&#x000A;	c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                                                        </svg>
+                                                        <div class='pricing-price'><span class='pricing-currency'>$</span>
+                                                            <%= user.nextGenForfait === 1 ? value.nextGenForfaitMontant : value.montant %>
+                                                                <span class='pricing-period'>investment</span> <br>
+                                                                <h3 class='pricing-title'>+</h3>
+                                                        </div>
+                                                        <h3 class='pricing-title'><span class='pricing-currency'>$</span>
+                                                            <%= value.inscription %> membership fees</h3>
+                                                    </div>
+                                                    <ul class='pricing-feature-list'>
+
+                                                        <li class='pricing-feature'>
+                                                            <%= value.limit %> new investment possible today</li>
+                                                    </ul>
+                                                    <button class='pricing-action' style="background-color: <%= value.color %>" data-toggle="modal" data-target="#basicExampleModal<%= value.id %>"><%= value.name %></button>
+                                                </div>
+                                                <% } else { %>
+                                                    <div class='pricing-item'>
+                                                        <div class='pricing-deco' style="background-color: <%= value.color %>">
+                                                            <svg class='pricing-deco-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'
+                                                                y='0px'>
+                                                                <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729&#x000A;	c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                                                                <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729&#x000A;	c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                                                                <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716&#x000A;	H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                                                                <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428&#x000A;	c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                                                            </svg>
+                                                            <div class='pricing-price'><span class='pricing-currency'>$</span>
+                                                                <%= user.nextGenForfait === 1 ? value.nextGenForfaitMontant : value.montant %>
+                                                                    <span class='pricing-period'>investment</span> <br>
+                                                                    <h3 class='pricing-title'>+</h3>
+                                                            </div>
+                                                            <h3 class='pricing-title'><span class='pricing-currency'>$</span>
+                                                                <%= value.inscription %> membership fees</h3>
+                                                        </div>
+                                                        <ul class='pricing-feature-list'>
+
+                                                            <li class='pricing-feature'>
+                                                                <%= value.limit %> new investment possible today</li>
+                                                        </ul>
+                                                        <button class='pricing-action' style="background-color: <%= value.color %>" data-toggle="modal" data-target="#basicExampleModal<%= value.id %>"><%= value.name %></button>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="modal fade" id="basicExampleModal<%= value.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Package
+                                                                            <%= value.name %>
+                                                                        </h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>You want to subscribe to a $
+                                                                            <%= user.nextGenForfait === 1 ? value.nextGenForfaitMontant : value.montant %> share this will allow you to receive at least
+                                                                                <% const rsii =  user.nextGenForfait === 1 ? value.nextGenForfaitMontant * 0.33 : value.montant * 0.33 %>
+                                                                                    <%= rsii.toFixed(2) %> $ each week until the end of your contract <br> This will give you
+                                                                                        <%= user.nextGenForfait === 1 ? value.nextGenForfaitMontant : value.montant %> $ +
+                                                                                            <%= value.inscription %> $ as the total to be settled .</p>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn" data-dismiss="modal">Back</button>
+                                                                        <% if ( user.isActive) { %>
+                                                                            <button type="button" data-ref="<%= value.id %>" class="btn btn-dark confirmerInscription">I agree</button>
+                                                                            <% }  else { %>
+                                                                                <button type="button" data-ref="<%= value.id %>" class="btn btn-dark confirmerLockedInscription">I agree</button>
+                                                                                <% } %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                            <% }); %>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- main-panel ends -->
+            </div>
+            <% } %>
+                <%- include('partials/_footer'); %>
+                    </body>
+
+                    </html>

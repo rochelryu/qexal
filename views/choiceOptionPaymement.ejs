@@ -1,0 +1,583 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="exchange main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="container bill">
+                            <div class="card" id="myBill" data-children=".card-footer .collapse">
+                                <div class="card-body">
+                                    <h3>TYPE :
+                                        <% if (infos.lastExchange.isSell === 1) { %> SELL
+                                            <% } else { %> BUY
+                                                <% } %>
+                                                    <%= infos.lastExchange.currencies.name%>
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item"><strong>You will receive:</strong>
+                                                    <p class="large">$
+                                                        <%= infos.lastExchange.montant_usd.toFixed(2) %>
+                                                    </p>
+                                                </li>
+                                                <li class="list-inline-item"><strong>Date of request:</strong>
+                                                    <script>
+                                                        formatDate("<%= infos.lastExchange.create_at %>")
+                                                    </script>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <% if (infos.lastExchange.isSell === 1) { %>
+
+                                                <div class="container-fluid pb-3">
+                                                    <% if (user.currencies === 'XOF') { %>
+                                                        <div class="row">
+
+                                                            <div class="intentMobileMoney p-1">
+                                                                <img src="../Inter/admin/images/Orange-money.jpeg" alt="money orange" class="mobile-money-sell" data-type="1" />
+                                                            </div>
+                                                            <div class="intentMobileMoney p-1">
+                                                                <img src="../Inter/admin/images/momo.jpg" alt="money mtn" class="mobile-money-sell" data-type="2" />
+                                                            </div>
+                                                            <div class="intentMobileMoney p-1">
+                                                                <img src="../Inter/admin/images/moov_mooney.jpeg" alt="money moov" class="mobile-money-sell" data-type="3" />
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                            <div class="row">
+
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/paypalLogo.png" alt="Paypal" class="mobile-money-sell" data-type="0" />
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/perfectmoneySell.png" alt="Perfect money" class="mobile-money-sell" data-type="4" />
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/wave_payement.jpeg" alt="Wave" class="mobile-money-sell" data-type="5" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="action p-1">
+                                                                <form id="exchangePayementMobileSell">
+                                                                    <ol>
+                                                                        <li>
+                                                                            <p>Sent <strong><%= (infos.lastExchange.montant_eth * 1.02).toFixed(5) %> <%= infos.lastExchange.currencies.symbol%></strong> to the following number : <strong id="numberDestinate"><%= infos.lastExchange.currencies.addressDestination%></strong></p>
+                                                                        </li>
+                                                                        <li>
+                                                                            <p>Enter txHash of transaction (only transaction done and not waiting) <br></p>
+                                                                            <input type="hidden" id='typeSell'>
+                                                                            <input type="text" id="refExchangeSell" placeholder="..........." class="form-control" required />
+                                                                        </li>
+                                                                        <li>
+                                                                            <p id="messageInfo"></p>
+                                                                            <input type="text" id="supplement" placeholder="<%= user.prefix %> xxxxxxxxxx" class="form-control" required value="<%= user.prefix %> <%= user.numberClient %>" />
+                                                                            <button class="btn btn-rounded submit-btn" type="submit" id="validateExchangeSell">Validate</button>
+                                                                        </li>
+                                                                    </ol>
+                                                                </form>
+                                                            </div>
+                                                </div>
+
+                                                <% } else { %>
+                                                    <% if (user.currencies === 'XOF') { %>
+                                                        <div class="container-fluid pb-3">
+                                                            <div class="row">
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/Orange-money.jpeg" alt="money orange" class="mobile-money" data-type="1" />
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/momo.jpg" alt="money mtn" class="mobile-money" data-type="2" />
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/moov_mooney.jpeg" alt="money moov" class="mobile-money" data-type="3" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="intentMobileMoney p-1">
+                                                                    <img src="../Inter/admin/images/wave_payement.jpeg" alt="money wave" class="mobile-money" data-type="5" />
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                </div>
+                                                                <div class="intentMobileMoney p-1">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="action p-1">
+                                                                <form id="exchangePayementMobile">
+                                                                    <ol>
+                                                                        <li>
+                                                                            <p>Sent <strong><%= infos.lastExchange.montantCurrencie %> <%= infos.lastExchange.currencie %></strong> to the following number : <strong id="numberDestinate"></strong></p>
+                                                                        </li>
+                                                                        <li>
+                                                                            <p>Enter the reference code of the transaction performed <br></p>
+                                                                            <input type="hidden" id='type'>
+                                                                            <input type="text" id="refExchange" placeholder="Reference code received by sms by your telephone operator" class="form-control" required />
+                                                                        </li>
+                                                                        <li>
+                                                                            <% if (infos.lastExchange.currencies.id === 3) { %>
+                                                                                <div class="d-sm-flex flex-row">
+                                                                                    <input type="radio" name="sendTrovaAccount" value="1" id="sendTrovaAccount">
+                                                                                    <label for="sendTrovaAccount"> Send directly to my Trova account</label>
+                                                                                </div>
+                                                                                <br>
+                                                                                <div class="d-sm-flex flex-row">
+                                                                                    <input type="radio" name="sendTrovaAccount" value="2" id="sendTrovaAccountSecond">
+                                                                                    <label for="sendTrovaAccount"> Send to my cryptocurrency wallet</label>
+                                                                                </div>
+                                                                                <div class="form-group" id='selectOtherAccount'>
+                                                                                    <p>Enter your Crypto address to receive<br></p>
+                                                                                    <input type="text" id="adress" placeholder="..........." class="form-control" required value="<%= user.addressCrypto %>" />
+                                                                                </div>
+                                                                                <% } else { %>
+
+                                                                                    <div class="d-sm-flex flex-row">
+                                                                                        <input type="radio" name="sendTrovaAccount" value="2" id="sendTrovaAccountSecond" checked>
+                                                                                        <label for="sendTrovaAccount"> Send to my cryptocurrency wallet</label>
+                                                                                    </div>
+                                                                                    <div class="form-group forceShow" id='selectOtherAccount'>
+                                                                                        <p>Enter your Crypto address to receive<br></p>
+                                                                                        <input type="text" id="adress" placeholder="..........." class="form-control" required value="<%= user.addressCrypto %>" />
+                                                                                    </div>
+                                                                                    <% } %>
+                                                                                        <button class="btn btn-rounded submit-btn" type="submit" id="validateExchange">Validate</button>
+
+                                                                        </li>
+                                                                    </ol>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                            <div id="paypal-button-container"></div>
+
+                                                            <div class="container-fluid">
+
+                                                                <div class="row">
+                                                                    <button type="button" class="btn perfectmoney"></button>
+
+
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="history">
+                                        <p>Payment is
+                                            <% if (infos.lastExchange.etatid === 1) { %>
+                                                <strong>Waiting</strong>
+                                                <% } else if (infos.lastExchange.etatid === 2) { %>
+                                                    <strong>Waiting</strong>
+                                                    <% } else if (infos.lastExchange.etatid === 3) { %>
+                                                        <strong class="text-success">Done</strong>
+                                                        <% } else { %>
+                                                            <strong class="text-danger">Error</strong>
+                                                            <% } %>
+                                                                <br /> You'll have to
+                                                                <% if (infos.lastExchange.isSell === 1) { %>receive
+                                                                    <% } else { %> pay
+                                                                        <% } %> <strong><%= infos.lastExchange.montantCurrencie.toFixed(2) %> <%= infos.lastExchange.currencie %></strong></p>
+                                        <a href="/exchange/removeLastExchange" class="btn btn-outline-danger btn-rounded"><i class="icon-arrow-left"></i> To cancel</a>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" style="display: none;" class="text-small forgot-password text-black" data-toggle="modal" id="openModalAddressEth" data-target="#basicExampleModal"></a>
+    </div>
+    </div>
+    <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Final Step (don't close this windows)</h5>
+                    <button type="button" id="closeWindows" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="recoverySection">
+                        <label class="addressEth">Enter Your Address ETH</label>
+                        <div class="input-group">
+                            <input type="text" id="addressEth" class="form-control" placeholder="0x....." value="<%= user.addressCrypto %>">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="hide wait position-relative">
+                        <div class="dot-opacity-loader">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary submit-btn btn-block addAdress">Validate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <form action="https://perfectmoney.com/api/step1.asp" id="payementperfect" method="POST">
+        <input type="hidden" name="PAYEE_ACCOUNT" value="U29575885">
+        <input type="hidden" name="PAYEE_NAME" value="QEXAL">
+        <input type="text" name="PAYMENT_ID" value="">
+        <BR>
+        <input type="text" id="PAYMENT_AMOUNT" name="PAYMENT_AMOUNT" value="">
+        <BR>
+        <input type="hidden" name="PAYMENT_UNITS" value="USD">
+        <input type="hidden" name="STATUS_URL" value="">
+        <input type="hidden" name="PAYMENT_URL" value="https://trova.vip/exchange/perfectmoneySucces">
+        <input type="hidden" name="PAYMENT_URL_METHOD" value="LINK">
+        <input type="hidden" name="NOPAYMENT_URL" value="https://trova.vip/exchange/choiceOptionPaymement">
+        <input type="hidden" name="NOPAYMENT_URL_METHOD" value="LINK">
+        <input type="hidden" name="SUGGESTED_MEMO" value="">
+        <input type="hidden" name="BAGGAGE_FIELDS" value="">
+        <input type="hidden" name="AVAILABLE_PAYMENT_METHODS" value="all">
+        <input type="submit" name="PAYMENT_METHOD" value="Pay Now!">
+    </form>
+    <%- include('partials/_footer'); %>
+        <script src="https://www.paypal.com/sdk/js?client-id=AfaJhchxa9S-TLRYfa6Us-JOo5TXNxl_ufTw_b1b5qxj3Te1wY2SPDW7YE2eMmq8ySnUmmbSXurFXGsA">
+            // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+        </script>
+        <script src="../Inter/admin/js/select2.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('input:radio[name="sendTrovaAccount"]').change(
+                    function() {
+                        if ($(this).is(':checked') && $(this).val() == '2') {
+                            $('#selectOtherAccount').fadeIn(1500);
+                        } else {
+                            $('#selectOtherAccount').hide();
+                        }
+                    });
+                if ($('#paypal-button-container').length) {
+                    paypal.Buttons({
+                        createOrder: function(data, actions) {
+                            // This function sets up the details of the transaction, including the amount and line item details.
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: '<%= infos.paypalPayement %>'
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            // This function captures the funds from the transaction.
+                            return actions.order.capture().then(function(details) {
+                                // This function shows a transaction success message to your buyer.
+                                // alert('Transaction completed by ' + .payer.name.given_name);
+                                console.log(details.id);
+                                $.notify({
+                                    position: 3,
+                                    type: 'info',
+                                    duration: 7000,
+                                    message: 'QEXAL verifies the transaction at PAYPAL level and that database. Thank you for your patience'
+                                });
+                                const url = '/exchange/paypalSuccess',
+                                    type = 'post';
+                                $.ajax({
+                                    url,
+                                    type,
+                                    data: {
+                                        orderId: details.id
+                                    },
+                                    success: function(datas) {
+                                        if (datas.etat) {
+
+                                            $('#openModalAddressEth').click();
+                                        } else {
+                                            $.notify({
+                                                position: 3,
+                                                type: 'error',
+                                                duration: 4000,
+                                                message: datas.error,
+                                            });
+
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }).render('#paypal-button-container');
+                }
+
+
+                $('.addAdress').click(function(e) {
+                    e.preventDefault();
+                    $(this).hide();
+
+                    const address = $('#addressEth').val();
+                    if (address.length > 20) {
+                        const url = '/exchange/addAdress',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                address
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $('#closeWindows').click();
+                                    $.notify({
+                                        position: 3,
+                                        type: 'info',
+                                        duration: 5000,
+                                        message: 'Great, our Team is moving on to the verification phase. please wait a few minutes.',
+
+                                    });
+                                    window.setTimeout(function() {
+                                        location.href = location.origin + '/exchange';
+                                    }, 5000);
+                                } else {
+                                    $(this).show();
+                                    $('#closeWindows').click();
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error,
+                                    });
+
+                                }
+                            }
+                        });
+
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Enter validate information please',
+                        });
+                    }
+                });
+
+
+
+                $('#validateExchange').click(function(e) {
+                    e.preventDefault();
+                    const typeInfo = $('#type').val();
+                    const ref = $('#refExchange').val();
+                    const address = $('#adress').val();
+                    const typeAccount = $('#sendTrovaAccountSecond').is(':checked') ? 2 : 1;
+                    if (parseInt(typeInfo, 10).toString() !== 'NaN' && ref.length > 4) {
+                        const url = '/exchange/validateMobilePayement',
+                            type = 'post';
+                        $.notify({
+                            position: 3,
+                            type: 'info',
+                            duration: 5000,
+                            message: 'In Wait. Please Wait....',
+
+                        });
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                type: typeInfo,
+                                ref,
+                                address,
+                                typeAccount
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: 'Great, our Team is moving on to the verification phase. please wait a few minutes.',
+
+                                    });
+                                    window.setTimeout(function() {
+
+                                        location.href = location.origin + '/exchange';
+                                    }, 5000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error,
+                                    });
+
+                                }
+                            }
+                        });
+
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Enter validate information please',
+                        });
+                    }
+                });
+
+                $('#validateExchangeSell').click(function(e) {
+                    e.preventDefault();
+                    const typeInfo = $('#typeSell').val();
+                    const ref = $('#refExchangeSell').val();
+                    const address = $('#supplement').val();
+                    if (parseInt(typeInfo, 10).toString() !== 'NaN' && ref.length > 20 && address.length > 6) {
+                        const url = '/exchange/validateMobilePayementSell',
+                            type = 'post';
+                        $.notify({
+                            position: 3,
+                            type: 'info',
+                            duration: 5000,
+                            message: 'In Wait. Please Wait....',
+
+                        });
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                type: typeInfo,
+                                ref,
+                                address
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: 'Great, our Team is moving on to the verification phase. please wait a few minutes.',
+
+                                    });
+                                    window.setTimeout(function() {
+
+                                        location.href = location.origin + '/exchange';
+                                    }, 5000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error,
+                                    });
+
+                                }
+                            }
+                        });
+
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 4000,
+                            message: 'Enter validate information please',
+                        });
+                    }
+                });
+
+                $('.perfectmoney').on('click', function() {
+                    const url = '/exchange/payementByPM',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {},
+                        success: function(datas) {
+                            if (datas.etat) {
+                                const amount = datas.result * 1.05;
+                                $('#PAYMENT_AMOUNT').val(amount.toFixed(2));
+                                $('#payementperfect').submit();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error ? datas.error : 'Error please try later'
+                                });
+
+                            }
+                        }
+                    });
+
+                });
+
+                $('.mobile-money').on('click', function() {
+                    const service = $(this).attr('data-type');
+
+                    $('.mobile-money').removeClass('activate');
+                    $(this).addClass('activate');
+                    const url = '/users/choiceTypeMobilePayement',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        data: {
+                            service
+                        },
+                        success: function(datas) {
+                            if (datas.etat) {
+                                $('#numberDestinate').text(datas.result.content);
+                                $('#type').val(datas.result.type.toString());
+                                $('.action').show();
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error,
+                                });
+
+                            }
+                        }
+                    });
+
+                });
+
+                $('.mobile-money-sell').on('click', function() {
+                    const service = $(this).attr('data-type');
+
+                    $('.mobile-money-sell').removeClass('activate');
+                    $(this).addClass('activate');
+
+                    $('#typeSell').val(service);
+                    if (parseInt(service) >= 1 && parseInt(service) <= 3) {
+                        $('#messageInfo').text("Enter your Number to receive");
+                        $('#supplement').val('');
+                        $('#supplement').attr("placeholder", "<%= user.prefix %> xxxxxxxxxx")
+                    } else if (parseInt(service) === 0) {
+                        $('#messageInfo').text("Enter your link of paypal account");
+                        $('#supplement').val('');
+                        $('#supplement').attr("placeholder", "https://www.paypal.me/johndoeexemple");
+                    } else if (parseInt(service) === 4) {
+                        $('#messageInfo').text("Enter your Number of account USD to receive");
+                        $('#supplement').val('');
+                        $('#supplement').attr("placeholder", "U......");
+                    } else if (parseInt(service) === 5) {
+                        $('#messageInfo').text("Enter your Number to receive");
+                        $('#supplement').val('');
+                        $('#supplement').attr("placeholder", "<%= user.prefix %> xxxxxxxxxx")
+                    }
+                    $('.action').show();
+
+
+                });
+            })
+        </script>
+        </body>
+
+        </html>

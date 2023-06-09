@@ -1,0 +1,292 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <style>
+        .slide-container {
+            margin: auto;
+            width: 100vw;
+            text-align: center;
+        }
+        
+        .wrapper {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+        
+        .wrapper:focus {
+            outline: 0;
+        }
+        
+        .clash-card {
+            background: white;
+            width: 300px;
+            display: inline-block;
+            margin: auto;
+            border-radius: 19px;
+            position: relative;
+            text-align: center;
+            box-shadow: -1px 15px 30px -12px black;
+        }
+        
+        .clash-card__image {
+            position: relative;
+            height: 200px;
+            margin-bottom: 35px;
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+        
+        .clash-card__image--barbarian {
+            background: rgb(2, 0, 36);
+            background: linear-gradient(61deg, rgba(2, 0, 36, 1) 0%, rgba(224, 153, 229, 1) 35%, rgba(253, 145, 164, 1) 100%);
+        }
+        
+        .clash-card__image--barbarian img {
+            width: 400px;
+            position: absolute;
+            top: -94px;
+            left: -70px;
+        }
+        
+        .clash-card__image--archer {
+            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/archer-bg.jpg");
+        }
+        
+        .clash-card__image--archer img {
+            width: 400px;
+            position: absolute;
+            top: -34px;
+            left: -37px;
+        }
+        
+        .clash-card__image--giant {
+            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/giant-bg.jpg");
+        }
+        
+        .clash-card__image--giant img {
+            width: 340px;
+            position: absolute;
+            top: -30px;
+            left: -25px;
+        }
+        
+        .clash-card__image--goblin {
+            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/goblin-bg.jpg");
+        }
+        
+        .clash-card__image--goblin img {
+            width: 370px;
+            position: absolute;
+            top: -21px;
+            left: -37px;
+        }
+        
+        .clash-card__image--wizard {
+            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/wizard-bg.jpg");
+        }
+        
+        .clash-card__image--wizard img {
+            width: 345px;
+            position: absolute;
+            top: -28px;
+            left: -10px;
+        }
+        
+        .clash-card__level {
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .clash-card__level--barbarian {
+            color: #EC9B3B;
+        }
+        
+        .clash-card__level--archer {
+            color: #EE5487;
+        }
+        
+        .clash-card__level--giant {
+            color: #F6901A;
+        }
+        
+        .clash-card__level--goblin {
+            color: #82BB30;
+        }
+        
+        .clash-card__level--wizard {
+            color: #4FACFF;
+        }
+        
+        .clash-card__unit-name {
+            font-size: 26px;
+            color: black;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .clash-card__unit-description {
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .clash-card__unit-stats--barbarian {
+            background: #EC9B3B;
+        }
+        
+        .clash-card__unit-stats--archer {
+            background: #EE5487;
+        }
+        
+        .clash-card__unit-stats--giant {
+            background: #F6901A;
+        }
+        
+        .clash-card__unit-stats--goblin {
+            background: #82BB30;
+        }
+        
+        .clash-card__unit-stats--wizard {
+            background: #4FACFF;
+        }
+        
+        .clash-card__unit-stats {
+            color: white;
+            font-weight: 700;
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+        
+        .clash-card__unit-stats .one-third {
+            width: 100%;
+            float: left;
+            padding: 20px 15px;
+            color: white;
+        }
+        
+        .clash-card__unit-stats sup {
+            position: absolute;
+            bottom: 4px;
+            font-size: 45%;
+            margin-left: 2px;
+        }
+        
+        .clash-card__unit-stats .stat {
+            position: relative;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .clash-card__unit-stats .stat-value {
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 12px;
+        }
+        
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+        
+        .slick-prev {
+            left: 100px;
+            z-index: 999;
+        }
+        
+        .slick-next {
+            right: 100px;
+            z-index: 999;
+        }
+    </style>
+    <div class="container-fluid page-body-wrapper game-page" style="padding-top: 80px;">
+        <div class="slide-container">
+
+            <div class="wrapper">
+                <div class="clash-card barbarian">
+                    <div class="clash-card__image clash-card__image--barbarian">
+                        <img src="../Inter/admin/images/loto.png" alt="barbarian" />
+                    </div>
+                    <div class="clash-card__level clash-card__level--barbarian">Close</div>
+                    <div class="clash-card__unit-name">Trova Loto</div>
+                    <div class="clash-card__unit-description">
+                        Each ball costs $ 5 a member can take up to a maximum of five balls. For each ball drawn at random the member wins $ 20.
+                    </div>
+
+                    <div class="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
+                        <a href="/other-game/gameLoto">
+                            <div class="one-third">
+                                <!-- <div class="stat">20<sup>S</sup></div> -->
+                                <div class="stat-value">Enter</div>
+                            </div>
+                        </a>
+
+                    </div>
+
+                </div>
+                <!-- end clash-card barbarian-->
+            </div>
+            <!-- end wrapper -->
+
+            <div class="wrapper">
+                <div class="clash-card archer">
+                    <div class="clash-card__image clash-card__image--archer">
+                        <img src="../Inter/admin/images/roulette.png" alt="archer" />
+                    </div>
+                    <div class="clash-card__level clash-card__level--archer">Close</div>
+                    <div class="clash-card__unit-name">Trova Wheel</div>
+                    <div class="clash-card__unit-description">
+                        It consists of placing a bet and rolling the wheel in order to multiply the winnings (the winnings on the wheel are x0, x1, x2, x3, x4, x5).
+                    </div>
+
+                    <div class="clash-card__unit-stats clash-card__unit-stats--archer clearfix">
+                        <div class="one-third">
+                            <!-- <div class="stat">20<sup>S</sup></div> -->
+                            <div class="stat-value">Enter</div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <!-- end clash-card archer-->
+            </div>
+            <!-- end wrapper -->
+
+        </div>
+        <!-- end container -->
+    </div>
+    </div>
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                (function() {
+
+                    var slideContainer = $('.slide-container');
+
+                    // slideContainer.click();
+
+                    // $('.clash-card__image img').hide();
+                    // $('.slick-active').find('.clash-card img').fadeIn(200);
+
+                    // // On before slide change
+                    // slideContainer.on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+                    //     $('.slick-active').find('.clash-card img').fadeOut(1000);
+                    // });
+
+                    // // On after slide change
+                    // slideContainer.on('afterChange', function(event, slick, currentSlide) {
+                    //     $('.slick-active').find('.clash-card img').fadeIn(200);
+                    // });
+
+                })();
+            })
+        </script>
+        </body>
+
+        </html>

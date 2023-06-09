@@ -1,0 +1,361 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card card-statistics">
+                            <div class="card-body p-0">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="d-flex justify-content-between border-right card-statistics-item">
+                                            <div>
+                                                <h1>
+                                                    <%= infos.countAllUser %>
+                                                </h1>
+                                                <p class="text-muted mb-0">Total users</p>
+                                            </div>
+                                            <i class="icon-pin text-primary icon-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="d-flex justify-content-between border-right card-statistics-item">
+                                            <div>
+                                                <h1>
+                                                    <%= infos.countUserActif %>
+                                                </h1>
+                                                <p class="text-muted mb-0">Total active users</p>
+                                            </div>
+                                            <i class="icon-layers text-primary icon-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="d-flex justify-content-between border-right card-statistics-item">
+                                            <div>
+                                                <h1>
+                                                    <%= infos.newInscrit %>
+                                                </h1>
+                                                <p class="text-muted mb-0">New users today</p>
+                                            </div>
+                                            <i class="icon-people text-primary icon-lg"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="d-flex justify-content-between border-right card-statistics-item">
+                                            <div>
+                                                <h1>
+                                                    <%= infos.countDemandeDone %>
+                                                </h1>
+                                                <p class="text-muted mb-0">Total requests paid</p>
+                                            </div>
+                                            <i class="icon-pin text-primary icon-lg"></i>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Global occupation</h4>
+                                <div class="google-chart-container">
+                                    <div id="regions-chart" class="google-charts"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">My Invitation Link</h4>
+                                <div class="flexbox flex-column position-relative">
+                                    <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                    <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
+                                </div>
+                                <div class="flexbox flex-column position-relative p-t-5">
+                                    <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">My request list</h4>
+                                <div class="">
+                                    <table id="table_id" class="table table-responsive table-hover display">
+                                        <thead class="black white-text shadow-lg">
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Name Package</th>
+                                                <th>State</th>
+                                                <th>Purpose</th>
+                                                <th>Date of request</th>
+                                                <th>Date of response</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% infos.mesDemandes.forEach(function(value){ %>
+                                                <tr>
+                                                    <td>
+                                                        <%= value.id %>
+                                                    </td>
+                                                    <td>
+                                                        <%= value.forfaits.name %>
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.etatid === 1 ) { %>
+                                                            <span>Pending Request</span>
+                                                            <% }  else if (value.etatid === 2) { %>
+                                                                <span>Waiting for confirmation</span>
+                                                                <% }  else { %>
+                                                                    <span>Valid</span>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <% if ( value.finality === 0 ) { %>
+                                                            <p class="color-grey">No action</p>
+                                                            <% }  else if (value.finality === 1) { %>
+                                                                <p class="color-grey">In the list to receive</p>
+                                                                <% }  else { %>
+                                                                    <p class="color-grey">Paid Request</p>
+                                                                    <% } %>
+
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            formatDate("<%= value.create_at %>")
+                                                        </script>
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            formatDateToPay("<%= value.create_at %>")
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small>Your subscription level</small>
+                                    <small><%= infos.percentage.toFixed(2) %> %</small>
+                                </div>
+                                <div class="progress progress-sm mt-2">
+                                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= infos.percentage.toFixed(2) %>%" aria-valuenow="<%= infos.percentage.toFixed(2) %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <br>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h4 class="card-title">Dictatiels</h4>
+                                            <div class="owl-carousel owl-theme full-width">
+                                                <div class="item">
+                                                    <div class="card text-white">
+                                                        <img class="card-img " src="../Inter/admin/images/sign in.png" alt="Card image">
+                                                        <div class="card-img-overlay d-flex">
+                                                            <div class="mt-auto text-center w-100">
+                                                                <h6 class="card-text mb-4 font-weight-normal" data-src="https://www.youtube.com/embed/nsbcNMv129w"><a class="btn-floating play btn-primary btn-lg" data-toggle="modal" data-target="#modal1"><i class="icon-control-play text-white"></i></a></h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="card text-white">
+                                                        <img class="card-img " src="../Inter/admin/images/packages.png" alt="Card image">
+                                                        <div class="card-img-overlay d-flex">
+                                                            <div class="mt-auto text-center w-100">
+                                                                <h6 class="card-text mb-4 font-weight-normal" data-src="https://www.youtube.com/embed/kqjquyhkQ2M"><a class="btn-floating play btn-primary btn-lg" data-toggle="modal" data-target="#modal1"><i class="icon-control-play text-white"></i></a></h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12">
+                                            <h4 class="card-title">Requests paid yesterday in Trova Account</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Rank</th>
+                                                        <th>Packages</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% infos.allDemandeYesterday.forEach(function(value){ %>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="disc bg-secondary"></div>
+                                                            </td>
+                                                            <td>
+                                                                <h4 class="text-primary font-weight-normal">
+                                                                    <%= value.id %>
+                                                                </h4>
+                                                            </td>
+                                                            <td>
+                                                                <%= value.forfaits.name %>
+                                                            </td>
+
+                                                        </tr>
+                                                        <% }); %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Requests paid on Last Week in Withdrawal</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <th>Username</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% infos.oldPayementTraitement.forEach(function(value){ %>
+                                            <tr>
+
+                                                <td>
+                                                    <h4 class="text-primary font-weight-normal">
+                                                        $
+                                                        <%= value.monatnt %>
+                                                    </h4>
+                                                </td>
+                                                <td>
+                                                    <%= value.users.pseudo %>
+                                                </td>
+
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                        <iframe id="player" class="embed-responsive-item" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../Inter/admin/js/owl-carousel.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "info": "Showing page _PAGE_ of _PAGES_",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+                // Region Charts Starts
+
+                google.charts.load('current', {
+                    'packages': ['geochart'],
+                    // Note: you will need to get a mapsApiKey for your project.
+                    // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+                    'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+                });
+                google.charts.setOnLoadCallback(drawRegionsMap);
+
+                function drawRegionsMap() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Country', 'Users'],
+                        <% infos.dataOfDemographie.forEach(function(value){ %> ["<%= value[0] %>", parseInt(<%= value[1] %>, 10)],
+                        <% }); %>
+                    ]);
+
+                    var options = {
+                        colorAxis: {
+                            colors: ['#76C1FA', '#63CF72', '#F36368', '#FABA66']
+                        }
+                    };
+                    var chart = new google.visualization.GeoChart(document.getElementById('regions-chart'));
+
+                    chart.draw(data, options);
+                }
+
+                $('.play').on('click', function(e) {
+                    e.preventDefault();
+                    const src = $(this).parent().attr("data-src");
+                    $('#modal1 iframe').attr("src", src);
+                    $("#player")[0].src += "?autoplay=1";
+                    $('#player').show();
+                    $('#video-cover').hide();
+                })
+                $('#modal1').on('hidden.bs.modal', function(e) {
+                    $('#modal1 iframe').attr("src", "");
+                });
+
+                $('body').on('click', '.changeLink', function(e) {
+                    e.preventDefault();
+
+                    const url = '/users/changeLink',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        success: function(datas) {
+                            if (datas.etat) {
+                                const link = window.location.origin + "/signup/" + datas.result;
+                                $("#myInput").val(link);
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: "Changed with Success"
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+            })
+        </script>
+        </body>
+
+        </html>

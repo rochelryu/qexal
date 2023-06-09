@@ -1,0 +1,566 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-6 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Investment</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= user.soldeInvestissement %>
+                                            </h2>
+                                            <% if (!user.isActive) { %>
+                                                <div class="d-flex align-items-center ml-md-2 mt-2 mt-md-0">
+                                                    <i class="icon-lock text-muted"></i>
+                                                    <small class=" ml-1 mb-0"><script>formatDate("<%= user.updated_at %>")</script></small>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                        <% if (!user.isActive && user.inscription === 3) { %>
+                                            <small class="text-gray">You must send a person in the system to be unlocked in order to continue.</small>
+                                            <% } %>
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-success px-4 py-2 rounded">
+                                            <i class="icon-layers text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title mb-0">Win</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-inline-block pt-3">
+                                        <div class="d-md-flex">
+                                            <span class='pricing-currency'>$</span>
+                                            <h2 class="mb-0">
+                                                <%= user.soldeGain.toFixed(2) %>
+                                            </h2>
+
+                                        </div>
+                                        <% if (user.soldeGain >= user.soldeInvestissement && isVerifyWeekend ) { %>
+                                            <small class="text-gray">You can withdraw your winning balance if you want to. Just fill in the appropriate fields</small>
+                                            <% } else { %>
+                                                <small class="text-gray">You cannot withdraw your winning balance</small>
+                                                <% } %>
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <div class="bg-warning px-4 py-2 rounded">
+                                            <i class="icon-wallet text-white icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 grid-margin stretch-card">
+
+                        <% if (!user.isActive && user.inscription === 3 ) {%>
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <h4 class="card-title">My Invitation Link</h4>
+                                    <div class="flexbox flex-column position-relative mb-5">
+                                        <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                        <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
+                                    </div>
+                                    <div class="flexbox flex-column position-relative p-t-5">
+                                        <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
+                                    </div>
+                                    <h4 class="card-title">My Email</h4>
+                                    <div class="flexbox flex-column position-relative mb-5">
+                                        <p class="text-primary">
+                                            <%= user.email %>
+                                        </p>
+                                    </div>
+                                    <h4 class="card-title">Choice Option</h4>
+                                    <div class="row mt-4">
+                                        <div class="col-md-12">
+                                            <h5>
+                                                <%= user.soldeGain.toFixed(2) %> $</h5>
+                                            <ul class="nav nav-tabs tab-simple-styled" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="tab-3-1" data-toggle="tab" href="#home-3-1" role="tab" aria-controls="home-3-1" aria-selected="true">Crypto Wallet</a>
+                                                </li>
+
+                                            </ul>
+                                            <div class="tab-content tab-content-basic">
+                                                <div class="tab-pane fade show active" id="home-3-1" role="tabpanel" aria-labelledby="tab-3-1">
+                                                    <% if (isVerifyWeekend ) { %>
+                                                        <% if (user.soldeGain >= user.soldeInvestissement) { %>
+                                                            <form id="forCryptoRetrait">
+                                                                <div class="form-group">
+                                                                    <label for="amount">Amount Payement</label>
+                                                                    <input type="text" required class="form-control" id="amount">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="addressCrypto">Crypto Wallet Address</label>
+                                                                    <input type="text" required class="form-control" id="addressCrypto" placeholder="Address of your Crypto Wallet" value="<%= user.addressCrypto %>">
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                                <button type="reset" class="btn btn-light">Reset</button>
+                                                            </form>
+                                                            <% } else { %>
+                                                                <small class="text-gray">You cannot withdraw your winning balance</small>
+                                                                <% } %>
+                                                                    <% } else { %>
+                                                                        <p class="mb-0">Not available on the working day, please wait for the weekend (Saturday and sunday)</p>
+                                                                        <% } %>
+
+
+                                                </div>
+                                                <div class="tab-pane fade" id="contact-3-3" role="tabpanel" aria-labelledby="tab-3-3">
+                                                    <p class="mb-0">A Money Gram Transaction will be made according to the fields you will fill in above and an email will be sent to you as a notification once the transaction is made.</p>
+                                                    <form id="forMoneyRetrait">
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-6">
+                                                                <label for="name">Your Name</label>
+                                                                <input type="text" required class="form-control" id="name" placeholder="Your Name" value="<%= user.name %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="firstname">Your Firstname</label>
+                                                                <input type="text" required class="form-control" id="firstname" placeholder="Your Firstname" value="<%= user.firstname %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="country">Your Country</label>
+                                                                <input type="text" name="country" required disabled class="form-control" value="<%= user.country %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="numberClient">Your Number : <%= user.prefix %></label>
+                                                                <input type="number" required class="form-control" id="numberClient" placeholder="Your Number" value="<%= parseInt(user.numberClient, 10) %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="address">Your Address</label>
+                                                                <input type="text" required class="form-control" id="address" placeholder="Your Address (Town,Commune,Rue)" value="<%= user.address %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="numberPiece">Number Piece (CNI/PASSPORT/PERMIS) </label>
+                                                                <input type="text" required class="form-control" id="numberPiece" placeholder="Your Number of one piece for the retrait" value="<%= user.numberPiece %>">
+                                                            </div>
+
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                        <button type="reset" class="btn btn-light">Reset</button>
+                                                    </form>
+                                                </div>
+                                                <div class="tab-pane fade" id="contact-3-4" role="tabpanel" aria-labelledby="tab-3-4">
+                                                    <p class="mb-0">A Western Union Transaction will be made according to the fields you will fill in above and an email will be sent to you as a notification once the transaction is done.</p>
+                                                    <form id="forWesternRetrait">
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-6">
+                                                                <label for="nameW">Your Name</label>
+                                                                <input type="text" required class="form-control" id="nameW" placeholder="Your Name" value="<%= user.name %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="firstnameW">Your Firstname</label>
+                                                                <input type="text" required class="form-control" id="firstnameW" placeholder="Your Firstname" value="<%= user.firstname %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="countryW">Your Country</label>
+                                                                <input type="text" name="countryW" required disabled class="form-control" value="<%= user.country %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="numberClientW">Your Number : <%= user.prefix %></label>
+                                                                <input type="number" required class="form-control" id="numberClientW" placeholder="Your Number" value="<%= parseInt(user.numberClient, 10) %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="addressW">Your Address</label>
+                                                                <input type="text" required class="form-control" id="addressW" placeholder="Your Address (Town,Commune,Rue)" value="<%= user.address %>">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label for="numberPieceW">Number Piece (CNI/PASSPORT/PERMIS) </label>
+                                                                <input type="text" required class="form-control" id="numberPieceW" placeholder="Your Number of one piece for the retrait" value="<%= user.numberPiece %>">
+                                                            </div>
+
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                        <button type="reset" class="btn btn-light">Reset</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } else if (user.isActive && user.soldeGain > 0 ) { %>
+                                <div class="card">
+                                    <div class="card-body p-3">
+                                        <h4 class="card-title">My Invitation Link</h4>
+                                        <div class="flexbox flex-column position-relative mb-5">
+                                            <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                            <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
+                                        </div>
+                                        <h4 class="card-title">My Email</h4>
+                                        <div class="flexbox flex-column position-relative mb-5">
+                                            <p class="text-primary">
+                                                <%= user.email %>
+                                            </p>
+                                        </div>
+                                        <h4 class="card-title">Choice Option</h4>
+                                        <div class="row mt-4">
+                                            <div class="col-md-12">
+                                                <h5>
+                                                    <%= user.soldeGain.toFixed(2) %> $</h5>
+                                                <ul class="nav nav-tabs tab-simple-styled" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" id="tab-3-1" data-toggle="tab" href="#home-3-1" role="tab" aria-controls="home-3-1" aria-selected="true">Crypto Wallet</a>
+                                                    </li>
+                                                </ul>
+
+                                                <div class="tab-content tab-content-basic">
+                                                    <div class="tab-pane fade show active" id="home-3-1" role="tabpanel" aria-labelledby="tab-3-1">
+                                                        <% if (isVerifyWeekend ) { %>
+                                                            <% if (user.soldeGain >= user.soldeInvestissement) { %>
+                                                                <form id="forCryptoRetrait">
+                                                                    <div class="form-group">
+                                                                        <label for="amount">Amount Payement</label>
+                                                                        <input type="text" required class="form-control" id="amount">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="addressCrypto">Crypto Wallet Address</label>
+                                                                        <input type="text" required class="form-control" id="addressCrypto" placeholder="Address of your Crypto Wallet" value="<%= user.addressCrypto %>">
+                                                                    </div>
+                                                                    <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                                    <button type="reset" class="btn btn-light">Reset</button>
+                                                                </form>
+                                                                <% } else { %>
+                                                                    <small class="text-gray">You cannot withdraw your winning balance</small>
+                                                                    <% } %>
+                                                                        <% } else { %>
+                                                                            <p class="mb-0">Not available on the working day, please wait for the weekend (Saturday and sunday)</p>
+                                                                            <% } %>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="contact-3-3" role="tabpanel" aria-labelledby="tab-3-3">
+                                                        <p class="mb-0">A Money Gram Transaction will be made according to the fields you will fill in above and an email will be sent to you as a notification once the transaction is made.</p>
+                                                        <form id="forMoneyRetrait">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-6">
+                                                                    <label for="name">Your Name</label>
+                                                                    <input type="text" required class="form-control" id="name" placeholder="Your Name" value="<%= user.name %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="firstname">Your Firstname</label>
+                                                                    <input type="text" required class="form-control" id="firstname" placeholder="Your Firstname" value="<%= user.firstname %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="country">Your Country</label>
+                                                                    <input type="text" name="country" required disabled class="form-control" value="<%= user.country %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="numberClient">Your Number : <%= user.prefix %></label>
+                                                                    <input type="number" required class="form-control" id="numberClient" placeholder="Your Number" value="<%= parseInt(user.numberClient, 10) %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="address">Your Address</label>
+                                                                    <input type="text" required class="form-control" id="address" placeholder="Your Address (Town,Commune,Rue)" value="<%= user.address %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="numberPiece">Number Piece (CNI/PASSPORT/PERMIS) </label>
+                                                                    <input type="text" required class="form-control" id="numberPiece" placeholder="Your Number of one piece for the retrait" value="<%= user.numberPiece %>">
+                                                                </div>
+
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                            <button type="reset" class="btn btn-light">Reset</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="contact-3-4" role="tabpanel" aria-labelledby="tab-3-4">
+                                                        <p class="mb-0">A Western Union Transaction will be made according to the fields you will fill in above and an email will be sent to you as a notification once the transaction is done.</p>
+                                                        <form id="forWesternRetrait">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-6">
+                                                                    <label for="nameW">Your Name</label>
+                                                                    <input type="text" required class="form-control" id="nameW" placeholder="Your Name" value="<%= user.name %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="firstnameW">Your Firstname</label>
+                                                                    <input type="text" required class="form-control" id="firstnameW" placeholder="Your Firstname" value="<%= user.firstname %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="countryW">Your Country</label>
+                                                                    <input type="text" name="countryW" required disabled class="form-control" value="<%= user.country %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="numberClientW">Your Number : <%= user.prefix %></label>
+                                                                    <input type="number" required class="form-control" id="numberClientW" placeholder="Your Number" value="<%= parseInt(user.numberClient, 10) %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="addressW">Your Address</label>
+                                                                    <input type="text" required class="form-control" id="addressW" placeholder="Your Address (Town,Commune,Rue)" value="<%= user.address %>">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="numberPieceW">Number Piece (CNI/PASSPORT/PERMIS) </label>
+                                                                    <input type="text" required class="form-control" id="numberPieceW" placeholder="Your Number of one piece for the retrait" value="<%= user.numberPiece %>">
+                                                                </div>
+
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary mr-2">Request a withdrawal</button>
+                                                            <button type="reset" class="btn btn-light">Reset</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                    </div>
+                    <div class="col-md-6 grid-margin">
+                        <% inscription.forEach(function(value){ %>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex flex-row">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/560/560216.png" class="img-lg rounded" alt="profile image" />
+                                        <div class="ml-3">
+                                            <h6>
+                                                <%= value.name %>
+                                                    <%= value.firstname %>
+                                            </h6>
+                                            <p class="text-muted">
+                                                <%= value.email %><br>
+                                                    <%= value.prefix %>
+                                                        <%= value.numberClient %>
+                                            </p>
+                                            <p class="mt-2">
+                                                <% if (!value.isActive && value.inscription === 3 ) { %>
+                                                    <small class="badge badge-danger badge-pill">Blocked looking for a godchild</small>
+                                                    <% } else if (!value.isActive && value.inscription !== 3) { %>
+                                                        <small class="badge badge-warning badge-pill">Blocked for re-subscription</small>
+                                                        <% } else if (value.isActive && value.inscription === 1) { %>
+                                                            <script>
+                                                                formatDate("<%= value.validEntryInSysteme %>")
+                                                            </script> <br>
+                                                            <small class="badge badge-success badge-pill">Active Account</small>
+                                                            <% } else { %>
+                                                                <small class="badge badge-info badge-pill">Registrations not completed</small>
+                                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- content-wrapper ends -->
+    </div>
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            (function($) {
+                'use strict';
+                $(function() {
+                    // $.ajax({
+                    //     url: 'https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8',
+                    //     type: 'get',
+                    //     success: function(data) {
+                    //         const dollars = parseFloat(data.result.ethusd);
+                    //         const montant = parseFloat(<%= user.soldeGain %>)
+                    //         const montantDisplay = 0.9 * montant * dollars;
+                    //         $(".priceToGet").text(montantDisplay.toFixed(2))
+                    //     }
+                    // })
+                    if ($('#vertical-left').length) {
+                        $('#vertical-left').pwstabs({
+                            effect: 'slideleft',
+                            defaultTab: 1,
+                            containerWidth: '600px',
+                            tabsPosition: 'vertical',
+                            verticalPosition: 'left'
+                        });
+                    }
+
+                    $('#forCryptoRetrait').submit(function(e) {
+                        e.preventDefault();
+                        const addressCrypto = $('#addressCrypto').val();
+                        const amount = $('#amount').val();
+
+                        if (parseFloat(amount) <= parseFloat("<%= user.soldeGain%>") && parseFloat(amount) >= 50 && parseFloat(amount) < 2001) {
+                            $('#addressCrypto').parent().next().hide();
+                            const url = '/users/forCryptoRetrait',
+                                type = 'post';
+                            $.notify({
+                                position: 3,
+                                type: 'info',
+                                duration: 10000,
+                                message: "Please wait a few seconds please our robot checks the contract"
+                            });
+                            $.ajax({
+                                url,
+                                type,
+                                data: {
+                                    addressCrypto,
+                                    amount: parseFloat(amount)
+                                },
+                                success: function(datas) {
+                                    if (datas.etat) {
+                                        $.notify({
+                                            position: 3,
+                                            type: 'success',
+                                            duration: 4000,
+                                            message: datas.result
+                                        });
+                                    } else {
+                                        $.notify({
+                                            position: 3,
+                                            type: 'error',
+                                            duration: 4000,
+                                            message: datas.error
+                                        });
+                                        $('#addressCrypto').parent().next().show();
+                                    }
+                                }
+                            });
+                        } else {
+                            $.notify({
+                                position: 3,
+                                type: 'error',
+                                duration: 4000,
+                                message: 'Amount unvailable. Min 50$, max 2000$'
+                            });
+                        }
+                    });
+
+                    $('#forMoneyRetrait').submit(function(e) {
+                        e.preventDefault();
+                        const name = $('#name').val();
+                        const firstname = $('#firstname').val();
+                        const numberClient = $('#numberClient').val();
+                        const address = $('#address').val();
+                        const numberPiece = $('#numberPiece').val();
+                        $('.btn-primary.mr-2').hide();
+                        $('.btn-primary.mr-2').next().hide();
+                        const url = '/users/forMoneyRetrait',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                name,
+                                firstname,
+                                numberClient,
+                                address,
+                                numberPiece
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: datas.result
+                                    });
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                    $('.btn-primary.mr-2').show();
+                                    $('.btn-primary.mr-2').next().show();
+                                }
+                            }
+                        });
+                    });
+
+                    $('body').on('click', '.changeLink', function(e) {
+                        e.preventDefault();
+
+                        const url = '/users/changeLink',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    const link = window.location.origin + "/signup/" + datas.result;
+                                    $("#myInput").val(link);
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: "Changed with Success"
+                                    });
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                }
+                            }
+                        });
+                    });
+
+
+                    $('#forWesternRetrait').submit(function(e) {
+                        e.preventDefault();
+                        const name = $('#nameW').val();
+                        const firstname = $('#firstnameW').val();
+                        const numberClient = $('#numberClientW').val();
+                        const address = $('#addressW').val();
+                        const numberPiece = $('#numberPieceW').val();
+                        $('.btn-primary.mr-2').hide();
+                        $('.btn-primary.mr-2').next().hide();
+                        const url = '/users/forWesternRetrait',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            data: {
+                                name,
+                                firstname,
+                                numberClient,
+                                address,
+                                numberPiece
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: datas.result
+                                    });
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                    $('.btn-primary.mr-2').show();
+                                    $('.btn-primary.mr-2').next().show();
+                                }
+                            }
+                        });
+                    });
+
+
+                });
+            })(jQuery);
+        </script>
+        </body>
+
+        </html>

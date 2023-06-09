@@ -1,0 +1,171 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="container">
+                    <div class="card bg-trova-background-orange minh-250 w-100">
+
+                    </div>
+                    <div class="card mt-4 reprise_entete p-3">
+                        <div class="card-header">
+                            <h4 class="card-title">My Invitation Link</h4>
+                            <div class="flexbox flex-column position-relative">
+                                <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
+                            </div>
+                            <div class="flexbox flex-column position-relative p-t-5">
+                                <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
+                            </div>
+                        </div>
+                        <h4>Règles Système</h4>
+                        <br>
+                        <br>
+                        <br>
+                        <p>reçois chaque semaine 33% du montant investi qui se trouve sur ton contrat et ça jusqu'à 5 semaines. (ça fait l'équivalent de 1 mois 1 semaines).<br> Ton retour d'investissement est un remerciement et un engagement que QEXAL
+                            prend pour le contrat signé avec eux.
+                            <br>
+                            <br> _ CLAUSE DU CONTRAT ET DATE D'ÉCHÉANCE _
+                            <br> 👩‍🎓 Tout contrat signé à QEXAL à une durée de vie de 5 semaines, outre passé ce délai libre choix revient à vous de relancer le contrat avec le même investissement, d'augmenter l'investissement, ou de rompre le contrat.<br>                            C'est 5 semaines représentent le cycle d'un abonnement. <br> La seule clause à QEXAL qui vous est imposée est la suivante 👉 : après avoir reçu pour votre deux premières fois, votre compte est temporairement bloqué, Pour
+                            se débloquer, il vous faudra un cumul de personne mais plus pour atteindre le montant investi ni même la moitié, mais plutôt le tiers du montant investi ( quelqu'un de 2560$ peut se faire débloquer en accumulant un total de
+                            844,8$).
+                            <br>
+                            <br>
+                            <br> _ LA MATRICE DE TROVA, C'EST QUOI ? _ 🤵 Concernants la matrice du tout début on partait de 60% à 100% hebdomadaire, ces bonifications n'étaient gérées que par les fonds gagnés par l'entreprise afin de bonifier ses top
+                            leaders. Mais là, les priorités ont changé, toutes les priorités de TROVA sont axées sur le remboursement de capital. Donc la matrice devra agir comme suit, tout filleul invité + débloqué fera toucher immédiatement 10% de son
+                            montant investi à son parrain si le filleul à investit un montant strictement inférieur à l'action de son parrain. Si le filleul a investit un montant supérieur ou égal au montant investi par son parrain, le parrain voit ce
+                            filleul se loger sous sa rubrique matrix, au bout de 3 filleuls loger sous sa rubrique matricielle le parrain bénéficie d'une semaine généreuse dans son contrat (son contrat passe à 6 semaines au lieu de 5, ça ne concerne que
+                            le contrat encours). si un parrain, cherchant à bénéficier de la semaine généreuse mais qu'au final n'est pas arrivé au quota demandé (3 filleuls dans la loge matricielle), par exemple il a pu avoir 2 ou 1 filleul dans sa loge
+                            matricielle et que les 5 semaines se sont écroulés, le système lui donne immédiatement 10% sur chaque filleul dans sa loge matricielle. Rien ne se perd tout se transforme..
+                            <br>
+                            <br> _ COMMENT RETIRER SON ARGENT ? _
+                            <br> ✌️ QEXAL vous donne la possibilité de retirer votre argent de deux manières :<br> * Retrait par transaction crypto monnaie (vous recevez directement vos gains sur le portefeuille crypto monnaie de votre choix) <br>                            * Le Retrait en liquidité (ce type de retrait est en deux étapes. D'abord vous devez retirer en crypto monnaie puis revenir sur TROVA EXCHANGE pour echanger votre crypto en argent physique).<br>
+                            <br> POUR VOUS INSCRIRE VEUILLEZ ENTRER EN CONTACT AVEC LA PERSONNE QUI VOUS FAIT CONNAÎTRE QEXAL OU TOUT SIMPLEMENT DE DEMANDER UN LIEN D'INSCRIPTION À <a href="https://t.me/trovasupporttechnique">SUPPORT LINK</a>.
+                            <br>
+                            <br> _INFORMATION DE PLUS _
+                            <br> 👤 Je veux acheter de la crypto monnaie Ethereum (<a href="https://trova.vip/exchange" target="_blank">TROVA EXCHANGE</a>)
+                            <br> 👤 Je veux vendre ma crypto monnaie Ethereum (<a href="https://trova.vip/exchange" target="_blank">TROVA EXCHANGE</a>)
+                            <br> La liste des forfaits d'investissement pour signer un contrat est disponible ici 👇👇👇 <a href="https://www.trova.vip/#pricing" target="_blank">https://www.trova.vip/#pricing</a> <br> (50$, 120$, 240$, 485$, 970$, 1280$,
+                            1750$, 2560$.)
+
+                            <br> Les priorités ont changé, toutes les priorités de TROVA sont axées sur le remboursement de capital.
+                        </p>
+                        <div class="card-footer">
+                            <form action="/users/reprise" method="post">
+                                <h5>Etes vous prêt pour cet accord ?</h5>
+                                <div class="form-check">
+
+                                    <input class="form-check-input" value='1' type="radio" name="response" id="flexRadioDefault1" <%=( user.vote===1 ) ? 'checked': '' %> required>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Oui je suis d'accord de reprendre avec le QEXAL INVESTMENT initial
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value='2' type="radio" name="response" id="flexRadioDefault2" <%=( user.vote===2 ) ? 'checked': '' %> required>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Non je ne veux plus de QEXAL INVESTMENT.
+                                    </label>
+                                </div>
+                                <% if ( user.haveVote ) { %>
+                                    <div id="pieChart">
+                                        <p>Total Votant :
+                                            <span class="text-primary"><%= allUsersVote %></span>
+                                        </p>
+                                        <p>Total Oui :
+                                            <span class="text-primary"><%= allUsersVoteYes %></span>
+                                        </p>
+                                        <p>Total Non :
+                                            <span class="text-primary"><%= allUsersVoteNo %></span>
+                                        </p>
+                                    </div>
+                                    <% }  else { %>
+                                        <button class="btn btn-outline-warning btn-rounded" type="submit">Envoyer</button>
+                                        <% } %>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Requests</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Pseudo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% allUsers.forEach(function(value, index){ %>
+                                        <tr>
+
+                                            <td>
+                                                <h4 class="text-primary font-weight-normal">
+                                                    <%= index %>
+                                                </h4>
+                                            </td>
+                                            <td>
+                                                <%= value.pseudo %>
+                                            </td>
+
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <%- include('partials/_footer'); %>
+            <script>
+                $(document).ready(function() {
+                    $('table').addClass('nowrap').DataTable({
+                        responsive: true,
+
+                        buttons: [
+                            'copy', 'excel', 'pdf'
+                        ],
+                        "language": {
+                            "lengthMenu": "Display _MENU_ records per page",
+                            "zeroRecords": "Nothing found - sorry",
+                            "info": "Showing page _PAGE_ of _PAGES_",
+                            "infoEmpty": "No records available",
+                            "infoFiltered": "(filtered from _MAX_ total records)"
+                        }
+                    });
+                    $('body').on('click', '.changeLink', function(e) {
+                        e.preventDefault();
+
+                        const url = '/users/changeLink',
+                            type = 'post';
+                        $.ajax({
+                            url,
+                            type,
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    const link = window.location.origin + "/signup/" + datas.result;
+                                    $("#myInput").val(link);
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 4000,
+                                        message: "Changed with Success"
+                                    });
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 4000,
+                                        message: datas.error
+                                    });
+                                }
+                            }
+                        });
+                    });
+                })
+            </script>
+
+            </body>
+
+            </html>

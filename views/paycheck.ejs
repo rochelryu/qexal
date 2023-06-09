@@ -1,0 +1,255 @@
+<%- include('partials/_horizontal-navbar'); %>
+
+    <% if (user.nextGenForfait === 0) { %>
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+
+                <div class="content-wrapper">
+
+                    <div class="container-fluid z-depth-1 my-5 pt-5 pb-3 px-3">
+
+                        <!-- Section -->
+                        <section>
+
+
+
+
+                            <div class="row align-items-center">
+
+                                <div class="col-lg-6 mb-4">
+                                    <div class="view z-depth-1-half rounded">
+                                        <img src="../Inter/admin/images/denied.svg" alt="logo" class="width-100 m-0" />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 mb-4">
+
+                                    <p>You are in Old System. Please <a href="/users/finishContrat">Click this for to Breack Contrat and to enter in New System</a></p>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+                        <!-- Section -->
+
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <% } else { %>
+            <div class="container-fluid page-body-wrapper">
+                <div class="main-panel">
+
+                    <div class="content-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-custom">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Paycheck</span></li>
+                            </ol>
+                        </nav>
+                        <div class="container-fluid z-depth-1 my-5 pt-5 pb-3 px-3">
+
+                            <!-- Section -->
+                            <section>
+
+                                <style>
+                                    .fa-play:before {
+                                        margin-left: .3rem;
+                                    }
+                                    /* Steps */
+                                    
+                                    .step {
+                                        width: 100%;
+                                        word-wrap: break-word;
+                                        list-style: none;
+                                        margin: 0;
+                                    }
+                                    
+                                    .step-element {
+                                        display: flex;
+                                        padding: 1rem 0;
+                                    }
+                                    
+                                    .step-number {
+                                        position: relative;
+                                        width: 3rem;
+                                        flex-shrink: 0;
+                                        text-align: center;
+                                    }
+                                    
+                                    .step-number .number {
+                                        color: #bfc5ca;
+                                        background-color: #eaeff4;
+                                        font-size: 1.5rem;
+                                    }
+                                    
+                                    .step-number .number {
+                                        width: 48px;
+                                        height: 48px;
+                                        line-height: 48px;
+                                    }
+                                    
+                                    .number {
+                                        display: inline-flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        width: 38px;
+                                        border-radius: 10rem;
+                                    }
+                                    
+                                    .step-number::before {
+                                        content: '';
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 48px;
+                                        bottom: -2rem;
+                                        margin-left: -1px;
+                                        border-left: 2px dashed #eaeff4;
+                                    }
+                                    
+                                    .step .step-element:last-child .step-number::before {
+                                        bottom: 1rem;
+                                    }
+                                </style>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                                <iframe id="player" class="embed-responsive-item" src="https://www.youtube.com/embed/zKPTPsId__8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h3 class="font-weight-bold text-center dark-grey-text pb-2">Finalisation</h3>
+                                <hr class="w-header my-4">
+                                <p class="lead text-center text-muted pt-2 mb-5">The last step for to finish your subscription at Inter Invest.</p>
+
+                                <div class="row align-items-center">
+
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="view z-depth-1-half rounded">
+                                            <img class="rounded img-fluid" src="https://media1-production-mightynetworks.imgix.net/asset/10889731/1582835081598-og_image.png?ixlib=rails-0.3.0&fm=jpg&q=75&auto=format" alt="Video title">
+                                            <div class="mask flex-center rgba-black-light">
+                                                <a id="play" class="btn-floating btn-primary btn-lg" data-toggle="modal" data-target="#modal1"><i class="icon-control-play text-white"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 mb-4">
+
+                                        <ol class="step pl-0">
+                                            <li class="step-element pb-0">
+                                                <div class="step-number">
+                                                    <span class="number">1</span>
+                                                </div>
+                                                <div class="step-excerpt">
+                                                    <h6 class="font-weight-bold dark-grey-text mb-3">Create at account BTC</h6>
+                                                    <p class="text-muted">You should to create wallet money for all transaction in the system. Download <a href="#" onclick="getMobileOperatingSystem('guarda')">Guarda</a>, <a href="#" onclick="getMobileOperatingSystem('trust')">Trust Wallet</a>,
+                                                        <a href="" onclick="getMobileOperatingSystem('blockChain')">BlockChain</a> or another app crypto-wallet and create one account on this</p>
+                                                </div>
+                                            </li>
+                                            <li class="step-element pb-0">
+                                                <div class="step-number">
+                                                    <span class="number">2</span>
+                                                </div>
+                                                <div class="step-excerpt">
+                                                    <h6 class="font-weight-bold dark-grey-text mb-3">Top up your account</h6>
+                                                    <p class="text-muted">Top up your account (electronic wallet) of at least
+                                                        <% if (user.montant === 0) { %>
+                                                            <% const rsi = forfait.inscription + forfait.montant %>
+                                                                <%= rsi.toFixed(2) %>
+                                                                    <% } else { %>
+                                                                        <%= user.montant.toFixed(2) %>
+                                                                            <% } %>
+                                                                                $ to enter this package. You can top up your account on <a href="/exchange" target="_blank">here</a></p>
+                                                </div>
+                                            </li>
+                                            <li class="step-element pb-0">
+                                                <div class="step-number">
+                                                    <span class="number">3</span>
+                                                </div>
+                                                <div class="step-excerpt">
+                                                    <h6 class="font-weight-bold dark-grey-text mb-3">Paycheck</h6>
+                                                    <p class="text-muted">You must send a sum of
+                                                        <% if (user.montant === 0) { %>
+                                                            <% const rsi = forfait.inscription + forfait.montant %>
+                                                                <%= rsi.toFixed(2) %>
+                                                                    <% } else { %>
+                                                                        <%= user.montant.toFixed(2) %>
+                                                                            <% } %> $ to this one address : </p>
+                                                    <ul>
+                                                        <% allNumber.forEach(function(value){ %>
+                                                            <li>
+                                                                <div class="flexbox flex-column position-relative">
+                                                                    <p>
+                                                                        <%= value.content.toLowerCase() %>
+                                                                    </p>
+                                                                </div>
+                                                            </li>
+                                                            <% }); %>
+                                                    </ul>
+                                                    <form id="finishSignin">
+
+                                                        <h6 class="font-weight-bold my-4 pb-2 text-center dark-grey-text">Enter code of transaction</h6>
+
+                                                        <% if (user.ref === '' || user.ref.indexOf('old-') != -1){ %>
+                                                            <input type="text" id="ref" placeholder="0x...................." class="form-control" />
+                                                            <small id="passwordHelpBlock" class="form-text text-right blue-text">
+                                                                <a href="#">Enter txHash of transaction (only transaction done and not waiting)</a>
+                                                            </small>
+
+                                                            <div class="text-center">
+                                                                <button type="submit" class="btn btn-outline-orange btn-rounded my-4 waves-effect" id="validate">Validate</button>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <input type="text" class="form-control" readonly disabled value="<%= user.ref %>">
+                                                                <% } %>
+
+                                                    </form>
+                                                </div>
+                                            </li>
+                                        </ol>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+                            <!-- Section -->
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- main-panel ends -->
+            </div>
+            <% } %>
+
+                <%- include('partials/_footer'); %>
+                    <script src="../Inter/admin/js/multi-countdown.js"></script>
+                    <script>
+                        $(document).ready(function() {
+
+                            $('#play').on('click', function(e) {
+                                e.preventDefault();
+                                $('#modal1 iframe').attr("src", "https://www.youtube.com/embed/zKPTPsId__8");
+                                $("#player")[0].src += "?autoplay=1";
+                                $('#player').show();
+                                $('#video-cover').hide();
+                            })
+                            $('#modal1').on('hidden.bs.modal', function(e) {
+                                $('#modal1 iframe').attr("src", "");
+                            });
+                        })
+                    </script>
+                    </body>
+
+                    </html>

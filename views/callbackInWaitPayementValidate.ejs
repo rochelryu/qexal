@@ -1,0 +1,202 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <style>
+        @import url('https://rsms.me/inter/inter-ui.css');
+         ::selection {
+            background: #2D2F36;
+        }
+        
+         ::-webkit-selection {
+            background: #2D2F36;
+        }
+        
+         ::-moz-selection {
+            background: #2D2F36;
+        }
+        
+        @media (max-width: 767px) {
+            .page {
+                height: auto;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+            }
+        }
+        
+        .containers {
+            display: flex;
+            height: 320px;
+            margin: 0 auto;
+            width: 640px;
+        }
+        
+        @media (max-width: 767px) {
+            .containers {
+                flex-direction: column;
+                height: 630px;
+                width: 320px;
+            }
+        }
+        
+        .left {
+            background: white;
+            height: calc(100% - 40px);
+            top: 20px;
+            position: relative;
+            width: 50%;
+        }
+        
+        @media (max-width: 767px) {
+            .left {
+                height: 100%;
+                left: 20px;
+                width: calc(100% - 40px);
+                max-height: 331px;
+            }
+        }
+        
+        .login {
+            font-size: 30px;
+            font-weight: 900;
+            margin: 50px 40px 40px;
+        }
+        
+        .eula {
+            color: #999;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 40px;
+        }
+        
+        .right {
+            background: #474A59;
+            box-shadow: 0px 0px 40px 16px rgba(0, 0, 0, 0.22);
+            color: #F1F1F2;
+            position: relative;
+            width: 50%;
+        }
+        
+        @media (max-width: 767px) {
+            .right {
+                flex-shrink: 0;
+                height: 100%;
+                width: 100%;
+                max-height: 350px;
+            }
+        }
+        
+        .contents {
+            margin: 40px;
+            word-wrap: break-word;
+        }
+        
+        .right h4 {
+            color: #c2c2c5;
+            text-decoration: underline;
+            display: block;
+            font-size: 18px;
+            height: 16px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .right p {
+            font-family: 'Inter UI', sans-serif;
+        }
+        
+        .right a {
+            color: #1EBBD7 !important;
+            text-decoration: none;
+            margin-top: 5px;
+        }
+    </style>
+    <div class="container-fluid page-body-wrapper">
+        <div class="exchange main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 p-5">
+                                <div class="page">
+                                    <div class="containers">
+                                        <div class="left">
+                                            <div class="login">QEXAL EXCHANGE</div>
+                                            <div class="eula">You have requested an
+                                                <%= infos.lastExchange.currencies.name.toUpperCase() %> purchase, your transaction is in progress. our team is available from 9 a.m. to 11 p.m. GMT + 0</div>
+                                        </div>
+                                        <div class="right">
+                                            <div class="contents position-relative">
+                                                <h4>Informations</h4>
+                                                <p>Order N°
+                                                    <%= infos.lastExchange.id %>
+                                                        <br> Date:
+                                                        <script>
+                                                            formatDate("<%= infos.lastExchange.create_at %>")
+                                                        </script>
+                                                        <br> Exchange Local:
+                                                        <%= infos.lastExchange.montantCurrencie.toFixed(2) %>
+                                                            <%= infos.lastExchange.currencie %>
+                                                                <br> Exchange
+                                                                <%= infos.lastExchange.currencies.symbol.toUpperCase() %>:
+                                                                    <%= infos.lastExchange.montant_eth.toFixed(2) %>
+                                                                        <br> Exchange USD:
+                                                                        <%= infos.lastExchange.montant_usd.toFixed(2) %>
+                                                                            <br> Address
+                                                                            <%= infos.lastExchange.currencies.symbol.toUpperCase() %>:
+                                                                                <%= user.addressCrypto %>
+                                                                                    <br> Status:
+                                                                                    <% if (infos.lastExchange.etatid === 2){ %>
+                                                                                        <span class="text-warning">Awaiting validation from QEXAL EXCHANGE</span>
+
+                                                </p>
+                                                <img src="../Inter/admin/images/loadingSvg.svg" alt="loadingSvg.svg" class='iconLoading'>
+                                                <% } else if (infos.lastExchange.etatid === 3){ %>
+                                                    <span class="text-success">Transaction Completed by QEXAL EXCHANGE</span>
+                                                    </p>
+                                                    <a href="/exchange/doneExchange" class="btn btn-outline-info btn-rounded text-info">I agree</a>
+                                                    <% } %>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                const socket = io('http://192.168.1.131:5001');
+                socket.on('connect', function() {
+                    console.log('Connected');
+                });
+                socket.emit('identity', {
+                    email: '<%= user.email %>'
+                })
+
+                socket.on('reponseExchangeReception', function(data) {
+                    $.notify({
+                        position: 3,
+                        type: 'success',
+                        autoClose: false,
+                        message: 'Transaction completed (Ethereum Purchase)',
+                    });
+                });
+
+                socket.on('disconnect', function() {
+                    console.log('Disconnected');
+                });
+
+            })
+        </script>
+        </body>
+
+        </html>

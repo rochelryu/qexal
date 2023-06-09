@@ -1,0 +1,89 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <section class="forms">
+                        <div class="card py-2 mb-4">
+                            <div class="cards__heading">
+                                <h3>Demandes de retrait Client STARTINVEST <span></span></h3>
+                            </div>
+                            <div class="card-body">
+                                <table id="table_id" class="table table-responsive table-hover display">
+                                    <thead class="black white-text shadow-lg">
+                                        <tr>
+                                            <th>Rang</th>
+                                            <th>Id</th>
+                                            <th>Sd Contrat</th>
+                                            <th>Etat</th>
+                                            <th>Date de retrait</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% paycheckDemande.forEach(function(value, index){ %>
+                                            <tr>
+                                                <td>
+                                                    <%= index + 1 %>
+                                                </td>
+                                                <td>
+                                                    <%= value.id %>
+                                                </td>
+
+                                                <td>
+                                                    <%= value.soldeGain %> $
+                                                </td>
+                                                <td>
+                                                    <p>
+                                                        <%= value.accord === 1 ? 'En Droit': 'Pas en Droit'%> <br>
+                                                            <%= value.montantRetrait %> $
+                                                    </p>
+                                                </td>
+
+                                                <td>
+                                                    <script>
+                                                        formatDate("<%= value.dateRetry %>")
+                                                    </script>
+                                                </td>
+                                                <td>
+                                                    <a type="button" target="_blank" href='/users/viewContrat?id=<%= value.id %>' class="btn btn-outline-warning btn-sm">Voir</a>
+
+
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </section>
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+
+                $('table').addClass('nowrap').DataTable({
+                    responsive: true,
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                });
+
+
+            });
+        </script>
+
+        </body>
+
+        </html>

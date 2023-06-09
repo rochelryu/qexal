@@ -1,0 +1,130 @@
+<%- include('partials/_horizontal-navbar'); %>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">My Invitation Link</h4>
+                                <div class="flexbox flex-column position-relative">
+                                    <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                    <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
+                                </div>
+                                <div class="flexbox flex-column position-relative p-t-5">
+                                    <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Setting account</h4>
+                                <p class="card-description">
+                                    General Information
+                                </p>
+                                <form class="forms-sample" id="infoGen">
+                                    <div class="form-group">
+                                        <label for="nameMateriel">Name</label>
+                                        <input type="text" value="<%= user.name %>" id="nameMateriel" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nameMateriel">Firstname</label>
+                                        <input type="text" value="<%= user.firstname %>" id="firstNameMateriel" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="numeroMateriel">Number : <%= user.prefix %></label>
+                                        <input type="text" value="<%= user.numberClient %>" id="numeroMateriel" class="form-control">
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="numeroPieceMateriel">N Piece/Passport/Permis :</label>
+                                        <input type="text" value="<%= user.numberPiece %>" id="numeroPieceMateriel" class="form-control">
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address City :</label>
+                                        <input type="text" value="<%= user.address %>" id="address" class="form-control" placeholder="City, town, district">
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="materialLoginFormPassword">Confirm Password</label>
+                                        <input type="password" class="form-control" id="materialLoginFormPassword" placeholder="Password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Setting account</h4>
+                                <p class="card-description">
+                                    Confidential Information
+                                </p>
+                                <form class="forms-sample" id="changePass">
+                                    <div class="form-group row">
+                                        <label for="oldPassword" class="col-sm-3 col-form-label">Current Password</label>
+                                        <div class="col-sm-9">
+                                            <input type="password" id="oldPassword" class="form-control">
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
+                                        <div class="col-sm-9">
+                                            <input type="password" class="form-control" id="newPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="confirmNewPassword" class="col-sm-3 col-form-label">Confirm Password</label>
+                                        <div class="col-sm-9">
+                                            <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm Password">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <%- include('partials/_footer'); %>
+        <script>
+            $(document).ready(function() {
+                $('body').on('click', '.changeLink', function(e) {
+                    e.preventDefault();
+
+                    const url = '/users/changeLink',
+                        type = 'post';
+                    $.ajax({
+                        url,
+                        type,
+                        success: function(datas) {
+                            if (datas.etat) {
+                                const link = window.location.origin + "/signup/" + datas.result;
+                                $("#myInput").val(link);
+                                $.notify({
+                                    position: 3,
+                                    type: 'success',
+                                    duration: 4000,
+                                    message: "Changed with Success"
+                                });
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 4000,
+                                    message: datas.error
+                                });
+                            }
+                        }
+                    });
+                });
+            })
+        </script>
+        </body>
+
+        </html>
