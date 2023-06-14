@@ -7,7 +7,7 @@ $(window).on("load", function() {
 
     $('.side-menu').removeClass('hidden');
 
-    //$('#bet').parallax({ imageSrc: 'corporate-finance/images/foot group.jpg' });
+    //$('#bet').parallax({ imageSrc: 'corporate-finance/images/graphique-circulaire-angle-eleve-villes.jpg' });
 
 
 

@@ -20,6 +20,8 @@ import { addDays, getDay } from 'date-fns';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
 import { ControleCode } from 'src/common/enum/EnumControl';
 import { ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION, ADDRESS_TROVA_EXCHANGE, ADDRESS_TROVA_INVESTMENT } from 'src/common/constant/constant';
+import { MovieEntity } from 'src/entities/movie.entity';
+import { UserMovieEntity } from 'src/entities/user_movie.entity';
 
 @Injectable()
 export class UsersService {
@@ -46,6 +48,8 @@ export class UsersService {
 		@InjectRepository(DemandeEntity) private demandesRepository: Repository<DemandeEntity>,
 		@InjectRepository(ForfaitEntity) private forfaitRepository: Repository<ForfaitEntity>,
 		@InjectRepository(NotificationEntity) private notificationRepository: Repository<NotificationEntity>,
+		@InjectRepository(MovieEntity) private movieRepository: Repository<MovieEntity>,
+		@InjectRepository(UserMovieEntity) private userMovieRepository: Repository<UserMovieEntity>,
 
 		@InjectRepository(SerialUserEntity) private serialUserRepository: Repository<SerialUserEntity>,
 
@@ -277,7 +281,6 @@ export class UsersService {
 	async getUserByAndChangeInfo(
 		id: number,
 		name: string,
-		firstname: string,
 		numberClient: string,
 	address: string,
     addressCrypto: string,
@@ -290,7 +293,6 @@ export class UsersService {
 				.then(async (result) => {
 					if (result && await compare(password.trim(), result.password)) {
 						result.name = name.trim();
-						result.firstname = firstname.trim();
 						result.numberClient = numberClient.trim();
 						result.address = address.trim();
 						result.addressCrypto = addressCrypto.toLowerCase().trim();
@@ -322,10 +324,10 @@ export class UsersService {
 		});
 	}
 
-	async verifyUser(email: string, password: string): Promise<ResponseProvider> {
+	async verifyUserForConnect(numberClient: string, password: string): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.usersRepository
-				.findOne({where: { email}})
+				.findOne({where: { numberClient}})
 				.then(async (result) => {
           if (result) {
             const state = await compare(password, result.password)
@@ -338,7 +340,7 @@ export class UsersService {
               next({ etat: false, error: new Error('Verified your password') });
             }
 					} else {
-						next({ etat: false, error: new Error('Verified your username') });
+						next({ etat: false, error: new Error('Verified your number') });
 					}
 				})
 				.catch((error) => next({ etat: false, error }));
@@ -378,12 +380,8 @@ export class UsersService {
 								numberClient: numero.trim(),
 								name: name.trim(),
 	              				email: email.trim(),
-								firstname: name.trim(),
-								pseudo: '',
 								recovery,
 								password: pass,
-								isNewUserBenefit: 1,
-								accord: 1,
 								endForfait: new Date(),
 								prefix: user.prefix,
 								alpha2code: user.alpha2code,
@@ -393,7 +391,6 @@ export class UsersService {
 								flag: '',
 								language: user.language,
 								currencies: user.currencies,
-								isRembourse: 5,
 								// eslint-disable-next-line @typescript-eslint/camelcase
 								iso639_1: user.iso639_1,
 							})
@@ -548,7 +545,7 @@ export class UsersService {
   async getCountDemandeByUserInRange(endContratTime: Date, userid: number): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
       const current = await this.demandesRepository
-        .query('SELECT COUNT(id) as nombre FROM demande_entity WHERE userid = ? AND finality = 2 AND create_at >= ?', [
+        .query('SELECT COUNT(id) as nombre FROM demande_entity WHERE userid = ? AND create_at >= ?', [
           userid, endContratTime
         ]);
 
@@ -2427,6 +2424,44 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 						next({ etat: true, result });
 					} else {
 						next({ etat: false, error: new Error('Verifié vos coordonnés') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+
+	// For Movie Entity
+	async getMoviesByItem(item): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.movieRepository
+				.find({where: item})
+				.then((result) => {
+					if (result) {
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Verifié vos items') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+	// For User Movie
+
+	async verifyIfUserAlreadySeeMovie(movieid: number, userid: number): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.userMovieRepository
+				.find({where: {
+					movieid,
+					userid,
+					create_at: MoreThanOrEqualDate(new Date(), EDateType.Date),
+				}})
+				.then((result) => {
+					if (result.length > 0) {
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Aucune vidéo trouvé') });
 					}
 				})
 				.catch((error) => next({ etat: false, error }));

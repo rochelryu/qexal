@@ -71,6 +71,28 @@
                         </div>
                     </div>
                     <div class="col-md-12 grid-margin stretch-card">
+                        <section class="game-section">
+                            <h2 class="line-title">Moovie Earn</h2>
+                            <div class="owl-carousel custom-carousel owl-theme">
+                                <% infos.movieDisplayAtClient.forEach(function(movie, index){ %>
+                                    <% if ( index === 0 ) { %>
+                                    <div class="item active" style="background-image: url(<%= movie.cover %>);">
+                                    <% }  else  { %>
+                                    <div class="item" style="background-image: url(<%= movie.cover %>);">
+                                    <% } %>
+                                        <div class="item-desc">
+                                            <h3><%= movie.title %></h3>
+                                            <p><%= movie.subtitle %></p>
+                                        </div>
+                                    </div>
+                              
+                                <% }); %>
+                            
+                            </div>
+                            </div>
+                          </section>
+                    </div>
+                    <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">My Invitation Link</h4>
@@ -230,21 +252,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% infos.oldPayementTraitement.forEach(function(value){ %>
-                                            <tr>
-
-                                                <td>
-                                                    <h4 class="text-primary font-weight-normal">
-                                                        $
-                                                        <%= value.monatnt %>
-                                                    </h4>
-                                                </td>
-                                                <td>
-                                                    <%= value.users.pseudo %>
-                                                </td>
-
-                                            </tr>
-                                            <% }); %>
+                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -270,8 +278,20 @@
         </div>
         <script src="../Inter/admin/js/owl-carousel.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="http://www.youtube.com/player_api"></script>
         <script>
             $(document).ready(function() {
+                $(".custom-carousel").owlCarousel(
+                    {
+                        autoWidth: true,
+                        loop: false
+                    }
+                );
+                $(".custom-carousel .item").click(function () {
+                    $(".custom-carousel .item").not($(this)).removeClass("active");
+                    $(this).toggleClass("active");
+                });
+
                 $('table').addClass('nowrap').DataTable({
                     responsive: true,
 

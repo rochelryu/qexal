@@ -6,6 +6,8 @@ import { NotificationEntity } from 'src/notification/notification.entity';
 import { SerialUserEntity } from 'src/message/serial-user.entity';
 import { DemandeEntity } from 'src/demande/demande.entity';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
+import { MovieEntity } from 'src/entities/movie.entity';
+import { UserMovieEntity } from 'src/entities/user_movie.entity';
 
 export const BASE_URL = '';
 export const BASE_API = 'api/v1/';
@@ -59,6 +61,8 @@ export const ALL_ENTITY = [
 		TypeOrmModule.forFeature([ DemandeEntity ]),
 		TypeOrmModule.forFeature([ ForfaitEntity ]),
 		TypeOrmModule.forFeature([ NotificationEntity ]),
+		TypeOrmModule.forFeature([ MovieEntity ]),
+		TypeOrmModule.forFeature([ UserMovieEntity ]),
 		TypeOrmModule.forFeature([ SerialUserEntity ]),
 		TypeOrmModule.forFeature([ WithdrawEntity ]),
 

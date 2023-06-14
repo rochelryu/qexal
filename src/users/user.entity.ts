@@ -15,18 +15,13 @@ import { RoleEntity } from '../role/role.entity';
 import { DemandeEntity } from 'src/demande/demande.entity';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
 import { WithdrawEntity } from 'src/withdraw/withdraw.entity';
+import { UserMovieEntity } from 'src/entities/user_movie.entity';
 @Entity()
 export class UserEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
 	@Column({ length: 100 })
 	name: string;
-
-	@Column({ length: 110 })
-  firstname: string;
-
-	@Column({ length: 50, default: '' })
-	pseudo: string;
 
   @Column({ default: '' })
   address: string;
@@ -97,6 +92,9 @@ export class UserEntity extends BaseEntity {
 
 	@OneToMany(() => DemandeEntity, (demandes) => demandes.userid)
   demandes: DemandeEntity[];
+
+  @OneToMany(() => UserMovieEntity, (userMovie) => userMovie.userid)
+	userMovies: UserMovieEntity[];
 
   @OneToMany(() => WithdrawEntity, (withdraw) => withdraw.userid)
   withdraws: WithdrawEntity[];

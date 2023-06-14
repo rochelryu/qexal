@@ -2,13 +2,13 @@ import { MoreThan, MoreThanOrEqual, LessThan, LessThanOrEqual, Between } from 't
 import { format } from 'date-fns';
 import { EDateType } from '../enum/EnumDate';
 
-const MoreThanDate = (date: Date, type: EDateType) => MoreThan(format(date, type));
+const MoreThanDate = (date: Date, type: EDateType) => MoreThan(new Date(format(date, type)));
 export const verifyWeekend = () => new Date().getDay() % 6 === 0 ;
-const MoreThanOrEqualDate = (date: Date, type: EDateType) => MoreThanOrEqual(format(date, type));
-const LessThanDate = (date: Date, type: EDateType) => LessThan(format(date, type));
-const LessThanOrEqualDate = (date: Date, type: EDateType) => LessThanOrEqual(format(date, type));
+const MoreThanOrEqualDate = (date: Date, type: EDateType) => MoreThanOrEqual(new Date(format(date, type)));
+const LessThanDate = (date: Date, type: EDateType) => LessThan(new Date(format(date, type)));
+const LessThanOrEqualDate = (date: Date, type: EDateType) => LessThanOrEqual(new Date(format(date, type)));
 
 const BetweenDate = (begDate: Date, endDate: Date, type: EDateType) =>
-	Between(format(begDate, type), format(endDate, type));
+	Between(new Date(format(begDate, type)), new Date(format(endDate, type)));
 
 export { MoreThanDate, MoreThanOrEqualDate, LessThanDate, LessThanOrEqualDate, BetweenDate };

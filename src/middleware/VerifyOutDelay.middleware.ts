@@ -8,31 +8,7 @@ export class VerifyOutDelay implements NestMiddleware {
 	constructor(private service: UsersService) {}
     async use(@Request() req, res: Response, next: Function) {
         if(req.session.qexal) {
-            if(req.session.qexal.nextGenForfait === 2 && req.session.qexal.isRembourse === 4){
-                if(req.session.qexal.isActive) {
-                    if(req.session.qexal.inscription === 1){
-                    next();
-                    } else if(req.session.qexal.inscription === 2) {
-                        return res.redirect('/users/paycheck')
-                    }
-                    else {
-                        return res.redirect('/users/choiceInscription')
-                    }
-                } else {
-                    if(req.session.qexal.inscription === 2){
-                        res.redirect('/users/paycheck');
-                    } else if(req.session.qexal.inscription === 3) {
-                        res.redirect('/users/filleuil');
-                    } else {
-                        res.redirect('/users/choiceLockedInscription');
-                    }
-                }
-            } else if(req.session.qexal.roleid === 3){
-                next();
-            } else {
-                res.redirect('/users/reprise');
-            }
-
+            next();
         }
         else {
             res.redirect('/login')

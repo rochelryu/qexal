@@ -29,17 +29,26 @@ export class UsersController {
 
       	const toDay = new Date();
       	let user = await this.service.getUserByItem({id :req.session.qexal.id})
-
+		const movieDisplayAtClient = [];
 		const notifications = await this.service.getNotificationsByUserid(req.session.qexal.id);
 		const countNotifications = await this.service.getCountNotificationsByUserid(req.session.qexal.id);
 		const countNotif = countNotifications.result > 0 ? { etat: true, result: countNotifications.result } : { etat: false };
 		const getLastDemandeParrain = await this.service.getLastDemandeForSuivie(user.result.id);
-		if(getLastDemandeParrain.etat && getLastDemandeParrain.result.finality === 1 && differenceInSeconds(addDays(new Date(getLastDemandeParrain.result.create_at), 7),new Date()) <= -5 /* -5 pour dire que le paiement hebdomadaire se fait 5 secondes après la date de paiement) */) {
+		/*if(getLastDemandeParrain.etat && getLastDemandeParrain.result.finality === 1 && differenceInSeconds(addDays(new Date(getLastDemandeParrain.result.create_at), 7),new Date()) <= -5 // -5 pour dire que le paiement hebdomadaire se fait 5 secondes après la date de paiement) ) {
 			const payeDemandeAuto = await this.payeDemandeAuto(getLastDemandeParrain.result.id);
 			if(payeDemandeAuto.etat && payeDemandeAuto.result === "Transaction successfully completed this account is at the same time locked for re-subscription"){
 				req.session.destroy();
 			}
 
+		}*/
+		const allMovies = await this.service.getMoviesByItem({});
+		
+		for (const movie of allMovies.result) {
+			const allMovie = await this.service.verifyIfUserAlreadySeeMovie(movie.id, user.result.id);
+			this.logger.log(allMovie);
+			if(!allMovie.etat && allMovie.error.message === "Aucune vidéo trouvé") {
+				movieDisplayAtClient.push(movie);
+			}
 		}
 		const mesDemandes = await this.service.getAllDemandeByUserid(user.result.id);
 		const countUserActif = await this.service.getCountUsersConnectedToDay();
@@ -69,6 +78,7 @@ export class UsersController {
 			newInscrit: newInscrit.result,
 			mesDemandes: mesDemandes.result,
 			allDemandeYesterday: allDemandeYesterday.result,
+			movieDisplayAtClient,
 		}
 		res
 		.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
@@ -265,7 +275,6 @@ export class UsersController {
 				const newinfo = await this.service.getUserByAndChangeInfo(
 					req.session.qexal.id,
 					demande.name,
-					demande.firstName,
 					demande.numberClient,
 					demande.address,
 					demande.addressCrypto,

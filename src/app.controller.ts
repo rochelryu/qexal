@@ -9,6 +9,7 @@ import { UsersService } from './users/users.service';
 
 @Controller()
 export class AppController {
+	private logger: Logger = new Logger("AppController")
 	constructor( private readonly usersService: UsersService) {}
 
 	@Get()
@@ -24,11 +25,7 @@ export class AppController {
 	@Get('/login')
 	index(@Request() req, @Res() res: Response) {
 		if (req.session.qexal) {
-			if((req.session.qexal.nextGenForfait === 2 && req.session.qexal.isRembourse === 4) || req.session.qexal.roleid === 3 ){
-				res.redirect('/users');
-			} else {
-				res.redirect('/users/reprise');
-			}
+			res.redirect('/users');
 		} else {
 			const message = req.session.flash ?? [];
 			req.session.destroy()
@@ -43,27 +40,18 @@ export class AppController {
 
 	async signup(@Request() req, @Res() res: Response, @Param() params) {
 		if (req.session.qexal) {
-			if((req.session.qexal.nextGenForfait === 2 && req.session.qexal.isRembourse === 4) || req.session.qexal.roleid === 3 ){
-				res.redirect('/users');
-			} else {
-				res.redirect('/users/reprise');
-			}
-    } else {
-      const user = await this.usersService.getUserByItem({recovery: params.id});
+			res.redirect('/users');
+		} else {
+		const user = await this.usersService.getUserByItem({recovery: params.id});
 
-      if (user.etat) {
-        const message = req.session.flash ?? [];
-        req.session.destroy()
-        res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-		.render('register-2', {
-          message,
-          parainid: user.result.id,
-          title: 'Authentification',
-        });
-      }
-      else {
-        res.redirect('/404')
-      }
+			const message = req.session.flash ?? [];
+			req.session.destroy()
+			res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+			.render('register-2', {
+			message,
+			parainid: user.etat ? user.result.id: 1,
+			title: 'Authentification',
+			});
 		}
   }
 
@@ -137,22 +125,14 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
   }
 
 	@Post('/login')
-	async login(@Body() user: {pseudo: string, password: string}, @Request() req, @Res() res: Response) {
+	async login(@Body() user: {number: string, password: string}, @Request() req, @Res() res: Response) {
 		if (req.session.qexal) {
-			if((req.session.qexal.nextGenForfait === 2 && req.session.qexal.isRembourse === 4) || req.session.qexal.roleid === 3 ){
-				res.redirect('/users');
-			} else {
-				res.redirect('/users/reprise');
-			}
+			res.redirect('/users');
 		} else {
-			const {etat, result, error} = await this.usersService.verifyUser(user.pseudo, user.password)
+			const {etat, result, error} = await this.usersService.verifyUserForConnect(user.number.trim(), user.password.trim())
 			if(etat){
 				req.session.qexal = result;
-				if((result.nextGenForfait === 2 && result.isRembourse === 4) || result.roleid === 3 ){
-					res.redirect('/users');
-				} else {
-					res.redirect('/users/reprise');
-				}
+				res.redirect('/users');
 			}
 			else {
 				req.session.flash = [error.message]
@@ -174,48 +154,35 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
   // )
 	async signupPost(@Body() user: User, @Request() req, @Res() res: Response ) {
 		if (req.session.qexal) {
-			if((req.session.qexal.nextGenForfait === 2 && req.session.qexal.isRembourse === 4) || req.session.qexal.roleid === 3 ){
-				res.redirect('/users');
-			} else {
-				res.redirect('/users/reprise');
-			}
+			res.redirect('/users');
     } else {
 		const users = await this.usersService.getUserByItem({id: parseInt(user.parrainid, 10)});
 			req.session.flash = []
 			let state = true;
-			if(user.name.length <= 1) {
+			if(user.name.length <= 5) {
 				state = false;
-				req.session.flash.push("Veillez entrer un nom correct")
+				req.session.flash.push("Please enter the correct full name")
 			}
-			if (user.firstname.length <= 3) {
+			if (user.email.indexOf("@") === -1) {
 				state = false;
-				req.session.flash.push("Veillez entrer un prénom correct")
-			}
-			if (user.pseudo.length <= 3) {
-				state = false;
-				req.session.flash.push("Veillez entrer un pseudo correct")
+				req.session.flash.push("Please enter a valid email address")
 			}
 			if (user.password.length <= 4) {
 				state = false;
-				req.session.flash.push("Votre mot de passe est trop court")
+				req.session.flash.push("Your password is too short")
 			}
       else if (state) {
         const { etat, result, error } = await this.usersService.createUser(user);
 				if(etat){
-					const message = `Hi ${result.name}, I'm one of the robots in ICORE I'm supposed to walk you through your journey here. I will give you advice, information, and instructions to follow to have the greatest profits.`;
-					const newUserNotif = await this.usersService.setNotification(result.id, 4, message);
-					const newMessage = `This is the very first step in joining the system, you need to choose a package you want to invest in. Be aware that you will have to pay the amount of the package and its registration fees at the same time later.`;
-					const newUserNotifSecond = await this.usersService.setNotification(result.id, 4, newMessage);
-
 					req.session.qexal = result;
-					return res.redirect('/users/choiceInscription');
+					return res.redirect('/users');
 				}
 				else {
 					req.session.flash.push(error.message);
-					res.status(HttpStatus.NOT_ACCEPTABLE).redirect('/signup/'+ users.result.recovery);
+					res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup/${users.etat ? users.result.recovery: 1}`);
 				}
 			}
-			res.status(HttpStatus.NOT_ACCEPTABLE).redirect('/signup/'+ users.result.recovery);
+			res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup/${users.etat ? users.result.recovery: 1}`);
 
 		}
 	}
@@ -243,32 +210,6 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 					res.json({etat: false, error: flash});
 				}
 			} else res.json({etat: false, error: flash})
-	}
-
-	@Post('/api/v1/login')
-	async signinPostApi(@Body() user: {email:string, password:string}, @Request() req, @Res() res: Response ) {
-		const { etat, result, error } = await this.usersService.verifyUser(user.email, user.password);
-				if(etat){
-					const {name, currencies, recovery, id, language, alpha2code} = result;
-					res.json({etat: true,result: {name, currencies, recovery, id, language, alpha2code}});
-				}
-				else {
-					console.log(error.message)
-					res.json({etat: false, error: error.message});
-				}
-	}
-
-	@Post('/api/v1/changeProfil')
-	async changeProfilApi(@Body() user: {email:string, password:string, name:string, id:string, recovery:string}, @Request() req, @Res() res: Response ) {
-		const { etat, result, error } = await this.usersService.verifyUser(user.email, user.password);
-				if(etat){
-					const newRecovery = await generateRecoveryForHelp()
-					await this.usersService.updateUser(result.id, {name:user.name, email:user.email, recovery:newRecovery})
-					res.json({etat: true,result: {name:user.name, email:user.email, recovery: newRecovery}});
-				}
-				else {
-					res.json({etat: false, error: error.message});
-				}
 	}
 
 	@Post('/api/v1/addSugestion')

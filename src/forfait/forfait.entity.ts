@@ -14,17 +14,17 @@ import { UserEntity } from 'src/users/user.entity';
 export class ForfaitEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
-	@Column({ default: 30 })
+	@Column({ default: 30, type: 'int' })
 	limit: number;
 
 	@Column()
 	cover: string;
 
-	@Column({length: '64'})
+	@Column({length: '255'})
 	addressCrypto: string;
 
 	@Column({ type: 'double', default: 1.3 })
-	percentage: number;
+	commissionTotal: number;
 
 	@Column({ type: 'double', default: 1 })
 	min: number;

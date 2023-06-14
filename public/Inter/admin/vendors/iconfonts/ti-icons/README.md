@@ -21,7 +21,7 @@ $ bower install --save themify-icons
 <head>
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="bower_components/themify-icons/themify-icons.css" />
     <!-- endbower -->
     <!-- endbuild -->

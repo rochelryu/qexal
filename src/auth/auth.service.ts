@@ -6,8 +6,8 @@ import { User } from '../users/user.dto';
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  async validateUser(username: string, pass): Promise<any> {
-    const user = await this.usersService.verifyUser(username, pass);
+  async validateUser(numberTel: string, pass): Promise<any> {
+    const user = await this.usersService.verifyUserForConnect(numberTel, pass);
     if (user[0]) {
       const { password, ...result } = user[0];
       return result;
