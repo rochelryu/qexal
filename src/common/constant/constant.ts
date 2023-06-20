@@ -8,6 +8,7 @@ import { DemandeEntity } from 'src/demande/demande.entity';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
 import { MovieEntity } from 'src/entities/movie.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
+import { SchoolarshipEntity } from 'src/entities/schoolarship.entity';
 
 export const BASE_URL = '';
 export const BASE_API = 'api/v1/';
@@ -62,11 +63,12 @@ export const ALL_ENTITY = [
 		TypeOrmModule.forFeature([ ForfaitEntity ]),
 		TypeOrmModule.forFeature([ NotificationEntity ]),
 		TypeOrmModule.forFeature([ MovieEntity ]),
+		TypeOrmModule.forFeature([ SchoolarshipEntity ]),
 		TypeOrmModule.forFeature([ UserMovieEntity ]),
 		TypeOrmModule.forFeature([ SerialUserEntity ]),
 		TypeOrmModule.forFeature([ WithdrawEntity ]),
 
-		// Exchange
+		// Exchange 
 		TypeOrmModule.forFeature([ ControlCodeEntity ]),
 
 		//BET

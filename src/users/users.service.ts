@@ -14,7 +14,7 @@ import { formatedEndpointcrypto, generateRecoveryForHelp } from 'src/common/func
 import { MoreThanDate, MoreThanOrEqualDate, BetweenDate } from 'src/common/functions/date';
 import { EDateType, MotifLocked } from 'src/common/enum/EnumDate';
 import { compare, hash } from 'bcrypt';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import * as cheerio from 'cheerio';
 import { addDays, getDay } from 'date-fns';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
@@ -22,6 +22,7 @@ import { ControleCode } from 'src/common/enum/EnumControl';
 import { ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION, ADDRESS_TROVA_EXCHANGE, ADDRESS_TROVA_INVESTMENT } from 'src/common/constant/constant';
 import { MovieEntity } from 'src/entities/movie.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
+import { SchoolarshipEntity } from 'src/entities/schoolarship.entity';
 
 @Injectable()
 export class UsersService {
@@ -43,6 +44,7 @@ export class UsersService {
 	private logger: Logger = new Logger('UsersServices');
 	private myDateRange: Date[] = [];
 	private myDateMonth: string[] = [];
+	private startonAPI: AxiosInstance;
 	constructor(
 		@InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
 		@InjectRepository(DemandeEntity) private demandesRepository: Repository<DemandeEntity>,
@@ -50,11 +52,18 @@ export class UsersService {
 		@InjectRepository(NotificationEntity) private notificationRepository: Repository<NotificationEntity>,
 		@InjectRepository(MovieEntity) private movieRepository: Repository<MovieEntity>,
 		@InjectRepository(UserMovieEntity) private userMovieRepository: Repository<UserMovieEntity>,
+		@InjectRepository(SchoolarshipEntity) private schoolarshipRepository: Repository<SchoolarshipEntity>,
 
 		@InjectRepository(SerialUserEntity) private serialUserRepository: Repository<SerialUserEntity>,
 
     @InjectRepository(ControlCodeEntity) private controlCodeRepository: Repository<ControlCodeEntity>,
 	) {
+		this.startonAPI = axios.create({
+			baseURL: "https://api.starton.com",
+			headers: {
+				"x-api-key": "sk_live_6e9ccd38-545a-4677-9b4f-260b5aa0880a",
+			},
+		})
 		for (let i = 0; i < 3; i++) {
 			this.myDateRange.push(new Date(new Date().setDate(this.indexDay - i)));
 		}
@@ -506,7 +515,7 @@ export class UsersService {
 	// get forfait information in table
 
 	async getAllForfait(): Promise<ForfaitEntity[]> {
-		return await this.forfaitRepository.find();
+		return await this.forfaitRepository.find({order: {min: "ASC"}});
   }
   async updateForfait(id: number, result: any): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
@@ -2462,6 +2471,23 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 						next({ etat: true, result });
 					} else {
 						next({ etat: false, error: new Error('Aucune vidéo trouvé') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+
+	// For Schoolarship Entity
+	async getAllSchoolarshipByItem(item): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.schoolarshipRepository
+				.find({where: item})
+				.then((result) => {
+					if (result) {
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Verifié vos items') });
 					}
 				})
 				.catch((error) => next({ etat: false, error }));

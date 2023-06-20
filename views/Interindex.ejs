@@ -70,15 +70,16 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-md-12 grid-margin stretch-card">
                         <section class="game-section">
-                            <h2 class="line-title">Moovie Earn</h2>
+                            <h2 class="line-title">Movies Earn</h2>
                             <div class="owl-carousel custom-carousel owl-theme">
                                 <% infos.movieDisplayAtClient.forEach(function(movie, index){ %>
                                     <% if ( index === 0 ) { %>
-                                    <div class="item active" style="background-image: url(<%= movie.cover %>);">
+                                    <div class="item active" style="background-image: url(../sponsors/<%= movie.cover %>);">
                                     <% }  else  { %>
-                                    <div class="item" style="background-image: url(<%= movie.cover %>);">
+                                    <div class="item" style="background-image: url(../sponsors/<%= movie.cover %>);">
                                     <% } %>
                                         <div class="item-desc">
                                             <h3><%= movie.title %></h3>
@@ -87,22 +88,110 @@
                                     </div>
                               
                                 <% }); %>
-                            
-                            </div>
+                                <div class="item end-section">
+                                    <h1>The End...</h1>
+                                </div>
                             </div>
                           </section>
                     </div>
+
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <section class="game-section timeline">
+                            <h2 class="line-title">Invest now</h2>
+                            <div class="container-fluid">
+                                <ol>
+                                    <% infos.forfaits.forEach(function(forfait, index){ %>
+                                    <li>
+                                      <div>
+                                        <time>+ <%= Math.ceil(forfait.commissionTotal * 100) %>% Earn</time>
+                                        <a class="ripple" href="#!">
+                                            <img
+                                              class="img-fluid rounded"
+                                              src="../sponsors/<%= forfait.cover %>" alt="<%= forfait.cover %>" srcset=""
+                                            />
+                                          </a>
+                                          <div class="pointilles"></div>
+                                          <h5 class="card-title text-center">In less than <%= forfait.numberDayTotalVersement %> Days</h5>
+                                            <p class="card-text">Min: <%= forfait.min %>$ (244.000 FCFA), Max: <%= forfait.max %>$ (544.000 FCFA)</p>
+                                            <div class="d-grid gap-2">
+                                                <button type="button" class="btn btn-primary btn-rounded">Choice</button>
+                                            </div>
+                                      </div>
+                                    </li>
+                                    <% }); %>
+                                    
+                                    <li></li>
+                                </ol>
+                            </div>
+                          </section>
+                    </div>
+
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">My Invitation Link</h4>
                                 <div class="flexbox flex-column position-relative">
-                                    <input type="text" id="myInput" value="https://www.trova.vip/signup/<%= user.recovery %>">
+                                    <input type="text" id="myInput" value="https://www.QEXAL.vip/signup/<%= user.recovery %>">
                                     <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
                                 </div>
                                 <div class="flexbox flex-column position-relative p-t-5">
                                     <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Scholarships</h4>
+                                <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+                                    <div class="carousel-indicators">
+                                        <% infos.schoolarships.forEach(function(schoolarship, index){ %>
+                                        <button
+                                          type="button"
+                                          data-mdb-target="#carouselExampleCaptions"
+                                          data-mdb-slide-to="<%= index %>"
+                                          class="<%= index === 0 ? 'active' : '' %>"
+                                          aria-current="true"
+                                        ></button>
+                                        <% }); %>
+                                      </div>
+                                    <div class="carousel-inner">
+                                        <% infos.schoolarships.forEach(function(schoolarship, index){ %>
+                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>" data-mdb-interval="<%= index %>0000">
+                                                <div class="flex m-auto">
+                                                    <div class="card mb-3" style="max-width: 540px;">
+                                                        <div class="row g-0">
+                                                        <div class="col-md-4">
+                                                            <img
+                                                            src="../sponsors/schoolarships/<%= schoolarship.cover %>"
+                                                            alt="<%= schoolarship.cover %>"
+                                                            class="img-fluid rounded-start"
+                                                            />
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="card-body">
+                                                            <h5 class="card-title"><%= schoolarship.address %></h5>
+                                                            <p class="card-text"><%= schoolarship.subtitle %></p>
+                                                            <p class="card-text">
+                                                                <small class="text-muted"><%= schoolarship.expire_at %></small>
+                                                            </p>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% }); %>
+                                      
+                                    <button class="carousel-control-prev" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="prev">
+                                        <i class="fa-solid fa-arrow-left" style="color: #1EBBD7"></i>
+                                    </button>
+                                    <button class="carousel-control-next" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="next">
+                                        <i class="fa-solid fa-arrow-right" style="color: #1EBBD7"></i>
+                                    </button>
+                                  </div>
                             </div>
                         </div>
                     </div>
@@ -176,67 +265,7 @@
                                     <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= infos.percentage.toFixed(2) %>%" aria-valuenow="<%= infos.percentage.toFixed(2) %>" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <br>
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-sm-4 col-xs-12">
-                                            <h4 class="card-title">Dictatiels</h4>
-                                            <div class="owl-carousel owl-theme full-width">
-                                                <div class="item">
-                                                    <div class="card text-white">
-                                                        <img class="card-img " src="../Inter/admin/images/sign in.png" alt="Card image">
-                                                        <div class="card-img-overlay d-flex">
-                                                            <div class="mt-auto text-center w-100">
-                                                                <h6 class="card-text mb-4 font-weight-normal" data-src="https://www.youtube.com/embed/nsbcNMv129w"><a class="btn-floating play btn-primary btn-lg" data-toggle="modal" data-target="#modal1"><i class="icon-control-play text-white"></i></a></h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="item">
-                                                    <div class="card text-white">
-                                                        <img class="card-img " src="../Inter/admin/images/packages.png" alt="Card image">
-                                                        <div class="card-img-overlay d-flex">
-                                                            <div class="mt-auto text-center w-100">
-                                                                <h6 class="card-text mb-4 font-weight-normal" data-src="https://www.youtube.com/embed/kqjquyhkQ2M"><a class="btn-floating play btn-primary btn-lg" data-toggle="modal" data-target="#modal1"><i class="icon-control-play text-white"></i></a></h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4 col-xs-12">
-                                            <h4 class="card-title">Requests paid yesterday in Trova Account</h4>
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Rank</th>
-                                                        <th>Packages</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% infos.allDemandeYesterday.forEach(function(value){ %>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="disc bg-secondary"></div>
-                                                            </td>
-                                                            <td>
-                                                                <h4 class="text-primary font-weight-normal">
-                                                                    <%= value.id %>
-                                                                </h4>
-                                                            </td>
-                                                            <td>
-                                                                <%= value.forfaits.name %>
-                                                            </td>
-
-                                                        </tr>
-                                                        <% }); %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -277,6 +306,7 @@
             </div>
         </div>
         <script src="../Inter/admin/js/owl-carousel.js"></script>
+        
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="http://www.youtube.com/player_api"></script>
         <script>
@@ -284,7 +314,13 @@
                 $(".custom-carousel").owlCarousel(
                     {
                         autoWidth: true,
-                        loop: false
+                        loop: false,
+                        center: true,
+                        responsive:{
+                            600:{
+                                items:4
+                            }
+                        }
                     }
                 );
                 $(".custom-carousel .item").click(function () {

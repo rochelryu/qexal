@@ -395,16 +395,16 @@
                         <div class="pricing-item">
                             <img src="sponsors/<%= forfait.cover %>" alt="" srcset="">
                             <div class="pricing-price d-flex"><sup class="price-dollar text-blue">+</sup>
-                                <%= forfait.commissionTotal * 100 %>%
+                                <%= Math.ceil(forfait.commissionTotal * 100) %>%
                                     <span class="d-block alt-font font-weight-200 font-10 text-center"></span></span>
                                     <p class="pricing-para text-grey ml-3"> for this collaborators</p>
                             </div>
                             <ul class="pricing-list mb-0 m-1">
                                 <li><i class="fa fa-check" aria-hidden="true"></i> Paid with warranty</li>
-                                <li><i class="fa fa-check" aria-hidden="true"></i>Min Invest : <%= forfait.min %></li>
-                                <li><i class="fa fa-check" aria-hidden="true"></i>Max Invest : <%= forfait.max %></li>
+                                <li><i class="fa fa-check" aria-hidden="true"></i>Min Invest : $<%= forfait.min %></li>
+                                <li><i class="fa fa-check" aria-hidden="true"></i>Max Invest : $<%= forfait.max %></li>
                                 <li><i class="fa fa-check" aria-hidden="true"></i>Reward time : <%= forfait.numberDayTotalVersement %> Days</li>
-                                <li><i class="fa fa-check" aria-hidden="true"></i>Daily earnings : <%= (forfait.commissionTotal * 100) / forfait.numberDayTotalVersement %>%</li>
+                                <li><i class="fa fa-check" aria-hidden="true"></i>Daily earnings : <%= ((forfait.commissionTotal * 100) / forfait.numberDayTotalVersement).toFixed(2) %>%</li>
                             </ul>
                         </div>
                     </div>
@@ -438,8 +438,7 @@
                         </div>
                         <!-- Phone-Box -->
                         <div class="col-12 col-md-6 wow fadeIn text-center text-lg-left" data-wow-delay="600ms">
-                            <h4 class="main-font text-blue font-16 font-weight-600">Our Email</h4>
-                            <p class="alt-font font-14 light-grey mt-3">Main Email : admin@trova.vip, Inquiries : infos@trova.vip </p>
+                            <p class="alt-font font-14 light-grey mt-3">Inquiries : infos@qexal.co</p>
                         </div>
                     </div>
 

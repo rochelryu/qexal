@@ -50,6 +50,12 @@ export class UsersController {
 				movieDisplayAtClient.push(movie);
 			}
 		}
+		//get All Forfait
+		const forfaits = await this.service.getAllForfait();
+		//get All Schoolarship
+		const schoolarships = await this.service.getAllSchoolarshipByItem({});
+
+
 		const mesDemandes = await this.service.getAllDemandeByUserid(user.result.id);
 		const countUserActif = await this.service.getCountUsersConnectedToDay();
 		const countAllUser = await this.service.getCountUsers();
@@ -79,6 +85,8 @@ export class UsersController {
 			mesDemandes: mesDemandes.result,
 			allDemandeYesterday: allDemandeYesterday.result,
 			movieDisplayAtClient,
+			forfaits,
+			schoolarships:schoolarships.result
 		}
 		res
 		.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")

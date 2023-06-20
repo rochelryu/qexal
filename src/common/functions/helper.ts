@@ -4,7 +4,26 @@ import { createTransport } from 'nodemailer';
 import { MailOptions } from '../interfaces/Mail.interface';
 import 'dotenv/config';
 import { format } from 'date-fns';
+import axios, { AxiosInstance } from 'axios';
 
+const startonAPI = axios.create({
+    baseURL: "https://api.starton.com",
+    headers: {
+        "x-api-key": "sk_live_6e9ccd38-545a-4677-9b4f-260b5aa0880a",
+    },
+});
+
+export const sendTransaction = async () =>{
+    return await startonAPI.post("/v3/transaction", {
+        network: "polygon-mumbai",
+        signerWallet: "0x694F07CEEc0869aa0dB5E8157FA538268F28B23f",
+        from: "0x694F07CEEc0869aa0dB5E8157FA538268F28B23f",
+        to: "0x6d86C7046CCfA2022BFcad18F0C993B55e1512dE",
+        value: "100", // in wei.
+    })
+        .then(res=>console.log(res.data))
+        .catch(e=>console.log(e))
+}
 
 export const choiceTaxeId = (filleulMontant_subscription: number, parrainMontant_subscription:number, nextGenForfait: number): {taxeId: number, finality:number} => {
     if(nextGenForfait === 0) {

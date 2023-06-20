@@ -80,7 +80,7 @@
                     <option value="" disabled>Select your country</option>
                     <script>
                       $.ajax({
-                          url: 'http://localhost:5001/api/v1/countries',
+                          url: 'http://192.168.1.14:5001/api/v1/countries',
                           type: 'get',
                           success: function(data) {
                             console.log(data);
@@ -151,10 +151,10 @@
                 </div>
                 <div class="modal-body">
                     <ol>
-                        <li>TROVA is a member-to-member financial self-help platform that offers its members the opportunity to invest and have a return on investment of at least 50% within a very short period of time compared to other systems.</li>
+                        <li>QEXAL is a member-to-member financial self-help platform that offers its members the opportunity to invest and have a return on investment of at least 50% within a very short period of time compared to other systems.</li>
                         <li>The delay of reception of the RSI varies according to the activities of the members.</li>
-                        <li>Each member of TROVA pays a membership fee, which varies according to the level of membership chosen by the member.</li>
-                        <li>TROVA levies 5% on each Return On Investment (ROI)</li>
+                        <li>Each member of QEXAL pays a membership fee, which varies according to the level of membership chosen by the member.</li>
+                        <li>QEXAL levies 5% on each Return On Investment (ROI)</li>
                         <li>Each member has the opportunity to increase his or her earning commission through the Matrix. This matrix remains optional.</li>
                         <li>After receiving your first two RSIs, your account is blocked to search for a godchild who will allow you to be unblocked in order to continue in the system.</li>
                         <li>Each person has two types of balances, the investment balance and the winning balance. only the winning balance can be withdrawn. the investment balance is used as a bet in the system.</li>
@@ -180,7 +180,7 @@
             $("#country").on("change", function() {
                 const value = $(this).val();
                 $.ajax({
-                    url: 'http://localhost:5001/api/v1/detailsCountries/' + value,
+                    url: 'http://192.168.1.14:5001/api/v1/detailsCountries/' + value,
                     type: 'get',
                     success: function(data) {
                         $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));
