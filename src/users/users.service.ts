@@ -14,7 +14,7 @@ import { formatedEndpointcrypto, generateRecoveryForHelp } from 'src/common/func
 import { MoreThanDate, MoreThanOrEqualDate, BetweenDate } from 'src/common/functions/date';
 import { EDateType, MotifLocked } from 'src/common/enum/EnumDate';
 import { compare, hash } from 'bcrypt';
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { addDays, getDay } from 'date-fns';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
@@ -44,7 +44,6 @@ export class UsersService {
 	private logger: Logger = new Logger('UsersServices');
 	private myDateRange: Date[] = [];
 	private myDateMonth: string[] = [];
-	private startonAPI: AxiosInstance;
 	constructor(
 		@InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
 		@InjectRepository(DemandeEntity) private demandesRepository: Repository<DemandeEntity>,
@@ -58,12 +57,6 @@ export class UsersService {
 
     @InjectRepository(ControlCodeEntity) private controlCodeRepository: Repository<ControlCodeEntity>,
 	) {
-		this.startonAPI = axios.create({
-			baseURL: "https://api.starton.com",
-			headers: {
-				"x-api-key": "sk_live_6e9ccd38-545a-4677-9b4f-260b5aa0880a",
-			},
-		})
 		for (let i = 0; i < 3; i++) {
 			this.myDateRange.push(new Date(new Date().setDate(this.indexDay - i)));
 		}
