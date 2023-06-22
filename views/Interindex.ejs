@@ -15,6 +15,7 @@
                                                     <%= infos.countAllUser %>
                                                 </h1>
                                                 <p class="text-muted mb-0">Total users</p>
+                                                <button id="connect-button" class="btn btn-rounded btn-primary">Connect</button>
                                             </div>
                                             <i class="icon-pin text-primary icon-lg"></i>
                                         </div>
@@ -142,151 +143,143 @@
                     </div>
 
                     <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Scholarships</h4>
-                                <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-mdb-ride="carousel">
-                                    <div class="carousel-indicators">
-                                        <% infos.schoolarships.forEach(function(schoolarship, index){ %>
-                                        <button
-                                          type="button"
-                                          data-mdb-target="#carouselExampleCaptions"
-                                          data-mdb-slide-to="<%= index %>"
-                                          class="<%= index === 0 ? 'active' : '' %>"
-                                          aria-current="true"
-                                        ></button>
-                                        <% }); %>
-                                      </div>
-                                    <div class="carousel-inner">
-                                        <% infos.schoolarships.forEach(function(schoolarship, index){ %>
-                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>" data-mdb-interval="<%= index %>0000">
-                                                <div class="flex m-auto">
-                                                    <div class="card mb-3" style="max-width: 540px;">
-                                                        <div class="row g-0">
-                                                        <div class="col-md-4">
-                                                            <img
-                                                            src="../sponsors/schoolarships/<%= schoolarship.cover %>"
-                                                            alt="<%= schoolarship.cover %>"
-                                                            class="img-fluid rounded-start"
-                                                            />
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div class="card-body">
-                                                            <h5 class="card-title"><%= schoolarship.address %></h5>
-                                                            <p class="card-text"><%= schoolarship.subtitle %></p>
-                                                            <p class="card-text">
-                                                                <small class="text-muted"><%= schoolarship.expire_at %></small>
-                                                            </p>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-8 grid-margin stretch-card">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Scholarships</h4>
+                                            <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+                                                <div class="carousel-indicators">
+                                                    <% infos.schoolarships.forEach(function(schoolarship, index){ %>
+                                                    <button
+                                                      type="button"
+                                                      data-mdb-target="#carouselExampleCaptions"
+                                                      data-mdb-slide-to="<%= index %>"
+                                                      class="<%= index === 0 ? 'active' : '' %>"
+                                                      aria-current="true"
+                                                    ></button>
+                                                    <% }); %>
+                                                  </div>
+                                                <div class="carousel-inner">
+                                                    <% infos.schoolarships.forEach(function(schoolarship, index){ %>
+                                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>" data-mdb-interval="<%= index %>0000">
+                                                            <div class="flex m-auto">
+                                                                <div class="card mb-3" style="max-width: 540px;">
+                                                                    <div class="row g-0">
+                                                                    <div class="col-md-4">
+                                                                        <img
+                                                                        src="../sponsors/schoolarships/<%= schoolarship.cover %>"
+                                                                        alt="<%= schoolarship.cover %>"
+                                                                        class="img-fluid rounded-start"
+                                                                        />
+                                                                    </div>
+                                                                    <div class="col-md-8">
+                                                                        <div class="card-body">
+                                                                        <h5 class="card-title"><%= schoolarship.address %></h5>
+                                                                        <p class="card-text"><%= schoolarship.subtitle %></p>
+                                                                        <p class="card-text">
+                                                                            <small class="text-muted"><%= schoolarship.expire_at %></small>
+                                                                        </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    <% }); %>
+                                                  
+                                                <button class="carousel-control-prev" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="prev">
+                                                    <i class="fa-solid fa-arrow-left" style="color: #1EBBD7"></i>
+                                                </button>
+                                                <button class="carousel-control-next" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="next">
+                                                    <i class="fa-solid fa-arrow-right" style="color: #1EBBD7"></i>
+                                                </button>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 grid-margin stretch-card">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">My request list</h4>
+                                            <div class="">
+                                                <table id="table_id" class="table table-responsive table-hover display">
+                                                    <thead class="black white-text shadow-lg">
+                                                        <tr>
+                                                            <th>Rank</th>
+                                                            <th>Name Package</th>
+                                                            <th>State</th>
+                                                            <th>Purpose</th>
+                                                            <th>Date of request</th>
+                                                            <th>Date of response</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% infos.mesDemandes.forEach(function(value){ %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= value.id %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= value.forfaits.name %>
+                                                                </td>
+                                                                <td>
+                                                                    <% if ( value.etatid === 1 ) { %>
+                                                                        <span>Pending Request</span>
+                                                                        <% }  else if (value.etatid === 2) { %>
+                                                                            <span>Waiting for confirmation</span>
+                                                                            <% }  else { %>
+                                                                                <span>Valid</span>
+                                                                                <% } %>
+            
+                                                                </td>
+                                                                <td>
+                                                                    <% if ( value.finality === 0 ) { %>
+                                                                        <p class="color-grey">No action</p>
+                                                                        <% }  else if (value.finality === 1) { %>
+                                                                            <p class="color-grey">In the list to receive</p>
+                                                                            <% }  else { %>
+                                                                                <p class="color-grey">Paid Request</p>
+                                                                                <% } %>
+            
+                                                                </td>
+                                                                <td>
+                                                                    <script>
+                                                                        formatDate("<%= value.create_at %>")
+                                                                    </script>
+                                                                </td>
+                                                                <td>
+                                                                    <script>
+                                                                        formatDateToPay("<%= value.create_at %>")
+                                                                    </script>
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+            
+            
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                        <% }); %>
-                                      
-                                    <button class="carousel-control-prev" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="prev">
-                                        <i class="fa-solid fa-arrow-left" style="color: #1EBBD7"></i>
-                                    </button>
-                                    <button class="carousel-control-next" data-mdb-target="#carouselExampleInterval" type="button" data-mdb-slide="next">
-                                        <i class="fa-solid fa-arrow-right" style="color: #1EBBD7"></i>
-                                    </button>
-                                  </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">My request list</h4>
-                                <div class="">
-                                    <table id="table_id" class="table table-responsive table-hover display">
-                                        <thead class="black white-text shadow-lg">
-                                            <tr>
-                                                <th>Rank</th>
-                                                <th>Name Package</th>
-                                                <th>State</th>
-                                                <th>Purpose</th>
-                                                <th>Date of request</th>
-                                                <th>Date of response</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% infos.mesDemandes.forEach(function(value){ %>
-                                                <tr>
-                                                    <td>
-                                                        <%= value.id %>
-                                                    </td>
-                                                    <td>
-                                                        <%= value.forfaits.name %>
-                                                    </td>
-                                                    <td>
-                                                        <% if ( value.etatid === 1 ) { %>
-                                                            <span>Pending Request</span>
-                                                            <% }  else if (value.etatid === 2) { %>
-                                                                <span>Waiting for confirmation</span>
-                                                                <% }  else { %>
-                                                                    <span>Valid</span>
-                                                                    <% } %>
-
-                                                    </td>
-                                                    <td>
-                                                        <% if ( value.finality === 0 ) { %>
-                                                            <p class="color-grey">No action</p>
-                                                            <% }  else if (value.finality === 1) { %>
-                                                                <p class="color-grey">In the list to receive</p>
-                                                                <% }  else { %>
-                                                                    <p class="color-grey">Paid Request</p>
-                                                                    <% } %>
-
-                                                    </td>
-                                                    <td>
-                                                        <script>
-                                                            formatDate("<%= value.create_at %>")
-                                                        </script>
-                                                    </td>
-                                                    <td>
-                                                        <script>
-                                                            formatDateToPay("<%= value.create_at %>")
-                                                        </script>
-                                                    </td>
-                                                </tr>
-                                                <% }); %>
-
-
-                                        </tbody>
-                                    </table>
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <small>Your subscription level</small>
+                                                <small><%= infos.percentage.toFixed(2) %> %</small>
+                                            </div>
+                                            <div class="progress progress-sm mt-2">
+                                                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= infos.percentage.toFixed(2) %>%" aria-valuenow="<%= infos.percentage.toFixed(2) %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <br>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-between mt-2">
-                                    <small>Your subscription level</small>
-                                    <small><%= infos.percentage.toFixed(2) %> %</small>
-                                </div>
-                                <div class="progress progress-sm mt-2">
-                                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= infos.percentage.toFixed(2) %>%" aria-valuenow="<%= infos.percentage.toFixed(2) %>" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <br>
                                 
                             </div>
                         </div>
+                        
                     </div>
-                    <div class="col-md-3 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Requests paid on Last Week in Withdrawal</h4>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Amount</th>
-                                            <th>Username</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                       
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <!-- content-wrapper ends -->
@@ -309,6 +302,38 @@
         
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="http://www.youtube.com/player_api"></script>
+        <script type="module">
+            import { Web3ModalSign } from 'https://unpkg.com/@web3modal/sign-html'
+
+            const web3Modal = new Web3ModalSign({
+                projectId: "032f05e4b02a8a305c7909421cc2517e",
+                walletConnectVersion: 2,
+                metadata: {
+                    name: 'Qexal',
+                    description: 'Qexal',
+                    url: 'qexal.co',
+                    icons: ['https://walletconnect.com/_next/static/media/logo_mark.84dd8525.svg']
+                }
+            })
+
+            async function onConnect() {
+                console.log("data");
+                const session = await web3Modal.connect({
+                    requiredNamespaces: {
+                    eip155: {
+                        methods: ['eth_sendTransaction','eth_signTransaction', 'eth_sign','personal_sign', 'eth_signTypedData'],
+                        chains: ['eip155:1'],
+                        events: ['chainChanged', 'accountsChanged']
+                    }
+                    }
+                })
+                if(session.topic) {
+                    //TODO SEND session.namespaces.eip155.accounts[0].slice(9) for address user
+                }
+                
+            }
+            document.getElementById('connect-button').addEventListener('click', onConnect)
+          </script>
         <script>
             $(document).ready(function() {
                 $(".custom-carousel").owlCarousel(
