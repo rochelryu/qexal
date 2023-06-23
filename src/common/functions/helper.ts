@@ -5,24 +5,25 @@ import { MailOptions } from '../interfaces/Mail.interface';
 import 'dotenv/config';
 import { format } from 'date-fns';
 import axios, { AxiosInstance } from 'axios';
+import { ResponseProvider } from '../interfaces/response.interface';
 
-const startonAPI = axios.create({
-    baseURL: "https://api.starton.com",
-    headers: {
-        "x-api-key": "sk_live_6e9ccd38-545a-4677-9b4f-260b5aa0880a",
-    },
-});
+const axiosInstance: AxiosInstance = axios.create();
 
-export const sendTransaction = async () =>{
-    return await startonAPI.post("/v3/transaction", {
-        network: "polygon-mumbai",
-        signerWallet: "0x694F07CEEc0869aa0dB5E8157FA538268F28B23f",
-        from: "0x694F07CEEc0869aa0dB5E8157FA538268F28B23f",
-        to: "0x6d86C7046CCfA2022BFcad18F0C993B55e1512dE",
-        value: "100", // in wei.
-    })
-        .then(res=>console.log(res.data))
-        .catch(e=>console.log(e))
+export const getValueOfEthInUsd = (): Promise<ResponseProvider> => {
+    const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
+        return new Promise(async (next) => {
+            axiosInstance.get(url)
+            .then( // Once we have data returned ...
+                response => {
+                const json = response.data;
+                const priceEthInUsd = parseFloat(json.result.ethusd).toFixed(2);
+
+                next({etat:true, result:priceEthInUsd})
+                }
+            )
+            .catch(error => {next({etat:false, error})});
+
+        });
 }
 
 export const choiceTaxeId = (filleulMontant_subscription: number, parrainMontant_subscription:number, nextGenForfait: number): {taxeId: number, finality:number} => {
@@ -1320,3 +1321,5 @@ export const nextStepForPackaheUpgrade = (nextGenForfait: number, prevAmount: nu
 export const payementVerifyByPromo = (isNewUserBenefit: number): number => {
   return isNewUserBenefit === 1 ? POURCENTAGE_PAY_BY_WEEK_FOR_NEW_USER : POURCENTAGE_PAY_BY_WEEK ;
 }
+
+

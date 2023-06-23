@@ -4,13 +4,14 @@ import { Response } from 'express';
 import { MotifLocked } from 'src/common/enum/EnumDate';
 // import translate from 'translate';
 import { Retrait } from './retrait.dto';
-import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp } from 'src/common/functions/helper';
+import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd } from 'src/common/functions/helper';
 import { verifyWeekend } from 'src/common/functions/date';
 import { RecoveryDto } from './recovery.dto';
 import { MailOptions } from 'src/common/interfaces/Mail.interface';
 import { EMAIL, EMAIL_BILLIONARY_INVEST, EMAIL_START_UP, NUMBER_OF_USE_NEXT_WEEK, PayementByTrovaExchange, POURCENTAGE_ADMIN, POURCENTAGE_BUSINESS, POURCENTAGE_PARRAIN, POURCENTAGE_PAYNET, POURCENTAGE_PAY_BY_WEEK, RATE_CRYPTO_INVERSION, Reabonnement } from 'src/common/constant/constant';
 import { hash } from 'bcrypt';
 import { differenceInSeconds, subDays, addDays, startOfWeek } from 'date-fns';
+import { currencies } from 'src/common/constant/currenciesData';
 
 @Controller('users')
 export class UsersController {
@@ -86,6 +87,7 @@ export class UsersController {
 			allDemandeYesterday: allDemandeYesterday.result,
 			movieDisplayAtClient,
 			forfaits,
+			valueUsdToCurrency: currencies.results[user.result.currencies],
 			schoolarships:schoolarships.result
 		}
 		res

@@ -1244,7 +1244,7 @@ export class UsersService {
 
   // scrap TxHash
 
-	async convertMoney(value:number): Promise<ResponseProvider> {
+	async convertEthToUsd(valueEth:number): Promise<ResponseProvider> {
         const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
         const AxiosInstance = axios.create();
 		    return new Promise(async (next) => {
@@ -1254,7 +1254,25 @@ export class UsersService {
                     const json = response.data;
 					const dollars = parseFloat(json.result.ethusd);
 
-                    next({etat:true, result: dollars * value})
+                    next({etat:true, result: dollars * valueEth})
+                    }
+                )
+                .catch(error => {next({etat:false, error})});
+
+			});
+	}
+
+	async convertUsdToEth(valueUsd:number): Promise<ResponseProvider> {
+        const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
+        const AxiosInstance = axios.create();
+		    return new Promise(async (next) => {
+            AxiosInstance.get(url)
+                .then( // Once we have data returned ...
+                    response => {
+                    const json = response.data;
+					const priceEthInUsd = parseFloat(json.result.ethusd);
+
+                    next({etat:true, result: (valueUsd / priceEthInUsd).toFixed(2)})
                     }
                 )
                 .catch(error => {next({etat:false, error})});
@@ -1276,7 +1294,7 @@ export class UsersService {
 						const destination = $('#contractCopy');
 						const arrayMontant = montant.text().trim().split('ETH');
 						const valueEth = parseFloat(arrayMontant[0]);
-						const montantUsd = await this.convertMoney(valueEth);
+						const montantUsd = await this.convertEthToUsd(valueEth);
 						if(state.text().trim() === "Success" && destination.text().trim() === destinationAddress) {
 							if((value - montantUsd.result) <= 1) {
 								next({etat:true, result: {ref, montant: 0, montant_net_send: montantUsd.result}})

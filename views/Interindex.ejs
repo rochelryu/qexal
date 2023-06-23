@@ -113,9 +113,9 @@
                                           </a>
                                           <div class="pointilles"></div>
                                           <h5 class="card-title text-center">In less than <%= forfait.numberDayTotalVersement %> Days</h5>
-                                            <p class="card-text">Min: <%= forfait.min %>$ (244.000 FCFA), Max: <%= forfait.max %>$ (544.000 FCFA)</p>
+                                            <p class="card-text">Min: <%= forfait.min %>$ (<%= (forfait.min * infos.valueUsdToCurrency).toFixed(1) %> <%= user.currencies %>)<br>Max: <%= forfait.max %>$ (<%= (forfait.max * infos.valueUsdToCurrency).toFixed(1) %> <%= user.currencies %>)</p>
                                             <div class="d-grid gap-2">
-                                                <button type="button" class="btn btn-primary btn-rounded">Choice</button>
+                                                <button type="button" class="btn btn-primary btn-rounded" data-mdb-toggle="modal" data-mdb-target="#choiceForfait<%= index %>">Choice</button>
                                             </div>
                                       </div>
                                     </li>
@@ -124,6 +124,8 @@
                                     <li></li>
                                 </ol>
                             </div>
+                            
+
                           </section>
                     </div>
 
@@ -289,6 +291,43 @@
     </div>
 
     <%- include('partials/_footer'); %>
+    <% infos.forfaits.forEach(function(forfait, index){ %>
+        <div class="modal fade" id="choiceForfait<%= index %>" tabindex="-1" data-mdb-backdrop="static"
+            data-mdb-keyboard="false" aria-labelledby="choiceForfaitLabel<%= index %>" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="choiceForfaitLabel">Min: <%= forfait.min %>$ (<%= (forfait.min * infos.valueUsdToCurrency).toFixed(1) %> <%= user.currencies %>)<br>Max: <%= forfait.max %>$ (<%= (forfait.max * infos.valueUsdToCurrency).toFixed(1) %> <%= user.currencies %>)</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></span>
+                                </div>
+                                <input type="text" name="amount" class="form-control" placeholder="Invest Amount" required>
+                            
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4">
+                            
+                        </div>
+                          <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency"></span> <%= user.currencies %></p></div>
+                                <div class="col-sm-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth"></span> ≈ </p></div>
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-dark btn-rounded">Payement</button>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }); %>
         <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -328,6 +367,26 @@
                     }
                 })
                 if(session.topic) {
+                    const account = session.namespaces.eip155.accounts[0].slice(9);
+                    const topic = session.topic;
+                    const tx = {
+                        from: account,
+                        to: "0xBDE1EAE59cE082505bB73fedBa56252b1b9C60Ce",
+                        data: "0x",
+                        gasPrice: "0x029104e28c",
+                        gasLimit: "0x5208",
+                        value: "0x00",
+                    };
+                    console.table([account, topic], ["account", "topic"]);
+                    const result = await web3Modal.request({
+                        topic,
+                        chainId: "eip155:1",
+                        request: {
+                            method: "eth_sendTransaction",
+                            params: [tx],
+                        },
+                    });
+                    console.log(result);
                     //TODO SEND session.namespaces.eip155.accounts[0].slice(9) for address user
                 }
                 
@@ -336,6 +395,15 @@
           </script>
         <script>
             $(document).ready(function() {
+                $(".tabs-menu").on('click', function (e) {
+                    e.preventDefault();
+                    const intent = $(this).find("a").attr("aria-controls")
+                    $(".tabs-menu > a").removeClass('active');
+                    $(this).find("a").addClass('active');
+                    $(this).parent().next().find('.tabs-intent').removeClass("show active");
+                    $(`#${intent}`).addClass("show active");
+                })
+
                 $(".custom-carousel").owlCarousel(
                     {
                         autoWidth: true,
