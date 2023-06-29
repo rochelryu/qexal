@@ -3,9 +3,10 @@ import { ALPHABET, EMAIL, EMAIL_BILLIONARY_INVEST, EMAIL_CRYPTO_WILD_INVEST, EMA
 import { createTransport } from 'nodemailer';
 import { MailOptions } from '../interfaces/Mail.interface';
 import 'dotenv/config';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import axios, { AxiosInstance } from 'axios';
 import { ResponseProvider } from '../interfaces/response.interface';
+import { FormatInitDemandeInterface } from '../interfaces/formatDataIO.interface';
 
 const axiosInstance: AxiosInstance = axios.create();
 
@@ -1320,6 +1321,19 @@ export const nextStepForPackaheUpgrade = (nextGenForfait: number, prevAmount: nu
 
 export const payementVerifyByPromo = (isNewUserBenefit: number): number => {
   return isNewUserBenefit === 1 ? POURCENTAGE_PAY_BY_WEEK_FOR_NEW_USER : POURCENTAGE_PAY_BY_WEEK ;
+}
+
+export const formatInitDemande = (forfaitid:number,numberDayTotalVersement:number , userid:number,amount:number, percentageTotal:number,ref:string): FormatInitDemandeInterface => {
+    return {
+        expire_at: addDays(new Date(), numberDayTotalVersement),
+        forfaitid,
+        userid,
+        amount: Math.round(amount),
+        last_date_payement: new Date(),
+        ref,
+        percentageTotal,
+        commissionDay: parseFloat((percentageTotal / numberDayTotalVersement).toFixed(1))
+    }
 }
 
 

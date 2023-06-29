@@ -1,6 +1,6 @@
 export enum ControleCode {
-    Subscription = 'Subscription',
-    ErrorTxhashPayment = 'ErrorTxhashPayment',
-    TxhashSkipedForIncreaseEthereum = 'TxhashSkipedForIncreaseEthereum',
+    success = 'Success',
+    pending = 'Pending',
+    error = 'Error',
 }
   

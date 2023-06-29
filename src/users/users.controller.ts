@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { MotifLocked } from 'src/common/enum/EnumDate';
 // import translate from 'translate';
 import { Retrait } from './retrait.dto';
-import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd } from 'src/common/functions/helper';
+import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd, formatInitDemande } from 'src/common/functions/helper';
 import { verifyWeekend } from 'src/common/functions/date';
 import { RecoveryDto } from './recovery.dto';
 import { MailOptions } from 'src/common/interfaces/Mail.interface';
@@ -12,6 +12,7 @@ import { EMAIL, EMAIL_BILLIONARY_INVEST, EMAIL_START_UP, NUMBER_OF_USE_NEXT_WEEK
 import { hash } from 'bcrypt';
 import { differenceInSeconds, subDays, addDays, startOfWeek } from 'date-fns';
 import { currencies } from 'src/common/constant/currenciesData';
+import { createDemandeDto } from './demande.dto';
 
 @Controller('users')
 export class UsersController {
@@ -34,19 +35,17 @@ export class UsersController {
 		const notifications = await this.service.getNotificationsByUserid(req.session.qexal.id);
 		const countNotifications = await this.service.getCountNotificationsByUserid(req.session.qexal.id);
 		const countNotif = countNotifications.result > 0 ? { etat: true, result: countNotifications.result } : { etat: false };
-		const getLastDemandeParrain = await this.service.getLastDemandeForSuivie(user.result.id);
-		/*if(getLastDemandeParrain.etat && getLastDemandeParrain.result.finality === 1 && differenceInSeconds(addDays(new Date(getLastDemandeParrain.result.create_at), 7),new Date()) <= -5 // -5 pour dire que le paiement hebdomadaire se fait 5 secondes après la date de paiement) ) {
-			const payeDemandeAuto = await this.payeDemandeAuto(getLastDemandeParrain.result.id);
-			if(payeDemandeAuto.etat && payeDemandeAuto.result === "Transaction successfully completed this account is at the same time locked for re-subscription"){
-				req.session.destroy();
-			}
-
-		}*/
+		let lastDemande = await this.service.getLastDemandeForSuivieByItem({userid: user.result.id, etatid: 2});
+		if(lastDemande.etat){
+			await this.payeDemandeAuto(lastDemande.result.id);
+		}
+		const usdToEth = await this.service.convertUsdToEth(1);
+		lastDemande = await this.service.getLastDemandeForSuivieByItem({userid: user.result.id, etatid: 2});
 		const allMovies = await this.service.getMoviesByItem({});
 		
 		for (const movie of allMovies.result) {
 			const allMovie = await this.service.verifyIfUserAlreadySeeMovie(movie.id, user.result.id);
-			this.logger.log(allMovie);
+			
 			if(!allMovie.etat && allMovie.error.message === "Aucune vidéo trouvé") {
 				movieDisplayAtClient.push(movie);
 			}
@@ -74,7 +73,7 @@ export class UsersController {
 			dataOfDemographie.push(rowData);
 		}
 		user = await this.service.getUserByItem({id :req.session.qexal.id});
-		const weekendBeginerDate = subDays(startOfWeek(new Date()),2);
+		//const weekendBeginerDate = subDays(startOfWeek(new Date()),2);
 		
 		const infos = {
 			percentage,
@@ -88,7 +87,9 @@ export class UsersController {
 			movieDisplayAtClient,
 			forfaits,
 			valueUsdToCurrency: currencies.results[user.result.currencies],
-			schoolarships:schoolarships.result
+			schoolarships:schoolarships.result,
+			lastDemande: lastDemande.etat ? lastDemande: {},
+			usdToEth: usdToEth.result
 		}
 		res
 		.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
@@ -101,8 +102,97 @@ export class UsersController {
 		});
 	}
 
+
+
+
+
+
+	@Post('createDemande')
+	async createDemande(@Body() demande: createDemandeDto, @Request() req) {
+		if(req.session.qexal){
+			const user = await this.service.getUserByItem({id: req.session.qexal.id});
+			if(user.etat) {
+				//Verify If TxHash already Exist
+				const txHashAlreadyExist = await this.service.getControlCodeItem({txHash: demande.txHash.trim()});
+				if(txHashAlreadyExist.etat) {
+					//Send Mail to explain txHash already Exist
+					const mailOptionParain: MailOptions = {
+						from: `QEXAL <${EMAIL}>`,
+						to: user.result.email,
+						subject: 'TxHash Already Exist',
+						html: ``
+						};
+						const send = await sendMail(mailOptionParain);
+						// Ce TxHash exist déjà : faire une methode de traduction automatique
+						return {etat: false, error: "Ce TxHash exist déjà"}
+				} else {
+					//getInfo from Forfait
+					const forfait = await this.service.getForfaitById(demande.forfaitId);
+					//TODO verifyInfo of txHash
+					const amountValid = demande.amount - 1;
+					const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountValid, forfait.result.addressCrypto);
+					if(forfait.result.min - 2 <= verifyTxHashInfo.result.montant_net_send && verifyTxHashInfo.result.montant_net_send <= forfait.result.max) {
+						//Create Demande of Client
+						const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, verifyTxHashInfo.result.montant_net_send, forfait.result.commissionTotal, demande.txHash.trim());
+						const {etat, error} = await this.service.setDemande(initDemande);
+						if(etat) {
+							//Send Mail at client for signal valid transaction
+							return {
+								etat, result: "Invest Valid"
+							}
+						} else {
+							return {
+								etat, error: error.message
+							}
+						}
+
+					} else {
+						// Notify Client demande note create and rembourse client when Transaction arise
+						return {
+							etat:false, error: "Votre transaction ne rentre pas dans les règles de cette action donc contacté le support pour remboursement."
+						}
+
+					}
+				}
+				
+			} else {
+				return {etat: false, error: "Email not found..."}
+			}
+		}
+
+  }
+
+  async payeDemandeAuto(demandeId: number) {
+	try {
+		const demande = await this.service.getDemandeById(demandeId)
+		const user = await this.service.getUserByItem({ id: demande.result.userid });
+		//Get diffDay to Moment at create_at demande
+		const differenceDay = differenceInSeconds(new Date(), demande.result.last_date_payement) % 86400;
+		
+		const cumulPercentage =
+		demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ? 
+		demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) : demande.result.percentageTotal;
+
+		const soldeGain = demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ?
+		user.result.soldeGain + (differenceDay * demande.result.commissionDay * demande.result.amount) : user.result.soldeGain + ((demande.result.percentageTotal - demande.result.cumulPercentage) * demande.result.amount);
+		await this.service.updateDemande(demandeId, { cumulPercentage,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay)});
+		await this.service.updateUser(user.result.id, {soldeGain});
+		return {etat:true}
+		
+	} catch (error) {
+		//throw new Error(error.message);
+		return {etat: false, error: error.message};
+	}
+  }
+
+	/* 
+	
+	-------------------END SECTION
+	
+	*/
+
 	@Get('forfaittaxe')
-	async createDemande(@Request() req, @Res() res: Response) {
+	async forfaittaxe(@Request() req, @Res() res: Response) {
 			if(req.session.qexal && req.session.qexal.roleid === 3){
       const notifications = await this.service.getNotificationsByUserid(req.session.qexal.id);
 			const countNotifications = await this.service.getCountNotificationsByUserid(req.session.qexal.id);
@@ -380,104 +470,6 @@ export class UsersController {
 		} else {
 			return { etat: false, error: 'veuillez vous authentifier' };
 		}
-  }
-
-
-	async payeDemandeAuto(demandeId: number) {
-      const update = await this.service.updateDemande(demandeId, { finality: 2 });
-      const demandes = await this.service.getDemandeById(demandeId)
-      //const forfait = await this.service.getForfaitById(demandes.result.forfaitid);
-
-      if (update.etat) {
-        const user = await this.service.getUserByItem({ id: demandes.result.userid });
-
-        const forfait = await this.service.getForfaitByItem({id: user.result.forfaitid});
-        const soldeGain =  user.result.soldeGain + (nextStepForPackaheUpgrade(user.result.nextGenForfait,forfait.result.montant, forfait.result.nextGenForfaitMontant) * payementVerifyByPromo(user.result.isNewUserBenefit)); // taxe.result.commission is between value 1.5 at 2
-        const newPayementForUser = await this.service.updateUser(user.result.id, {soldeGain});
-        const numberDemande = await this.service.getCountDemandeByUserInRange(new Date(user.result.endContratTime), demandes.result.userid);
-		
-        if(user.result.accord === 0) {
-            // const reservoireGain = await this.service.getReservoireByItem({ id: 1});
-            // const reservoireTransaction = await this.service.getReservoireByItem({ id: 2 });
-            // const montantGain = (forfait.result.nextGenForfaitMontant * POURCENTAGE_ADMIN) / 2;
-            // const updateReservoireGain = await this.service.updateReservoire(1, {montant : reservoireGain.result.montant + montantGain});
-            // const updateReservoireTransaction = await this.service.updateReservoire(2, { montant: reservoireTransaction.result.montant + montantGain });
-          if (numberDemande.result > 1) {
-            const lockedUser = await this.service.updateUser(user.result.id, { isActive: false, inscription: 3, motif: "Recherche de fillieuls pour debloquage"});
-            const demande = await this.service.setDemandeMY(user.result.forfaitid,user.result.id, 3, 1);
-			const newUserNotif = await this.service.setNotification(user.result.id, 6, `Your account has just been locked, You should to search one person for follow to you, But you can to remote your balance Win: ${soldeGain}. Thank you`);
-            return {
-              etat: true,
-              result: 'Transaction successfully completed this account is ON The same time locked to search for godchildren.'
-            };
-          } else {
-            const demande = await this.service.setDemandeMY(user.result.forfaitid,user.result.id, 3, 1);
-            return {
-              etat: true,
-              result: 'Transaction successfully completed'
-            };
-          }
-        } else {
-			const limitDemande = user.result.isEligibleForNextWeek === 1 ? 6: 5;
-			if(limitDemande === 6) {
-				const messageForUserLockedInSubcribe = `${user.result.pseudo}: <a href='/users/viewAllInfo?id=${user.result.id}' target="_bank">${user.result.id}</a> va à 6 receptions`;
-				await this.service.setNotification(3, 1,messageForUserLockedInSubcribe);
-			}
-          if (numberDemande.result >= limitDemande) {
-			  if(user.result.isEligibleForNextWeek === 0) { // for pay 10% of montant when the contrat is end but the user have not win the bonus week (Insufficient personne in matrix);
-				const filleuilInMatrix = await this.service.getUserFollowInRange(user.result.dateMatrixCount, user.result.id);
-				for (let index = 0; index < filleuilInMatrix.result.length; index++) {
-					const element = filleuilInMatrix.result[index];
-					const forfaitUser = await this.service.getForfaitById(element.forfaitid);
-					await this.service.updateUser(element.id, {soldeGain: user.result.soldeGain + (nextStepForPackaheUpgrade(element.nextGenForfait,forfaitUser.result.montant, forfaitUser.result.nextGenForfaitMontant) * POURCENTAGE_PARRAIN) });
-				}
-			  }
-            const messageForUserLockedInSubcribe = 'Your account has just been locked, You must to subscribe an one package for continuous to use the system, In this state, you can\'t to remote your balance Win. Thank you';
-            const lockedUser = await this.service.updateUser(user.result.id, { isActive: false, inscription: 0, ref: 'old-'+ user.result.ref, motif: "Reabonnement", soldeInvestissement: 0, isEligibleForNextWeek: 0});
-			const newUserNotif = await this.service.setNotification(user.result.id, 1,messageForUserLockedInSubcribe);
-            const mailOptionUser: MailOptions = {
-              from: `QEXAL <${EMAIL}>`,
-              to: user.result.email,
-              subject: 'ACCOUNT LOCKED ON QEXAL',
-              html: `<div style="background:#eee; padding: 20px"> <p>${messageForUserLockedInSubcribe}</p></div>`
-            };
-            const sendParain = await sendMail(mailOptionUser);
-            return {
-              etat: true,
-              result: 'Transaction successfully completed this account is at the same time locked for re-subscription'
-            };
-          } else {
-			
-            // const reservoireGain = await this.service.getReservoireByItem({ id: 1});
-            // const reservoireTransaction = await this.service.getReservoireByItem({ id: 2 });
-            // const montantGain = (forfait.result.nextGenForfaitMontant * POURCENTAGE_ADMIN) / 2;
-            // const updateReservoireGain = await this.service.updateReservoire(1, {montant : reservoireGain.result.montant + montantGain});
-            // const updateReservoireTransaction = await this.service.updateReservoire(2, { montant: reservoireTransaction.result.montant + montantGain });
-            const demande = await this.service.setDemandeMY(user.result.forfaitid,user.result.id, 3, 1);
-			const numberDemandeAfter = await this.service.getCountDemandeByUserInRangeNoFilter(new Date(user.result.endContratTime), demandes.result.userid);
-			if(numberDemandeAfter.result > 5) {
-				const messageForUserLockedInSubcribe = `${user.result.pseudo}: <a href='https://trova.vip/users/viewAllInfo?id=${user.result.id}' target="_bank">${user.result.id}</a> va à 6 receptions`;
-				const mailOptionUser: MailOptions = {
-					from: `QEXAL <${EMAIL}>`,
-					to: EMAIL,
-					subject: 'ACCOUNT WICH RECEIVE 6',
-					html: `<div style="background:#eee; padding: 20px"> <p>${messageForUserLockedInSubcribe}</p></div>`
-				  };
-				  await sendMail(mailOptionUser);
-			}
-            return {
-              etat: true,
-              result: 'Transaction effectuée avec succès'
-            };
-          }
-        }
-
-			} else {
-				return {
-					etat: false,
-					error: 'Echec de la transaction'
-				};
-			}
   }
 
   @Post('removeDemande')

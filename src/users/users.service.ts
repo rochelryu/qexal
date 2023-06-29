@@ -23,6 +23,7 @@ import { ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION, ADDRESS_TROVA_EXCHANGE, 
 import { MovieEntity } from 'src/entities/movie.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
 import { SchoolarshipEntity } from 'src/entities/schoolarship.entity';
+import { FormatInitDemandeInterface } from 'src/common/interfaces/formatDataIO.interface';
 
 @Injectable()
 export class UsersService {
@@ -927,10 +928,10 @@ export class UsersService {
 				);
 		});
 	}
-	async getLastDemandeForSuivie(userid: number): Promise<ResponseProvider> {
+	async getLastDemandeForSuivieByItem(item): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.demandesRepository
-				.findOne({ where: { userid }, order: { id: 'DESC' } })
+				.findOne({ where: item, order: { id: 'DESC' } })
 				.then((res) => {
 					if (res) {
 						next({ etat: true, result: res });
@@ -1002,28 +1003,6 @@ export class UsersService {
 		});
 	}
 
-	async getLastDemandeForSuivie2(userid: number): Promise<ResponseProvider> {
-		return new Promise(async (next) => {
-			await this.demandesRepository
-				.query('SELECT * FROM demande_entity WHERE userid = ? and etatid = 3 ORDER BY id DESC LIMIT 3', [
-					userid
-				])
-				.then((res) => {
-					if (res.length > 0) {
-						next({ etat: true, result: res });
-					} else {
-						next({ etat: false, error: new Error('Aucun traitement fait') });
-					}
-				})
-				.catch((error) =>
-					next({
-						etat: false,
-						error: new Error("Server side error has occurred, please try again later")
-					})
-				);
-		});
-	}
-
 	async getDemandeById(id: number): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.demandesRepository
@@ -1047,18 +1026,18 @@ export class UsersService {
 		});
 	}
 
-	async setDemande(forfaitid: number, userid: number): Promise<ResponseProvider> {
+	async setDemande(initDemande:FormatInitDemandeInterface): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.demandesRepository
 				// eslint-disable-next-line @typescript-eslint/camelcase
-				.save({ forfaitid, userid, updated_at: new Date(), create_at: new Date() })
+				.save({ ...initDemande, updated_at: new Date(), create_at: new Date() })
 				.then((result) => {
 					next({ etat: true, result });
 				})
 				.catch((error) =>
 					next({
 						etat: false,
-						error: new Error("l'enregistrement du forfait a échoué, veuillez ressayer plutard")
+						error: new Error("l'enregistrement de la demande a échoué, veuillez ressayer plutard")
 					})
 				);
 		});
@@ -1272,7 +1251,7 @@ export class UsersService {
                     const json = response.data;
 					const priceEthInUsd = parseFloat(json.result.ethusd);
 
-                    next({etat:true, result: (valueUsd / priceEthInUsd).toFixed(2)})
+                    next({etat:true, result: valueUsd / priceEthInUsd})
                     }
                 )
                 .catch(error => {next({etat:false, error})});
@@ -1280,7 +1259,7 @@ export class UsersService {
 			});
 	}
 
-  async verifyTxHash(ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT): Promise<ResponseProvider> {
+  async verifyTxHash(userid:number,ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT): Promise<ResponseProvider> {
         const url = `https://etherscan.io/tx/${ref}`; // URL we're scraping
         const AxiosInstance = axios.create();
 		return new Promise(async (next) => {
@@ -1295,16 +1274,21 @@ export class UsersService {
 						const arrayMontant = montant.text().trim().split('ETH');
 						const valueEth = parseFloat(arrayMontant[0]);
 						const montantUsd = await this.convertEthToUsd(valueEth);
-						if(state.text().trim() === "Success" && destination.text().trim() === destinationAddress) {
+						if((state.text().trim() === "Success" || state.text().trim() === "Pending") && destination.text().trim() === destinationAddress) {
+							//add txHash in Control Code 
+							const type = state.text().trim() === "Success" ? ControleCode.success: ControleCode.pending;
+							await this.setControlCode(userid, type, ref.trim(), montantUsd.result);
 							if((value - montantUsd.result) <= 1) {
 								next({etat:true, result: {ref, montant: 0, montant_net_send: montantUsd.result}})
 							} else {
 								next({etat:false, result: {ref, montant: value - montantUsd.result, montant_net_send: montantUsd.result}, error: new Error("incomplete transaction")});
 							}
 							
-						} else if(state.text().trim() === "Pending") {
-							next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
-						} else {
+						}
+						// else if(state.text().trim() === "Pending") {
+						// 	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
+						// }
+						else {
 							next({etat:false, error: new Error("this transaction has failed, please make a new transaction to sign your contract")})
 						}
                     }
@@ -2450,6 +2434,22 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 		});
 	}
 
+	async setControlCode(userid: number, type: ControleCode, txHash: string, amount: number): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.controlCodeRepository
+				.save({userid,type, txHash,  amount})
+				.then((result) => {
+					next({ etat: true, result });
+				})
+				.catch((error) =>
+					next({
+						etat: false,
+						error: new Error("l'enregistrement du controlCode a échoué, veuillez ressayer plutard")
+					})
+				);
+		});
+	}
+
 
 	// For Movie Entity
 	async getMoviesByItem(item): Promise<ResponseProvider> {
@@ -2483,6 +2483,17 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 					} else {
 						next({ etat: false, error: new Error('Aucune vidéo trouvé') });
 					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+	async setMovieVisualisation(movieid: number, userid: number): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.userMovieRepository
+				.save({movieid,userid})
+				.then((result) => {
+					next({ etat: true, result });
 				})
 				.catch((error) => next({ etat: false, error }));
 		});

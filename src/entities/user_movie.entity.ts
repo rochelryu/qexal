@@ -18,18 +18,6 @@ import { MovieEntity } from './movie.entity';
 export class UserMovieEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
-	@Column()
-	title: string;
-
-	@Column()
-	subtitle: string;
-
-	@Column({length: '255', type: 'varchar'})
-	cover: string;
-
-	@Column({ type: 'varchar' })
-	linkId: string;
-
     @Column({ type: 'int' })
 	movieid: number;
 

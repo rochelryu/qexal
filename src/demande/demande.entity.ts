@@ -16,19 +16,16 @@ import {
 export class DemandeEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
-	@Column({ default: 1 })
+	@Column({ default: 2 })
 	etatid: number;
 
 	@Column({ length: 64 })
-	addressCrypto: string;
+	ref: string;
 
 	@Column({ type: 'double' })
 	amount: number;
 
-	@Column({ type: 'double' })
-	amount_rest_payment: number;
-
-	@Column({ type: 'double' })
+	@Column({ type: 'double', default: 0 })
 	cumulPercentage: number;
 
 	@Column({ type: 'double' })
@@ -60,5 +57,6 @@ export class DemandeEntity extends BaseEntity {
 
 	@CreateDateColumn() create_at: Date;
 	@Column({default: null}) expire_at: Date;
+	@Column({default: null}) last_date_payement: Date;
 	@UpdateDateColumn() updated_at: Date;
 }

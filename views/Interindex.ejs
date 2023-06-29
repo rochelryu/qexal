@@ -134,7 +134,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">My Invitation Link</h4>
                                 <div class="flexbox flex-column position-relative">
-                                    <input type="text" id="myInput" value="https://www.QEXAL.vip/signup/<%= user.recovery %>">
+                                    <input type="text" id="myInput" value="https://www.qexal.co/signup/<%= user.recovery %>">
                                     <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
                                 </div>
                                 <div class="flexbox flex-column position-relative p-t-5">
@@ -306,7 +306,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></span>
                                 </div>
-                                <input type="text" name="amount" class="form-control" placeholder="Invest Amount" required>
+                                <input type="number" ng-change="performOperation()" name="amount" ng-maxlength="<%= forfait.max.toString().length %>" ng-model="amoutInvest" ng-max="<%= forfait.max %>" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" class="form-control" placeholder="Invest Amount" required>
                             
                             </div>
                         </div>
@@ -315,14 +315,14 @@
                         </div>
                           <div class="container-fluid">
                             <div class="row">
-                                <div class="col-sm-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency"></span> <%= user.currencies %></p></div>
-                                <div class="col-sm-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth"></span> ≈ </p></div>
+                                <div class="col-sm-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
+                                <div class="col-sm-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
                             </div>
                           </div>
                           <button type="button" class="btn btn-dark btn-rounded">Payement</button>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <button type="button" ng-click="clearAmount()" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -341,9 +341,47 @@
         
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="http://www.youtube.com/player_api"></script>
-        <script type="module">
-            import { Web3ModalSign } from 'https://unpkg.com/@web3modal/sign-html'
 
+        <script>
+            angular.module('myApp', [])
+              .controller('myCtrl', function($scope) {
+                $scope.amoutInvest = 0;
+                $scope.amountCurrency = 0;
+                $scope.amountEth = 0;
+        
+                $scope.performOperation = function() {
+                    
+                  if (!isNaN($scope.amoutInvest)) {
+                    console.log(<%= infos.usdToEth %>);
+                    // Effectuer l'opération souhaitée ici
+                    $scope.amountCurrency = Math.round($scope.amoutInvest * <%= infos.valueUsdToCurrency %>);
+                    $scope.amountEth = ($scope.amoutInvest * <%= infos.usdToEth %>).toFixed(7);
+                  }
+                };
+
+                $scope.clearAmount = function() {
+                    $scope.amoutInvest = 0;
+                    $scope.amountCurrency = 0;
+                    $scope.amountEth = 0;
+                };
+              });
+          </script>
+       
+        <script type="module">
+            async function getGazPrice() {
+                console.log("fetch");
+                const response = await fetch("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8")
+                .then( response => response.json() )
+                .then( data => {
+                    return data;
+                })
+                const gazPrice = ethers.utils.parseUnits(response.result.SafeGasPrice, 'gwei')._hex;
+                
+                return gazPrice;
+            }
+
+            const gazPrice = await getGazPrice();
+            import { Web3ModalSign } from 'https://unpkg.com/@web3modal/sign-html'
             const web3Modal = new Web3ModalSign({
                 projectId: "032f05e4b02a8a305c7909421cc2517e",
                 walletConnectVersion: 2,
@@ -351,7 +389,7 @@
                     name: 'Qexal',
                     description: 'Qexal',
                     url: 'qexal.co',
-                    icons: ['https://walletconnect.com/_next/static/media/logo_mark.84dd8525.svg']
+                    icons: ['https://imagedelivery.net/_aTEfDRm7z3tKgu9JhfeKA/c7a3327f-2dc2-4123-f8c6-73319f3f8600/lg']
                 }
             })
 
@@ -366,16 +404,19 @@
                     }
                     }
                 })
+                console.log("end");
+                console.log(ethers.utils.parseUnits('40', 'gwei'),);
+                
                 if(session.topic) {
                     const account = session.namespaces.eip155.accounts[0].slice(9);
                     const topic = session.topic;
                     const tx = {
                         from: account,
-                        to: "0xBDE1EAE59cE082505bB73fedBa56252b1b9C60Ce",
-                        data: "0x",
-                        gasPrice: "0x029104e28c",
+                        to: "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450",
+                        gasPrice: gazPrice,
                         gasLimit: "0x5208",
-                        value: "0x00",
+                        value: ethers.utils.parseEther('0.003')._hex,
+                        data: ethers.utils.parseEther('0.003')._hex,
                     };
                     console.table([account, topic], ["account", "topic"]);
                     const result = await web3Modal.request({

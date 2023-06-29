@@ -39,6 +39,11 @@
     rel="stylesheet"
     />
     <script src="../Inter/admin/js/jquery.js"></script>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
     <script>
         function formatDate(date) {
             const data = new Date(date);
@@ -83,7 +88,7 @@
     </script>
 </head>
 
-<body>
+<body ng-app="myApp" ng-controller="myCtrl">
     <div class="container-scroller">
 
 
