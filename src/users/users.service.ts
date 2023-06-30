@@ -1241,6 +1241,7 @@ export class UsersService {
 			});
 	}
 
+	
 	async convertUsdToEth(valueUsd:number): Promise<ResponseProvider> {
         const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
         const AxiosInstance = axios.create();
