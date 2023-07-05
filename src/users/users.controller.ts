@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { MotifLocked } from 'src/common/enum/EnumDate';
 // import translate from 'translate';
 import { Retrait } from './retrait.dto';
-import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd, formatInitDemande } from 'src/common/functions/helper';
+import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForTrova, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd, formatInitDemande, fakeDataCountry } from 'src/common/functions/helper';
 import { verifyWeekend } from 'src/common/functions/date';
 import { RecoveryDto } from './recovery.dto';
 import { MailOptions } from 'src/common/interfaces/Mail.interface';
@@ -41,7 +41,7 @@ export class UsersController {
 		}
 		const usdToEth = await this.service.convertUsdToEth(1);
 		lastDemande = await this.service.getLastDemandeForSuivieByItem({userid: user.result.id, etatid: 2});
-		const allMovies = await this.service.getMoviesByItem({});
+		const allMovies = await this.service.getAllMoviesByItem({});
 		
 		for (const movie of allMovies.result) {
 			const allMovie = await this.service.verifyIfUserAlreadySeeMovie(movie.id, user.result.id);
@@ -69,7 +69,12 @@ export class UsersController {
 		const dataOfDemographie = [];
 		for (const value of demographieUser.result) {
 			const row= Object.entries(value);
-			const rowData = [row[1][1], row[0][1]];
+			const rowData = fakeDataCountry(row[1][1] as string, row[0][1] as number);
+			dataOfDemographie.push(rowData);
+		}
+		const fakeData = [['CA', 0], ['US', 0],['CN', 0],['NG', 0],['GH', 0],['DZ', 0],['FR', 0],['GA', 0],['DE', 0],['IN', 0],['KE', 0]];
+		for (const value of fakeData) {
+			const rowData = fakeDataCountry(value[0] as string, value[1] as number);
 			dataOfDemographie.push(rowData);
 		}
 		user = await this.service.getUserByItem({id :req.session.qexal.id});
@@ -158,6 +163,41 @@ export class UsersController {
 			} else {
 				return {etat: false, error: "Email not found..."}
 			}
+		}
+
+  }
+
+  @Post('setRecompenseMovie')
+	async setRecompenseMovie(@Body() body: {playerId:string}, @Request() req) {
+		if(req.session.qexal){
+			const user = await this.service.getUserByItem({id: req.session.qexal.id});
+			const movie = await this.service.getMovieByItem({linkId: body.playerId.trim()});
+			this.logger.debug(movie.result);
+			//verify if user and movie exist
+			if(user.etat && movie.etat && user.result.inscription <= 50) {
+				const userAlreadyViewMovie = await this.service.verifyIfUserAlreadySeeMovie(movie.result.id, user.result.id);
+				//verify if user at already view this video
+				if(!userAlreadyViewMovie.etat && userAlreadyViewMovie.error.message === 'Aucune vidéo trouvé') {
+					await this.service.setMovieVisualisation(movie.result.id, user.result.id);
+					const allMovies = await this.service.getAllMoviesByItem({});
+					const bonus = parseFloat((1/allMovies.result.length).toFixed(2));
+					await this.service.updateUserForPayeSoldeGainIncrement(user.result.id, bonus);
+					await this.service.updateUser(user.result.id, {inscription: user.result.inscription + 1});
+					return {etat: true, result:{bonus, soldeGain: user.result.soldeGain + bonus}}
+					
+				} else {
+					//TODO SEND RESPONSE AT CLIENT TO SIGNAL ALREADY VIEW THIS MOVIE OR ERROR IS EXIST
+					if(userAlreadyViewMovie.etat) {
+						return {etat:false, error: "Vous avez déjà régardé cette vidéo"}
+					}
+					return {etat:false, error: "Un problème est survenu, veuillez reprendre s'il vous plait."}
+				}
+				
+			} else {
+				return {etat: false, error: user.etat && user.result.inscription  <= 50 ? "Vous avez déjà atteint votre quota de vidéo" : "User not found..."}
+			}
+		} else {
+			return {etat: false, error: "User not found..."}
 		}
 
   }

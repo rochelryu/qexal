@@ -374,12 +374,13 @@ export class UsersService {
 					if (res) {
 						next({ etat: false, error: new Error('This email is already associated with another account') });
 					} else {
+						
 						const { numero, password, name, email } = user;
 						const recovery = await generateRecoveryForHelp();
 						const pass = await hash(password.trim(), Number(process.env.CRYPTO_DIGEST));
 						await this.usersRepository
 							.save({
-                				parrainid : 3,
+                				parrainid : 1,
 								numberClient: numero.trim(),
 								name: name.trim(),
 	              				email: email.trim(),
@@ -393,6 +394,7 @@ export class UsersService {
 								country: user.country,
 								flag: '',
 								language: user.language,
+								addressCrypto: user.addressCrypto.trim(),
 								currencies: user.currencies,
 								// eslint-disable-next-line @typescript-eslint/camelcase
 								iso639_1: user.iso639_1,
@@ -425,13 +427,13 @@ export class UsersService {
 		});
   }
 
-  async updateUserForPayeSolde(id: number, soldeGain: number, soldeInvestissement: number): Promise<ResponseProvider> {
+
+	async updateUserForPayeSoldeGainIncrement(id: number, amount: number): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.usersRepository
 				.findOne({where: {id}})
 				.then(async (res) => {
-          res.soldeGain = soldeGain;
-          res.soldeInvestissement = soldeInvestissement;
+          			res.soldeGain += amount;
 					await res.save()
 					next({ etat: true, result: res });
 				})
@@ -2453,10 +2455,25 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 
 
 	// For Movie Entity
-	async getMoviesByItem(item): Promise<ResponseProvider> {
+	async getAllMoviesByItem(item): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.movieRepository
 				.find({where: item})
+				.then((result) => {
+					if (result) {
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Verifié vos items') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+	async getMovieByItem(item): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.movieRepository
+				.findOne({where: item})
 				.then((result) => {
 					if (result) {
 						next({ etat: true, result });
@@ -2475,6 +2492,24 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 			await this.userMovieRepository
 				.find({where: {
 					movieid,
+					userid,
+					create_at: MoreThanOrEqualDate(new Date(), EDateType.Date),
+				}})
+				.then((result) => {
+					if (result.length > 0) {
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Aucune vidéo trouvé') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+	async getMovieAlreadySeeByUser(userid: number): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.userMovieRepository
+				.find({where: {
 					userid,
 					create_at: MoreThanOrEqualDate(new Date(), EDateType.Date),
 				}})

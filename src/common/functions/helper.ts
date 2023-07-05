@@ -10,6 +10,7 @@ import { FormatInitDemandeInterface } from '../interfaces/formatDataIO.interface
 
 const axiosInstance: AxiosInstance = axios.create();
 
+
 export const getValueOfEthInUsd = (): Promise<ResponseProvider> => {
     const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
         return new Promise(async (next) => {
@@ -393,7 +394,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="x-apple-disable-message-reformatting">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
@@ -706,7 +707,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="x-apple-disable-message-reformatting">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
@@ -1017,7 +1018,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="x-apple-disable-message-reformatting">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
@@ -1333,6 +1334,37 @@ export const formatInitDemande = (forfaitid:number,numberDayTotalVersement:numbe
         ref,
         percentageTotal,
         commissionDay: parseFloat((percentageTotal / numberDayTotalVersement).toFixed(1))
+    }
+}
+
+export const fakeDataCountry = (country:string, value:number): (string|number)[] => {
+    switch (country) {
+        case 'CA':
+            return [country, 1134+value];
+        case 'US':
+            return [country, 163+value];
+        case 'CN':
+            return [country, 116+value];
+        case 'NG':
+            return [country, 34+value];
+        case 'GH':
+            return [country, 10+value];
+        case 'DZ':
+            return [country, 8+value];
+        case 'BE':
+            return [country, 36 + value];
+        case 'FR':
+            return [country, 250 + value];
+        case 'GA':
+            return [country, 10 + value];
+        case 'DE':
+            return [country, 23 + value];
+        case 'IN':
+            return [country, 21 + value];
+        case 'KE':
+            return [country, 16 + value];             
+        default:
+            return [country, value];
     }
 }
 

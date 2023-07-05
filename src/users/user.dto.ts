@@ -3,7 +3,7 @@ export interface User {
 	password: string;
 	numero: string;
 	email: string;
-  parrainid?: string;
+  addressCrypto: string;
   country: string;
   alpha2code: string;
   region: string;

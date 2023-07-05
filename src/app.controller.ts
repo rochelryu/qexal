@@ -36,20 +36,17 @@ export class AppController {
 			});
 		}
   }
-  @Get('/signup/:id')
+  @Get('/signup')
 
 	async signup(@Request() req, @Res() res: Response, @Param() params) {
 		if (req.session.qexal) {
 			res.redirect('/users');
 		} else {
-		const user = await this.usersService.getUserByItem({recovery: params.id});
-
 			const message = req.session.flash ?? [];
 			req.session.destroy()
 			res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
 			.render('register-2', {
 			message,
-			parainid: user.etat ? user.result.id: 1,
 			title: 'Authentification',
 			});
 		}
@@ -156,7 +153,6 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 		if (req.session.qexal) {
 			res.redirect('/users');
     } else {
-		const users = await this.usersService.getUserByItem({id: parseInt(user.parrainid, 10)});
 			req.session.flash = []
 			let state = true;
 			if(user.name.length <= 5) {
@@ -179,10 +175,10 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 				}
 				else {
 					req.session.flash.push(error.message);
-					res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup/${users.etat ? users.result.recovery: 1}`);
+					res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup`);
 				}
 			}
-			res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup/${users.etat ? users.result.recovery: 1}`);
+			res.status(HttpStatus.NOT_ACCEPTABLE).redirect(`/signup`);
 
 		}
 	}

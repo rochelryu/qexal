@@ -12,7 +12,7 @@ import { UserMovieEntity } from 'src/entities/user_movie.entity';
 @Entity()
 export class MovieEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
-
+	
 	@Column()
 	title: string;
 
@@ -23,7 +23,7 @@ export class MovieEntity extends BaseEntity {
 	cover: string;
 
 	@Column({ type: 'varchar' })
-	linkId: number;
+	linkId: string;
 
 	@OneToMany(() => UserMovieEntity, (userMovie) => userMovie.movieid)
 	userMovies: UserMovieEntity[];

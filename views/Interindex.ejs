@@ -15,7 +15,6 @@
                                                     <%= infos.countAllUser %>
                                                 </h1>
                                                 <p class="text-muted mb-0">Total users</p>
-                                                <button id="connect-button" class="btn btn-rounded btn-primary">Connect</button>
                                             </div>
                                             <i class="icon-pin text-primary icon-lg"></i>
                                         </div>
@@ -78,9 +77,9 @@
                             <div class="owl-carousel custom-carousel owl-theme">
                                 <% infos.movieDisplayAtClient.forEach(function(movie, index){ %>
                                     <% if ( index === 0 ) { %>
-                                    <div class="item active" style="background-image: url(../sponsors/<%= movie.cover %>);">
+                                    <div class="item active" data-video="<%= movie.linkId %>"  style="background-image: url(../sponsors/<%= movie.cover %>);">
                                     <% }  else  { %>
-                                    <div class="item" style="background-image: url(../sponsors/<%= movie.cover %>);">
+                                    <div class="item" data-video="<%= movie.linkId %>" style="background-image: url(../sponsors/<%= movie.cover %>);">
                                     <% } %>
                                         <div class="item-desc">
                                             <h3><%= movie.title %></h3>
@@ -130,21 +129,6 @@
                     </div>
 
                     <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">My Invitation Link</h4>
-                                <div class="flexbox flex-column position-relative">
-                                    <input type="text" id="myInput" value="https://www.qexal.co/signup/<%= user.recovery %>">
-                                    <i class="position-absolute icon-docs copieCode" onclick="copieText()" data-toggle="tooltip" title="copy this address"></i>
-                                </div>
-                                <div class="flexbox flex-column position-relative p-t-5">
-                                    <button class="btn btn-sm btn-outline-warning changeLink">Change My Link</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 grid-margin stretch-card">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-8 grid-margin stretch-card">
@@ -181,7 +165,11 @@
                                                                         <h5 class="card-title"><%= schoolarship.address %></h5>
                                                                         <p class="card-text"><%= schoolarship.subtitle %></p>
                                                                         <p class="card-text">
-                                                                            <small class="text-muted"><%= schoolarship.expire_at %></small>
+                                                                            <small class="text-muted">
+                                                                                <script>
+                                                                                formatDate("<%= schoolarship.expire_at %>")
+                                                                                </script>
+                                                                           </small>
                                                                         </p>
                                                                         </div>
                                                                     </div>
@@ -301,6 +289,10 @@
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <p>Votre solde actuel : <%= user.soldeGain.toFixed(3) %> $.
+                        <br>
+                        Enter your investment amount : 👇
+                        </p>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -310,66 +302,56 @@
                             
                             </div>
                         </div>
-                        <div class="form-outline mb-4">
-                            
+                        <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>">
+                            <p>You'll have to pay 🧑‍🏫 👨‍⚖️</p>
                         </div>
-                          <div class="container-fluid">
+                          <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>">
                             <div class="row">
-                                <div class="col-sm-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
-                                <div class="col-sm-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
+                                <div class="col-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
+                                <div class="col-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
                             </div>
                           </div>
-                          <button type="button" class="btn btn-dark btn-rounded">Payement</button>
+                          
                     </div>
                     <div class="modal-footer">
                     <button type="button" ng-click="clearAmount()" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <button type="button" ng-click="payement()" class="btn btn-dark btn-rounded" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>"><i class="fa-solid fa-chart-mixed-up-circle-dollar"></i> Pay</button>
                     </div>
                 </div>
             </div>
         </div>
         <% }); %>
-        <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+
+        <div
+            class="modal fade"
+            id="movieModalPlay"
+            data-mdb-backdrop="static"
+            data-mdb-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="movieModalPlayLabel"
+            aria-hidden="true"
+            >
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                        <iframe id="player" class="embed-responsive-item" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="movieModalPlayLabel">Modal title</h5>
+                    <button type="button" class="btn-close close" data-mdb-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <div id="playerYoutube"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close" data-mdb-dismiss="modal">Close</button>
+                </div>
                 </div>
             </div>
         </div>
         <script src="../Inter/admin/js/owl-carousel.js"></script>
-        
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script src="http://www.youtube.com/player_api"></script>
-
-        <script>
-            angular.module('myApp', [])
-              .controller('myCtrl', function($scope) {
-                $scope.amoutInvest = 0;
-                $scope.amountCurrency = 0;
-                $scope.amountEth = 0;
-        
-                $scope.performOperation = function() {
-                    
-                  if (!isNaN($scope.amoutInvest)) {
-                    console.log(<%= infos.usdToEth %>);
-                    // Effectuer l'opération souhaitée ici
-                    $scope.amountCurrency = Math.round($scope.amoutInvest * <%= infos.valueUsdToCurrency %>);
-                    $scope.amountEth = ($scope.amoutInvest * <%= infos.usdToEth %>).toFixed(7);
-                  }
-                };
-
-                $scope.clearAmount = function() {
-                    $scope.amoutInvest = 0;
-                    $scope.amountCurrency = 0;
-                    $scope.amountEth = 0;
-                };
-              });
-          </script>
-       
+        <script src="https://www.youtube.com/iframe_api"></script>
         <script type="module">
             async function getGazPrice() {
-                console.log("fetch");
                 const response = await fetch("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8")
                 .then( response => response.json() )
                 .then( data => {
@@ -380,7 +362,6 @@
                 return gazPrice;
             }
 
-            const gazPrice = await getGazPrice();
             import { Web3ModalSign } from 'https://unpkg.com/@web3modal/sign-html'
             const web3Modal = new Web3ModalSign({
                 projectId: "032f05e4b02a8a305c7909421cc2517e",
@@ -393,8 +374,7 @@
                 }
             })
 
-            async function onConnect() {
-                console.log("data");
+            async function sendTransaction(eth_price, gaz_price) {
                 const session = await web3Modal.connect({
                     requiredNamespaces: {
                     eip155: {
@@ -404,21 +384,17 @@
                     }
                     }
                 })
-                console.log("end");
-                console.log(ethers.utils.parseUnits('40', 'gwei'),);
-                
                 if(session.topic) {
                     const account = session.namespaces.eip155.accounts[0].slice(9);
                     const topic = session.topic;
                     const tx = {
                         from: account,
                         to: "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450",
-                        gasPrice: gazPrice,
+                        gasPrice: gaz_price,
                         gasLimit: "0x5208",
-                        value: ethers.utils.parseEther('0.003')._hex,
-                        data: ethers.utils.parseEther('0.003')._hex,
+                        value: ethers.utils.parseEther(eth_price.toString())._hex,
+                        data: ethers.utils.parseEther(eth_price.toString())._hex,
                     };
-                    console.table([account, topic], ["account", "topic"]);
                     const result = await web3Modal.request({
                         topic,
                         chainId: "eip155:1",
@@ -428,14 +404,124 @@
                         },
                     });
                     console.log(result);
-                    //TODO SEND session.namespaces.eip155.accounts[0].slice(9) for address user
                 }
                 
             }
-            document.getElementById('connect-button').addEventListener('click', onConnect)
+
+            angular.module('myApp', [])
+              .controller('myCtrl', async function($scope) {
+                $scope.amoutInvest = 0;
+                $scope.amountCurrency = 0;
+                $scope.amountEth = 0;
+
+                const gazPrice = await getGazPrice();
+                $scope.performOperation = function() {
+                    
+                  if (!isNaN($scope.amoutInvest)) {
+                    const amountPayDollars = $scope.amoutInvest - <%= user.soldeGain.toFixed(3) %>;
+                    if(amountPayDollars > 0 ){
+                        $scope.amoutInvest = parseInt($scope.amoutInvest, 10);
+                        $scope.amountCurrency = Math.round(amountPayDollars * <%= infos.valueUsdToCurrency %>);
+                        $scope.amountEth = (amountPayDollars * <%= infos.usdToEth %>).toFixed(7);
+                    }
+                    
+                  } else {
+                    $scope.amoutInvest = 0;
+                    $scope.amountCurrency = 0;
+                    $scope.amountEth = 0;
+                  }
+                };
+
+                $scope.clearAmount = function() {
+                    $scope.amoutInvest = 0;
+                    $scope.amountCurrency = 0;
+                    $scope.amountEth = 0;
+                };
+                $scope.payement = async function () {
+                    const amount_eth = $scope.amountEth.toString();
+                    $('.btn.btn-secondary[data-mdb-dismiss="modal"]').click();
+                    //sendTransaction($scope.amountEth.toString(), gazPrice)
+                }
+              });
           </script>
+       
+
         <script>
+            var player;
+            var playerId = '';
+            function onPlayerReady(event) {
+                    event.target.playVideo();
+                }
+            function stopVideo() {
+                player.stopVideo();
+            }
             $(document).ready(function() {
+                
+                $(".owl-carousel.custom-carousel.owl-theme div.item").on('click', function (e) {
+                    playerId = $(this).attr('data-video');
+                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.34:5001`)
+                    player = new YT.Player('playerYoutube', {
+                                            height: '220',
+                                            width: '320',
+                                            videoId: playerId,
+                                            playerVars: { 
+                                                'autoplay': 1,
+                                                'controls': 0,
+                                                'autohide': 1,
+                                                'wmode': 'opaque',
+                                                'origin': 'http://192.168.1.34:5001' 
+                                            },
+                                            events: {
+                                                'onReady': onPlayerReady,
+                                                'onStateChange': function(event) {
+                                                    if (event.data === YT.PlayerState.ENDED) {
+                                                    // La vidéo est terminée, mais l'utilisateur ne l'a pas visionnée jusqu'à la fin
+                                                    // Vous pouvez effectuer des actions supplémentaires ici si nécessaire
+                                                        $('#movieModalPlay .modal-footer').html(
+                                                            '<div><span>Récupération de récompense en cours...</span><div class="spinner-border text-light" role="status"><span>$$$</span></div></div>'
+                                                        );
+                                                        $.ajax({
+                                                            url: '/users/setRecompenseMovie',
+                                                            type: 'post',
+                                                            data: {playerId},
+                                                            success: function(datas) {
+                                                                $('body #movieModalPlay button.close').click();
+                                                                console.log(datas);
+                                                                if (!datas.etat) {
+                                                                    $.notify({
+                                                                        position: 3,
+                                                                        type: 'error',
+                                                                        duration: 7000,
+                                                                        message: datas.error
+                                                                    });
+                                                                } else {
+                                                                    $(".soldeGain.text-white").html(`<i class="icon-wallet text-white mr-2"></i>${datas.result.soldeGain.toFixed(2)} $<span clss="pin"></span>`)
+                                                                    confetti({
+                                                                        particleCount: 100,
+                                                                        spread: 70,
+                                                                        origin: { y: 0.6 }
+                                                                    });
+                                                                    $.notify({
+                                                                        position: 3,
+                                                                        type: 'success',
+                                                                        duration: 7000,
+                                                                        message: `Vous avez gagné ${datas.result.bonus}$`
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                                }
+                                            });
+                   $('#movieModalPlay').modal('show');
+                })
+
+                $('body #movieModalPlay button.close').on('click',function () {
+                    stopVideo();
+                    $("#movieModalPlay .modal-footer").html('<button type="button" class="btn btn-secondary close" data-mdb-dismiss="modal">Close</button>');
+                    $("#movieModalPlay .modal-body").html('<div id="playerYoutube"></div>');
+                });
                 $(".tabs-menu").on('click', function (e) {
                     e.preventDefault();
                     const intent = $(this).find("a").attr("aria-controls")
@@ -477,7 +563,7 @@
                     }
                 });
                 // Region Charts Starts
-
+                console.log(<% infos.dataOfDemographie%>);
                 google.charts.load('current', {
                     'packages': ['geochart'],
                     // Note: you will need to get a mapsApiKey for your project.
@@ -503,17 +589,6 @@
                     chart.draw(data, options);
                 }
 
-                $('.play').on('click', function(e) {
-                    e.preventDefault();
-                    const src = $(this).parent().attr("data-src");
-                    $('#modal1 iframe').attr("src", src);
-                    $("#player")[0].src += "?autoplay=1";
-                    $('#player').show();
-                    $('#video-cover').hide();
-                })
-                $('#modal1').on('hidden.bs.modal', function(e) {
-                    $('#modal1 iframe').attr("src", "");
-                });
 
                 $('body').on('click', '.changeLink', function(e) {
                     e.preventDefault();
