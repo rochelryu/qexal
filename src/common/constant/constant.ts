@@ -48,7 +48,7 @@ export const POURCENTAGE_PAYNET = 0.9; //pourcentage a payer a l'utilisateur lor
 export const POURCENTAGE_PAYNET_EXCHANGE = 0.85; //pourcentage a payer a l'utilisateur lorsqu'il vend sa crypto
 export const ALPHABET = "qwertyuiopkmjnhbgvfcdxsazAQWZSXEDCRFVTGBYHNUJKIOLPM1234567890"; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash
 
-export const ADDRESS_TROVA_INVESTMENT = "12Dy7AzkJD1W4nfNw1BMdAfEsRx2RcxPYn";
+export const ADDRESS_TROVA_INVESTMENT = "0x1880868d5617ba08975803ee1ea6d7e0d1be8450";
 export const ADDRESS_TROVA_EXCHANGE = "0x0704228829e671958a3271e58c71e0cc7f2ddacb";
 export const ADDRESS_ANONYMOUS_INVESTMENT = "bc1qh5g3jhy8aajgrcs690ufue4eufm8g9swf5ufu4";
 export const ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION = "1Fp1JtyeVWGH95diPG5oe4TcuipbwE3boR";

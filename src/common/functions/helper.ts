@@ -1333,7 +1333,7 @@ export const formatInitDemande = (forfaitid:number,numberDayTotalVersement:numbe
         last_date_payement: new Date(),
         ref,
         percentageTotal,
-        commissionDay: parseFloat((percentageTotal / numberDayTotalVersement).toFixed(1))
+        commissionDay: parseFloat((percentageTotal / numberDayTotalVersement).toFixed(5))
     }
 }
 

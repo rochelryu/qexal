@@ -174,7 +174,7 @@
     <%- include('partials/_footer'); %>
         <script>
             $(document).ready(function() {
-                const socket = io('http://192.168.1.34:5001');
+                const socket = io('http://192.168.1.16:5001');
                 socket.on('connect', function() {
                     console.log('Connected');
                 });

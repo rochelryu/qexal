@@ -50,6 +50,11 @@
             document.write(`${data.toLocaleDateString()} ${data.toLocaleTimeString()}`)
         }
 
+        function formatDateWithoutTime(date) {
+            const data = new Date(date);
+            document.write(data.toLocaleDateString())
+        }
+
         function formatDateToPay(date) {
             const oldDate = new Date(date);
             const numberOldDate = oldDate.setDate(oldDate.getDate() + 7);

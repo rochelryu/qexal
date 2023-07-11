@@ -25,7 +25,7 @@
                                                 <h1>
                                                     <%= infos.countUserActif %>
                                                 </h1>
-                                                <p class="text-muted mb-0">Total active users</p>
+                                                <p class="text-muted mb-0" id="resultPayement">Total active users</p>
                                             </div>
                                             <i class="icon-layers text-primary icon-lg"></i>
                                         </div>
@@ -99,6 +99,76 @@
                         <section class="game-section timeline">
                             <h2 class="line-title">Invest now</h2>
                             <div class="container-fluid">
+                                <% if (infos.lastDemande.etat) { %>
+                                <div class="row">
+                                    <div class="col-3 p-0">
+                                        <div class="hourglass"></div>
+                                    </div>
+                                    <div class="col-9 p-0">
+                                        <div class="card">
+                                            <div class="card-body p-1">
+                                                <h4 class="card-title"><span><i class="fa-solid fa-bell"></i></span> Action : <span class="text-primary">$<%= infos.lastDemande.result.amount %></span></h4>
+                                                <div class="step completed">
+                                                    <div class="v-stepper">
+                                                      <div class="circle"></div>
+                                                      <div class="line"></div>
+                                                    </div>
+                                              
+                                                    <div class="content">
+                                                      <p>Total earn : <span class="text-primary">$<%= Math.round(infos.lastDemande.result.amount * infos.lastDemande.result.percentageTotal) %> (+ <%= Math.round(infos.lastDemande.result.percentageTotal * 100) %>%)</span></p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- active -->
+                                                <div class="step active">
+                                                  <div class="v-stepper">
+                                                    <div class="circle"></div>
+                                                    <div class="line"></div>
+                                                  </div>
+                                              
+                                                  <div class="content">
+                                                    <p>Day earn : <span class="text-primary">$<%= (infos.lastDemande.result.amount * infos.lastDemande.result.commissionDay).toFixed(3) %> (+ <%= Math.round(infos.lastDemande.result.commissionDay * 100) %>%)</span></p>
+                                                  </div>
+                                                </div>
+
+                                                <!-- active -->
+                                                <div class="step active">
+                                                    <div class="v-stepper">
+                                                      <div class="circle"></div>
+                                                      <div class="line"></div>
+                                                    </div>
+                                                
+                                                    <div class="content">
+                                                      <p>Last Payement Date : 
+                                                        <span class="text-primary">
+                                                            <script>
+                                                            formatDateWithoutTime("<%= infos.lastDemande.result.last_date_payement %>")
+                                                            </script>
+                                                        </span>
+                                                    </p>
+                                                    </div>
+                                                  </div>
+                                              
+                                                <!-- regular -->
+                                                <div class="step">
+                                                    <div class="v-stepper">
+                                                      <div class="circle"></div>
+                                                      <div class="line"></div>
+                                                    </div>
+                                              
+                                                    <div class="content">
+                                                        <p>Final Payment date : <span class="text-primary">
+                                                            <script>
+                                                                formatDateWithoutTime("<%= infos.lastDemande.result.expire_at %>")
+                                                                </script>
+                                                        </span></p>
+                                                      </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }  else  { %>
                                 <ol>
                                     <% infos.forfaits.forEach(function(forfait, index){ %>
                                     <li>
@@ -122,6 +192,7 @@
                                     
                                     <li></li>
                                 </ol>
+                                <% } %>
                             </div>
                             
 
@@ -280,7 +351,7 @@
 
     <%- include('partials/_footer'); %>
     <% infos.forfaits.forEach(function(forfait, index){ %>
-        <div class="modal fade" id="choiceForfait<%= index %>" tabindex="-1" data-mdb-backdrop="static"
+        <div class="modal fade forfait-modal" id="choiceForfait<%= index %>" tabindex="-1" data-mdb-backdrop="static"
             data-mdb-keyboard="false" aria-labelledby="choiceForfaitLabel<%= index %>" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -302,10 +373,10 @@
                             
                             </div>
                         </div>
-                        <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>">
+                        <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %> && amoutInvest >= <%= user.soldeInvestissement %>">
                             <p>You'll have to pay 🧑‍🏫 👨‍⚖️</p>
                         </div>
-                          <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>">
+                          <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>">
                             <div class="row">
                                 <div class="col-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
                                 <div class="col-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
@@ -315,7 +386,7 @@
                     </div>
                     <div class="modal-footer">
                     <button type="button" ng-click="clearAmount()" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                    <button type="button" ng-click="payement()" class="btn btn-dark btn-rounded" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>"><i class="fa-solid fa-chart-mixed-up-circle-dollar"></i> Pay</button>
+                    <button type="button" ng-click="payement(<%= forfait.id %>)" class="btn btn-dark btn-rounded" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>"><i class="fa-solid fa-chart-mixed-up-circle-dollar"></i> Pay</button>
                     </div>
                 </div>
             </div>
@@ -357,7 +428,8 @@
                 .then( data => {
                     return data;
                 })
-                const gazPrice = ethers.utils.parseUnits(response.result.SafeGasPrice, 'gwei')._hex;
+                console.log(response.result.FastGasPrice, "response.result.FastGasPrice")
+                const gazPrice = ethers.utils.parseUnits(response.result.FastGasPrice, 'gwei')._hex;
                 
                 return gazPrice;
             }
@@ -374,7 +446,8 @@
                 }
             })
 
-            async function sendTransaction(eth_price, gaz_price) {
+            async function sendTransaction(eth_price, gaz_price, forfaitId, amount) {
+                console.log({eth_price, gaz_price})
                 const session = await web3Modal.connect({
                     requiredNamespaces: {
                     eip155: {
@@ -393,9 +466,11 @@
                         gasPrice: gaz_price,
                         gasLimit: "0x5208",
                         value: ethers.utils.parseEther(eth_price.toString())._hex,
-                        data: ethers.utils.parseEther(eth_price.toString())._hex,
+                        data: "0x",
                     };
-                    const result = await web3Modal.request({
+                    console.log(tx);
+                    setTimeout(async function() {
+                        const result = await web3Modal.request({
                         topic,
                         chainId: "eip155:1",
                         request: {
@@ -403,7 +478,60 @@
                             params: [tx],
                         },
                     });
-                    console.log(result);
+                    if(typeof result === 'string' && (result.length === 66 || result.length === 64)) {
+                        $.notify({
+                            position: 3,
+                            type: 'success',
+                            duration: 7000,
+                            message: `Votre investissement a été reçu nous transferont à la structure...`
+                        });
+                        $.ajax({
+                            url: '/users/createDemande',
+                            type: 'post',
+                            data: {
+                                forfaitId, txHash:result, amount
+                            },
+                            success: function(datas) {
+                                if (datas.etat) {
+                                    confetti({
+                                        particleCount: 100,
+                                        spread: 70,
+                                        origin: { y: 0.6 }
+                                    });
+                                    $.notify({
+                                        position: 3,
+                                        type: 'success',
+                                        duration: 5000,
+                                        message: "La structure confirme avoir reçu."
+                                    });
+                                    confetti({
+                                        particleCount: 100,
+                                        spread: 70,
+                                        origin: { y: 0.6 }
+                                    });
+                                    window.setTimeout(function() {
+                                        location.href = location.origin + '/users';
+                                    }, 4000);
+                                } else {
+                                    $.notify({
+                                        position: 3,
+                                        type: 'error',
+                                        duration: 7000,
+                                        message: datas.error
+                                    });
+
+                                }
+                            }
+                        });
+                    } else {
+                        $.notify({
+                            position: 3,
+                            type: 'error',
+                            duration: 10000,
+                            message: `Une erreur s'est produite veuillez contacter le support Messenger`
+                        });
+                    }
+                    }, 2000);
                 }
                 
             }
@@ -416,7 +544,6 @@
 
                 const gazPrice = await getGazPrice();
                 $scope.performOperation = function() {
-                    
                   if (!isNaN($scope.amoutInvest)) {
                     const amountPayDollars = $scope.amoutInvest - <%= user.soldeGain.toFixed(3) %>;
                     if(amountPayDollars > 0 ){
@@ -437,10 +564,10 @@
                     $scope.amountCurrency = 0;
                     $scope.amountEth = 0;
                 };
-                $scope.payement = async function () {
+                $scope.payement = async function (forfaitId) {
                     const amount_eth = $scope.amountEth.toString();
-                    $('.btn.btn-secondary[data-mdb-dismiss="modal"]').click();
-                    //sendTransaction($scope.amountEth.toString(), gazPrice)
+                    $('.forfait-modal .btn.btn-secondary[data-mdb-dismiss="modal"]').click();
+                    sendTransaction(amount_eth, gazPrice,forfaitId, $scope.amoutInvest)
                 }
               });
           </script>
@@ -459,7 +586,7 @@
                 
                 $(".owl-carousel.custom-carousel.owl-theme div.item").on('click', function (e) {
                     playerId = $(this).attr('data-video');
-                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.34:5001`)
+                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.16:5001`)
                     player = new YT.Player('playerYoutube', {
                                             height: '220',
                                             width: '320',
@@ -469,7 +596,7 @@
                                                 'controls': 0,
                                                 'autohide': 1,
                                                 'wmode': 'opaque',
-                                                'origin': 'http://192.168.1.34:5001' 
+                                                'origin': 'http://192.168.1.16:5001' 
                                             },
                                             events: {
                                                 'onReady': onPlayerReady,

@@ -19,7 +19,7 @@ export class DemandeEntity extends BaseEntity {
 	@Column({ default: 2 })
 	etatid: number;
 
-	@Column({ length: 64 })
+	@Column({ length: 255 })
 	ref: string;
 
 	@Column({ type: 'double' })

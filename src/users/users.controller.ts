@@ -25,6 +25,7 @@ export class UsersController {
 	// async dashboard(@Request() req, @Res() res: Response) {
 	// 	res.redirect('/users/settings')
 	// }
+	
 
 	@Get()
 	async dashboardSecond(@Request() req, @Res() res: Response) {
@@ -79,7 +80,6 @@ export class UsersController {
 		}
 		user = await this.service.getUserByItem({id :req.session.qexal.id});
 		//const weekendBeginerDate = subDays(startOfWeek(new Date()),2);
-		
 		const infos = {
 			percentage,
 			countAllUser: countAllUser.result,
@@ -109,9 +109,6 @@ export class UsersController {
 
 
 
-
-
-
 	@Post('createDemande')
 	async createDemande(@Body() demande: createDemandeDto, @Request() req) {
 		if(req.session.qexal){
@@ -121,7 +118,7 @@ export class UsersController {
 				const txHashAlreadyExist = await this.service.getControlCodeItem({txHash: demande.txHash.trim()});
 				if(txHashAlreadyExist.etat) {
 					//Send Mail to explain txHash already Exist
-					const mailOptionParain: MailOptions = {
+				const mailOptionParain: MailOptions = {
 						from: `QEXAL <${EMAIL}>`,
 						to: user.result.email,
 						subject: 'TxHash Already Exist',
@@ -135,11 +132,14 @@ export class UsersController {
 					const forfait = await this.service.getForfaitById(demande.forfaitId);
 					//TODO verifyInfo of txHash
 					const amountValid = demande.amount - 1;
-					const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountValid, forfait.result.addressCrypto);
+					const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountValid);
+					this.logger.log(verifyTxHashInfo);
 					if(forfait.result.min - 2 <= verifyTxHashInfo.result.montant_net_send && verifyTxHashInfo.result.montant_net_send <= forfait.result.max) {
 						//Create Demande of Client
 						const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, verifyTxHashInfo.result.montant_net_send, forfait.result.commissionTotal, demande.txHash.trim());
+						this.logger.log(initDemande);
 						const {etat, error} = await this.service.setDemande(initDemande);
+						await this.service.updateUser(user.result.id, {soldeGain: 0, soldeInvestissement: demande.amount + user.result.soldeGain});
 						if(etat) {
 							//Send Mail at client for signal valid transaction
 							return {
@@ -161,7 +161,7 @@ export class UsersController {
 				}
 				
 			} else {
-				return {etat: false, error: "Email not found..."}
+				return {etat: false, error: "Client not found..."}
 			}
 		}
 
@@ -172,7 +172,6 @@ export class UsersController {
 		if(req.session.qexal){
 			const user = await this.service.getUserByItem({id: req.session.qexal.id});
 			const movie = await this.service.getMovieByItem({linkId: body.playerId.trim()});
-			this.logger.debug(movie.result);
 			//verify if user and movie exist
 			if(user.etat && movie.etat && user.result.inscription <= 50) {
 				const userAlreadyViewMovie = await this.service.verifyIfUserAlreadySeeMovie(movie.result.id, user.result.id);
@@ -207,16 +206,19 @@ export class UsersController {
 		const demande = await this.service.getDemandeById(demandeId)
 		const user = await this.service.getUserByItem({ id: demande.result.userid });
 		//Get diffDay to Moment at create_at demande
-		const differenceDay = differenceInSeconds(new Date(), demande.result.last_date_payement) % 86400;
-		
-		const cumulPercentage =
-		demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ? 
-		demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) : demande.result.percentageTotal;
+		const diffInSecond = differenceInSeconds(new Date(), new Date(demande.result.last_date_payement));
+		const differenceDay = parseInt((diffInSecond / 86400).toString(), 10);
+		if(differenceDay > 0) {
+			const cumulPercentage =
+			demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ? 
+			demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) : demande.result.percentageTotal;
 
-		const soldeGain = demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ?
-		user.result.soldeGain + (differenceDay * demande.result.commissionDay * demande.result.amount) : user.result.soldeGain + ((demande.result.percentageTotal - demande.result.cumulPercentage) * demande.result.amount);
-		await this.service.updateDemande(demandeId, { cumulPercentage,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay)});
-		await this.service.updateUser(user.result.id, {soldeGain});
+			const soldeGain = demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ?
+			user.result.soldeGain + (differenceDay * demande.result.commissionDay * demande.result.amount) : user.result.soldeGain + ((demande.result.percentageTotal - demande.result.cumulPercentage) * demande.result.amount);
+			this.logger.log({ cumulPercentage,diffInSecond ,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay), differenceDay, soldeGain});
+			await this.service.updateDemande(demandeId, { cumulPercentage,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay)});
+			await this.service.updateUser(user.result.id, {soldeGain});
+		}
 		return {etat:true}
 		
 	} catch (error) {
@@ -230,6 +232,7 @@ export class UsersController {
 	-------------------END SECTION
 	
 	*/
+
 
 	@Get('forfaittaxe')
 	async forfaittaxe(@Request() req, @Res() res: Response) {
@@ -849,6 +852,14 @@ export class UsersController {
 		req.session.destroy();
 		res.redirect('/');
 	}
+
+	@Get('/testTransaction')
+	async testTransaction(@Request() req, @Res() res: Response) {
+		const verifyTxHashInfo = await this.service.verifyTxHash(1, "0xa0d4e4aed7f651256b777169ece4b6303f1318877eda88afda6108dcf747068f", 5, "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450");
+		res.json(verifyTxHashInfo);
+	}
+
+	
 
 	@Get('/delaccount')
 	async delaccount(@Request() req, @Res() res: Response) {

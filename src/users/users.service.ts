@@ -1263,28 +1263,29 @@ export class UsersService {
 	}
 
   async verifyTxHash(userid:number,ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT): Promise<ResponseProvider> {
-        const url = `https://etherscan.io/tx/${ref}`; // URL we're scraping
+	const url = `https://api.blockchair.com/ethereum/dashboards/transaction/${ref}`; // URL we're scraping
+		this.logger.debug(url);
         const AxiosInstance = axios.create();
 		return new Promise(async (next) => {
             AxiosInstance.get(url)
                 .then( // Once we have data returned ...
                     async response => {
-						const html = response.data;
-						const $ = cheerio.load(html);
-						const state = $('span.u-label.u-label--sm');
-						const montant = $('#ContentPlaceHolder1_spanValue > span');
-						const destination = $('#contractCopy');
-						const arrayMontant = montant.text().trim().split('ETH');
-						const valueEth = parseFloat(arrayMontant[0]);
-						const montantUsd = await this.convertEthToUsd(valueEth);
-						if((state.text().trim() === "Success" || state.text().trim() === "Pending") && destination.text().trim() === destinationAddress) {
+						const json = response.data;
+						const data = json.data;
+						const state = json.context.results === 1;
+						const transaction = data[ref].transaction;
+						const destination = transaction.recipient as string;
+						//const valueEth = parseFloat((parseInt(transaction.value, 10)/1000000000000000000).toString());
+						const montantUsd = transaction.value_usd as number;
+						
+						if(state && destination.trim().toLocaleLowerCase() === destinationAddress.toLocaleLowerCase().trim()) {
 							//add txHash in Control Code 
-							const type = state.text().trim() === "Success" ? ControleCode.success: ControleCode.pending;
-							await this.setControlCode(userid, type, ref.trim(), montantUsd.result);
-							if((value - montantUsd.result) <= 1) {
-								next({etat:true, result: {ref, montant: 0, montant_net_send: montantUsd.result}})
+							const type = ControleCode.success;
+							await this.setControlCode(userid, type, ref.trim(), montantUsd);
+							if((value - montantUsd) <= 1) {
+								next({etat:true, result: {ref, montant: 0, montant_net_send: montantUsd}})
 							} else {
-								next({etat:false, result: {ref, montant: value - montantUsd.result, montant_net_send: montantUsd.result}, error: new Error("incomplete transaction")});
+								next({etat:false, result: {ref, montant: value - montantUsd, montant_net_send: montantUsd}, error: new Error("incomplete transaction")});
 							}
 							
 						}
@@ -1296,7 +1297,10 @@ export class UsersService {
 						}
                     }
                 )
-                .catch(error => {next({etat:false, error})});
+                .catch(error => {
+					this.logger.debug({error});
+					next({etat:false, error});
+				});
 
 		});
 
@@ -1432,6 +1436,7 @@ async verifyTxHashForOtherCrypto(ref: string, value: number, destinationAddress:
 			  .then( // Once we have data returned ...
 				  response => {
 				  const json = response.data;
+				  this.logger.debug(json);
 				  const state = json.data[ref].transaction.block_id !== -1;
 				  const montant = isExchange ? json.data[ref].transaction.output_total / 100000000 : json.data[ref].transaction.output_total_usd;
 				  const destination = json.data[ref].outputs[0].recipient;

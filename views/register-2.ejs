@@ -80,7 +80,7 @@
                     <option value="" disabled>Select your country</option>
                     <script>
                       $.ajax({
-                          url: 'http://192.168.1.34:5001/api/v1/countries',
+                          url: 'http://192.168.1.16:5001/api/v1/countries',
                           type: 'get',
                           success: function(data) {
                             console.log(data);
@@ -217,7 +217,7 @@
             $("#country").on("change", function() {
                 const value = $(this).val();
                 $.ajax({
-                    url: 'http://192.168.1.34:5001/api/v1/detailsCountries/' + value,
+                    url: 'http://192.168.1.16:5001/api/v1/detailsCountries/' + value,
                     type: 'get',
                     success: function(data) {
                         $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));
