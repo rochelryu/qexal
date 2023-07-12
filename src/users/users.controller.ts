@@ -107,6 +107,7 @@ export class UsersController {
 		});
 	}
 
+	
 
 
 	@Post('createDemande')
@@ -559,23 +560,23 @@ export class UsersController {
 
 
 
-  @Get('/filleuil')
-	async filleuil(@Request() req, @Res() res: Response) {
+  @Get('/withdraw')
+	async withdraw(@Request() req, @Res() res: Response) {
     if (req.session.qexal) {
       const isVerifyWeekend = verifyWeekend();
-      const inscription = await this.service.getUsersByItem({ parrainid: req.session.qexal.id });
       const user = await this.service.getUserByItem({id :req.session.qexal.id})
 			const notifications = await this.service.getNotificationsByUserid(req.session.qexal.id);
 			const countNotifications = await this.service.getCountNotificationsByUserid(req.session.qexal.id);
 			const countNotif =
         countNotifications.result > 0 ? { etat: true, result: countNotifications.result } : { etat: false };
+		let lastDemande = await this.service.getLastDemandeForSuivieByItem({userid: user.result.id, etatid: 2});
 			res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
 			.render('filleuil', {
 				user: user.result,
 				countNotif,
         notifications,
         isVerifyWeekend,
-				inscription: inscription.result,
+		lastDemande,
 				title: `${req.session.qexal.name} - Filleul`
 			});
     } else {

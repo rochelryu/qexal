@@ -120,7 +120,7 @@
                                                 </div>
                                                 
                                                 <!-- active -->
-                                                <div class="step active">
+                                                <div class="step completed">
                                                   <div class="v-stepper">
                                                     <div class="circle"></div>
                                                     <div class="line"></div>
@@ -270,9 +270,9 @@
                                                     <thead class="black white-text shadow-lg">
                                                         <tr>
                                                             <th>Rank</th>
-                                                            <th>Name Package</th>
-                                                            <th>State</th>
-                                                            <th>Purpose</th>
+                                                            <th>Amount</th>
+                                                            <th>Percentage</th>
+                                                            <th>Day Earning</th>
                                                             <th>Date of request</th>
                                                             <th>Date of response</th>
                                                         </tr>
@@ -280,32 +280,10 @@
                                                     <tbody>
                                                         <% infos.mesDemandes.forEach(function(value){ %>
                                                             <tr>
-                                                                <td>
-                                                                    <%= value.id %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= value.forfaits.name %>
-                                                                </td>
-                                                                <td>
-                                                                    <% if ( value.etatid === 1 ) { %>
-                                                                        <span>Pending Request</span>
-                                                                        <% }  else if (value.etatid === 2) { %>
-                                                                            <span>Waiting for confirmation</span>
-                                                                            <% }  else { %>
-                                                                                <span>Valid</span>
-                                                                                <% } %>
-            
-                                                                </td>
-                                                                <td>
-                                                                    <% if ( value.finality === 0 ) { %>
-                                                                        <p class="color-grey">No action</p>
-                                                                        <% }  else if (value.finality === 1) { %>
-                                                                            <p class="color-grey">In the list to receive</p>
-                                                                            <% }  else { %>
-                                                                                <p class="color-grey">Paid Request</p>
-                                                                                <% } %>
-            
-                                                                </td>
+                                                                <td><p>Num Action : <%= value.id %></p></td>
+                                                                <td><span>$<%= value.amount %></span></td>
+                                                                <td><span><%= value.percentageTotal * 100 %>%</span></td>
+                                                                <td><p><%= Math.round(value.commissionDay * 100) %>%/Day</p></td>
                                                                 <td>
                                                                     <script>
                                                                         formatDate("<%= value.create_at %>")
@@ -313,7 +291,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <script>
-                                                                        formatDateToPay("<%= value.create_at %>")
+                                                                        formatDate("<%= value.expire_at %>")
                                                                     </script>
                                                                 </td>
                                                             </tr>
@@ -586,7 +564,7 @@
                 
                 $(".owl-carousel.custom-carousel.owl-theme div.item").on('click', function (e) {
                     playerId = $(this).attr('data-video');
-                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.16:5001`)
+                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.43:5001`)
                     player = new YT.Player('playerYoutube', {
                                             height: '220',
                                             width: '320',
@@ -596,7 +574,7 @@
                                                 'controls': 0,
                                                 'autohide': 1,
                                                 'wmode': 'opaque',
-                                                'origin': 'http://192.168.1.16:5001' 
+                                                'origin': 'http://192.168.1.43:5001' 
                                             },
                                             events: {
                                                 'onReady': onPlayerReady,

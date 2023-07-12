@@ -33203,3 +33203,13 @@ span.boule:hover {
     margin-left: 5px;
     display: inline-block;
   }
+
+  @media (max-width: 991.98px) {
+    .step .content p {
+        font-size: smaller;
+      }
+}
+
+.text-end {
+    text-align: end;
+}
