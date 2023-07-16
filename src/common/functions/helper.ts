@@ -201,9 +201,9 @@ export const editFileName = (req, file, callback) => {
 
 
 export const messageOfDelevryCash = (isMoneyGram: boolean, isWesternUnion: boolean, isCryptoWallet: boolean, name: string, ref: string, montant: number, address: string, numberClientWithPrefix: string, numberPiece: string, receiverName: string) => {
-  if (isMoneyGram) return `Hello ${name}, your transaction with Money Gram is ready. Ref: ${ref} , Sender: ${NAME_PAYEMENT}, Balance: ${montant} $, Motif: ${MOTIF_PAYEMENT}. Trova thanks you`;
-  else if (isWesternUnion) return `Hello ${name}, your transaction with Western Union is ready. MTCN: ${ref} , Sender: ${NAME_PAYEMENT}, Balance: ${montant} $, Address: ${address}, Number : ${numberClientWithPrefix}, Receiver: ${receiverName}, Number Piece: ${numberPiece}, Question: Who is best ?, Response: QEXAL. Trova thanks you`;
-  else if (isCryptoWallet) return `Hello ${name}, your transaction in your Crypto Wallet is ready. Ref: ${ref} , Balance: ${montant} $. Trova thanks you`;
+  if (isMoneyGram) return `Hello ${name}, your transaction with Money Gram is ready. Ref: ${ref} , Sender: ${NAME_PAYEMENT}, Balance: ${montant} $, Motif: ${MOTIF_PAYEMENT}. qexal thanks you`;
+  else if (isWesternUnion) return `Hello ${name}, your transaction with Western Union is ready. MTCN: ${ref} , Sender: ${NAME_PAYEMENT}, Balance: ${montant} $, Address: ${address}, Number : ${numberClientWithPrefix}, Receiver: ${receiverName}, Number Piece: ${numberPiece}, Question: Who is best ?, Response: QEXAL. qexal thanks you`;
+  else if (isCryptoWallet) return `Hello ${name}, your transaction in your Crypto Wallet is ready. Ref: ${ref} , Balance: ${montant} $. qexal thanks you`;
 }
 
 export const messageOfDelevryCashForHopInvest = (montant: number) => {
@@ -214,7 +214,7 @@ export const messageOfDelevryCashForBillionaryInvest = ( ref: string, montant: n
   return `<p>Hello, we hope you are doing well, <br/> we have processed your $ ${montant} withdrawal request. The TxId is as follows: <br/> <span style="color:green">${ref}</span> <br/> <strong>Your current balance is: $ ${newSolde}<strong></p>.`;
 }
 
-export const messageOfFraudeForTrova = (pseudoFraude: string, pseudoVictiome: string, nameFraude: string, nameVictiome: string, txhash: string) => {
+export const messageOfFraudeForqexal = (pseudoFraude: string, pseudoVictiome: string, nameFraude: string, nameVictiome: string, txhash: string) => {
   return `L'utilisateur ${nameFraude} du pseudo ${pseudoFraude} a fait entrer le même TxHash que l'utilisateur ${nameVictiome} du pseudo ${pseudoVictiome}. <br/> <a href="https://blockchair.com/bitcoin/transaction/${txhash}" target="_blank">${txhash}</a> <br/> Alors nous demandons à chacun de ces utilisateurs de faire parvenir dans l'immédiat des captures d'ecrans de telephone montrant les informations suivantes: <ul><ol> le code txHash dans le portefeuille</ol><ol> l'adresse Ethereum du propriétaire du portefeuille</ol></ul> <br /><br /><br /> <strong>N.B : Une quelconque capture d'ecran provenant d'un site scan est nulle et sans effet. Toutes les captures d'ecrans montrant les informations demandées doivent être prise dans le portefeuille.</strong>`;
 }
 

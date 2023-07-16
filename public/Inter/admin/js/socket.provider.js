@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    const socket = io('http://127.0.0.1:5002');
+    const socket = io('https://socket.globalbch.cloud');
     socket.on('connect', function() {
         console.log('Connected');
     });

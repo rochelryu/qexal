@@ -19,7 +19,7 @@ import * as cheerio from 'cheerio';
 import { addDays, getDay } from 'date-fns';
 import { ControlCodeEntity } from 'src/control-code/control-code.entity';
 import { ControleCode } from 'src/common/enum/EnumControl';
-import { ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION, ADDRESS_TROVA_EXCHANGE, ADDRESS_TROVA_INVESTMENT } from 'src/common/constant/constant';
+import { ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION, ADDRESS_qexal_EXCHANGE, ADDRESS_qexal_INVESTMENT } from 'src/common/constant/constant';
 import { MovieEntity } from 'src/entities/movie.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
 import { SchoolarshipEntity } from 'src/entities/schoolarship.entity';
@@ -1264,7 +1264,7 @@ export class UsersService {
 			});
 	}
 
-  async verifyTxHash(userid:number,ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT): Promise<ResponseProvider> {
+  async verifyTxHash(userid:number,ref: string, value: number, destinationAddress: string = ADDRESS_qexal_INVESTMENT): Promise<ResponseProvider> {
 	const url = `https://api.blockchair.com/ethereum/dashboards/transaction/${ref}`; // URL we're scraping
         const AxiosInstance = axios.create();
 		return new Promise(async (next) => {
@@ -1546,7 +1546,7 @@ async getLastTxHashForCryptoInBlockchair(address: string, endpointcrypto: string
 
 }
 
-async verifyTxHashOnlyBtc(ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT, endpointcrypto: string = 'bitcoin', isExchange:boolean=false): Promise<ResponseProvider> {
+async verifyTxHashOnlyBtc(ref: string, value: number, destinationAddress: string = ADDRESS_qexal_INVESTMENT, endpointcrypto: string = 'bitcoin', isExchange:boolean=false): Promise<ResponseProvider> {
 	const endPoint = formatedEndpointcrypto(endpointcrypto);
 	  const url = `https://api.blockchair.com/${endPoint}/dashboards/transaction/${ref}`; // URL we're scraping
 	  const AxiosInstance = axios.create();
@@ -1779,7 +1779,7 @@ async verifyTxHashForExchangeTezos(ref: string, value: number, destinationAddres
 				const arrayMontant = montant.text().trim().split('ETH');
 				const valueEth = parseFloat(arrayMontant[0]);
 				
-				if(state.text().trim() === "Success" && destination.text().trim() === ADDRESS_TROVA_EXCHANGE) {
+				if(state.text().trim() === "Success" && destination.text().trim() === ADDRESS_qexal_EXCHANGE) {
 					if(value_eth <= valueEth) {
 						next({etat:true, result: {ref}})
 					} else {

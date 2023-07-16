@@ -119,13 +119,13 @@
                                                                         <li>
                                                                             <% if (infos.lastExchange.currencies.id === 3) { %>
                                                                                 <div class="d-sm-flex flex-row">
-                                                                                    <input type="radio" name="sendTrovaAccount" value="1" id="sendTrovaAccount">
-                                                                                    <label for="sendTrovaAccount"> Send directly to my Trova account</label>
+                                                                                    <input type="radio" name="sendqexalAccount" value="1" id="sendqexalAccount">
+                                                                                    <label for="sendqexalAccount"> Send directly to my qexal account</label>
                                                                                 </div>
                                                                                 <br>
                                                                                 <div class="d-sm-flex flex-row">
-                                                                                    <input type="radio" name="sendTrovaAccount" value="2" id="sendTrovaAccountSecond">
-                                                                                    <label for="sendTrovaAccount"> Send to my cryptocurrency wallet</label>
+                                                                                    <input type="radio" name="sendqexalAccount" value="2" id="sendqexalAccountSecond">
+                                                                                    <label for="sendqexalAccount"> Send to my cryptocurrency wallet</label>
                                                                                 </div>
                                                                                 <div class="form-group" id='selectOtherAccount'>
                                                                                     <p>Enter your Crypto address to receive<br></p>
@@ -134,8 +134,8 @@
                                                                                 <% } else { %>
 
                                                                                     <div class="d-sm-flex flex-row">
-                                                                                        <input type="radio" name="sendTrovaAccount" value="2" id="sendTrovaAccountSecond" checked>
-                                                                                        <label for="sendTrovaAccount"> Send to my cryptocurrency wallet</label>
+                                                                                        <input type="radio" name="sendqexalAccount" value="2" id="sendqexalAccountSecond" checked>
+                                                                                        <label for="sendqexalAccount"> Send to my cryptocurrency wallet</label>
                                                                                     </div>
                                                                                     <div class="form-group forceShow" id='selectOtherAccount'>
                                                                                         <p>Enter your Crypto address to receive<br></p>
@@ -242,9 +242,9 @@
         <BR>
         <input type="hidden" name="PAYMENT_UNITS" value="USD">
         <input type="hidden" name="STATUS_URL" value="">
-        <input type="hidden" name="PAYMENT_URL" value="https://trova.vip/exchange/perfectmoneySucces">
+        <input type="hidden" name="PAYMENT_URL" value="https://qexal.vip/exchange/perfectmoneySucces">
         <input type="hidden" name="PAYMENT_URL_METHOD" value="LINK">
-        <input type="hidden" name="NOPAYMENT_URL" value="https://trova.vip/exchange/choiceOptionPaymement">
+        <input type="hidden" name="NOPAYMENT_URL" value="https://qexal.vip/exchange/choiceOptionPaymement">
         <input type="hidden" name="NOPAYMENT_URL_METHOD" value="LINK">
         <input type="hidden" name="SUGGESTED_MEMO" value="">
         <input type="hidden" name="BAGGAGE_FIELDS" value="">
@@ -258,7 +258,7 @@
         <script src="../Inter/admin/js/select2.js"></script>
         <script>
             $(document).ready(function() {
-                $('input:radio[name="sendTrovaAccount"]').change(
+                $('input:radio[name="sendqexalAccount"]').change(
                     function() {
                         if ($(this).is(':checked') && $(this).val() == '2') {
                             $('#selectOtherAccount').fadeIn(1500);
@@ -377,7 +377,7 @@
                     const typeInfo = $('#type').val();
                     const ref = $('#refExchange').val();
                     const address = $('#adress').val();
-                    const typeAccount = $('#sendTrovaAccountSecond').is(':checked') ? 2 : 1;
+                    const typeAccount = $('#sendqexalAccountSecond').is(':checked') ? 2 : 1;
                     if (parseInt(typeInfo, 10).toString() !== 'NaN' && ref.length > 4) {
                         const url = '/exchange/validateMobilePayement',
                             type = 'post';
