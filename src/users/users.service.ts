@@ -24,7 +24,7 @@ import { MovieEntity } from 'src/entities/movie.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
 import { SchoolarshipEntity } from 'src/entities/schoolarship.entity';
 import { FormatInitDemandeInterface } from 'src/common/interfaces/formatDataIO.interface';
-
+import Web3 from 'web3';
 @Injectable()
 export class UsersService {
 	private date: string[] = [
@@ -45,6 +45,8 @@ export class UsersService {
 	private logger: Logger = new Logger('UsersServices');
 	private myDateRange: Date[] = [];
 	private myDateMonth: string[] = [];
+	private web3:Web3;
+
 	constructor(
 		@InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
 		@InjectRepository(DemandeEntity) private demandesRepository: Repository<DemandeEntity>,
@@ -58,6 +60,7 @@ export class UsersService {
 
     @InjectRepository(ControlCodeEntity) private controlCodeRepository: Repository<ControlCodeEntity>,
 	) {
+		this.web3 = new Web3('https://mainnet.infura.io/v3/bfa8430008fd4845b91e14eadf901c2b');
 		for (let i = 0; i < 3; i++) {
 			this.myDateRange.push(new Date(new Date().setDate(this.indexDay - i)));
 		}
@@ -1242,7 +1245,6 @@ export class UsersService {
 
 			});
 	}
-
 	
 	async convertUsdToEth(valueUsd:number): Promise<ResponseProvider> {
         const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
@@ -1264,7 +1266,6 @@ export class UsersService {
 
   async verifyTxHash(userid:number,ref: string, value: number, destinationAddress: string = ADDRESS_TROVA_INVESTMENT): Promise<ResponseProvider> {
 	const url = `https://api.blockchair.com/ethereum/dashboards/transaction/${ref}`; // URL we're scraping
-		this.logger.debug(url);
         const AxiosInstance = axios.create();
 		return new Promise(async (next) => {
             AxiosInstance.get(url)
@@ -1324,6 +1325,64 @@ export class UsersService {
 		});
 
   }
+
+  async getLatestTransactions() {
+	try {
+		const latestBlock = await this.web3.eth.getBlockNumber();
+		const block = await this.web3.eth.getBlock(latestBlock);
+		if (block.transactions.length > 0) {
+			const latestTransactionHash = block.transactions[block.transactions.length - 1];
+			const transaction = await this.web3.eth.getTransaction(latestTransactionHash.toString());
+			const amount = this.web3.utils.fromWei(transaction.value, 'ether');
+			const lastTransaction = {
+				amount,
+				hash: transaction.hash,
+				date: `${Math.floor(Math.random() * 10)}sec ago`
+			}
+			return {etat: true, result: lastTransaction};
+		} else {
+			return {etat: false, error: new Error('No transactions found in the latest block.')};
+		}
+	} catch (error) {
+		return {etat: false, error};
+	}
+  };
+  
+  async getLatestTransaction(): Promise<ResponseProvider> {
+	const url = `https://etherscan.io/txs`; // URL we're scraping
+	const AxiosInstance = axios.create();
+	return new Promise(async (next) => {
+		AxiosInstance.get(url)
+			.then( // Once we have data returned ...
+				async response => {
+					const html = response.data;
+					const $ = cheerio.load(html);
+					let transaction:any = {};
+					//this.logger.debug($(".table.table-hover.table-align-middle.mb-0 tr"));
+					$('.table.table-hover.table-align-middle.mb-0 tr').each(function (index:number, element:any) {
+						const txHash = $(element).find("a.myFnExpandBox_searchVal").text();
+						const typeTransaction = $(element).find("td:nth-child(3) > span").text();
+						if(typeTransaction.toString().toLocaleLowerCase().indexOf("transfer") !== -1) {
+							const date = $(element).find("td:nth-child(6) > span").text();
+							const amount = $(element).find("td:nth-child(11) > span").text().split(" ETH")[0];
+							if(parseFloat(amount) > 0 ) {
+								transaction = {txHash, typeTransaction, date, amount};
+								return false;
+							}
+						}
+
+					});
+					next({etat:true, result: transaction})
+				}
+			)
+			.catch(error => {
+				this.logger.error(error);
+				next({etat:false, error})
+			});
+
+	});
+
+}
 
   async getValueOfLittle(): Promise<ResponseProvider> {
 	const url = `https://coinmarketcap.com/fr/currencies/little-rabbit/`; // URL we're scraping
@@ -1436,7 +1495,6 @@ async verifyTxHashForOtherCrypto(ref: string, value: number, destinationAddress:
 			  .then( // Once we have data returned ...
 				  response => {
 				  const json = response.data;
-				  this.logger.debug(json);
 				  const state = json.data[ref].transaction.block_id !== -1;
 				  const montant = isExchange ? json.data[ref].transaction.output_total / 100000000 : json.data[ref].transaction.output_total_usd;
 				  const destination = json.data[ref].outputs[0].recipient;

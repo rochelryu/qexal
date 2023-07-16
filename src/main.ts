@@ -1,17 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
-import * as session from 'express-session';
+import session from 'express-session';
 import flash = require('connect-flash');
-import * as passport from 'passport';
+import passport from 'passport';
 import 'dotenv/config';
 
 import { join } from 'path';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import helmet = require('helmet');
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter';
-import * as http from 'http';
-import * as express from 'express';
+import http from 'http';
+import express from 'express';
 
 const logger = new Logger('App Main');
 // const httpsOptions = {

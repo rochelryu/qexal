@@ -1368,4 +1368,7 @@ export const fakeDataCountry = (country:string, value:number): (string|number)[]
     }
 }
 
+const arrayTime = [5000, 15000, 23000, 2000, 6000, 10000, 31000, 32000, 75000, 10000, 20000, 13000, 23000, 34000,41000,54000,6600, 7100, 8900,9200];
+
+export const randomTime = () => arrayTime[Math.floor(Math.random() * arrayTime.length)];
 

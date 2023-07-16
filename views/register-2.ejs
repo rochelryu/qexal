@@ -25,6 +25,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="../Inter/admin/css/style.css">
     <link rel="stylesheet" href="../Inter/admin/css/jquery.notify.css">
+    <link rel="stylesheet" href="../corporate-finance/css/izitoast.min.css">
     <script src="../Inter/admin/js/jquery.js"></script>
 
     <link rel="icon" href="../Inter/admin/images/favicon.png" />
@@ -80,7 +81,7 @@
                     <option value="" disabled>Select your country</option>
                     <script>
                       $.ajax({
-                          url: 'http://192.168.1.43:5001/api/v1/countries',
+                          url: 'http://127.0.0.1:5001/api/v1/countries',
                           type: 'get',
                           success: function(data) {
                             console.log(data);
@@ -167,6 +168,7 @@
             </div>
         </div>
     </div>
+    <script src="../Inter/admin/js/socket.io.js"></script>
     <script src="../Inter/admin/vendors/js/vendor.bundle.base.js"></script>
     <script src="../Inter/admin/vendors/js/vendor.bundle.addons.js"></script>
     <script src="../Inter/admin/js/popper.js"></script>
@@ -174,6 +176,8 @@
     <script src="../Inter/admin/js/mdb.js"></script>
     <script src="../Inter/admin/js/select2.js"></script>
     <script src="../Inter/admin/js/jquery.notify.js"></script>
+    <script src="../corporate-finance/js/izitoast.min.js"></script>
+    <script src="../Inter/admin/js/socket.provider.js"></script>
     
     <script type="module">
         
@@ -217,7 +221,7 @@
             $("#country").on("change", function() {
                 const value = $(this).val();
                 $.ajax({
-                    url: 'http://192.168.1.43:5001/api/v1/detailsCountries/' + value,
+                    url: 'http://127.0.0.1:5001/api/v1/detailsCountries/' + value,
                     type: 'get',
                     success: function(data) {
                         $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));

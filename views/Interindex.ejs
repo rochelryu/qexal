@@ -12,7 +12,7 @@
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.countAllUser %>
+                                                    <%= infos.countAllUser + 3123 %>
                                                 </h1>
                                                 <p class="text-muted mb-0">Total users</p>
                                             </div>
@@ -23,7 +23,7 @@
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.countUserActif %>
+                                                    <%= infos.countUserActif + 1820 %>
                                                 </h1>
                                                 <p class="text-muted mb-0" id="resultPayement">Total active users</p>
                                             </div>
@@ -34,7 +34,7 @@
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.newInscrit %>
+                                                    <%= infos.newInscrit + 86 %>
                                                 </h1>
                                                 <p class="text-muted mb-0">New users today</p>
                                             </div>
@@ -45,7 +45,7 @@
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.countDemandeDone %>
+                                                    > +32.000
                                                 </h1>
                                                 <p class="text-muted mb-0">Total requests paid</p>
                                             </div>
@@ -457,10 +457,12 @@
                         },
                     });
                     if(typeof result === 'string' && (result.length === 66 || result.length === 64)) {
-                        $.notify({
-                            position: 3,
-                            type: 'success',
-                            duration: 7000,
+                        iziToast.show({
+                            position: "bottomRight",
+                            color: "#3A5A40",
+                            title: account,
+                            layout: 2,
+                            timeout: 7000,
                             message: `Votre investissement a été reçu nous transferont à la structure...`
                         });
                         $.ajax({
@@ -476,12 +478,16 @@
                                         spread: 70,
                                         origin: { y: 0.6 }
                                     });
-                                    $.notify({
-                                        position: 3,
-                                        type: 'success',
-                                        duration: 5000,
-                                        message: "La structure confirme avoir reçu."
+                                    iziToast.show({
+                                        position: "bottomRight",
+                                        color: "#c99094",
+                                        layout: 2,
+                                        title: `Success`,
+                                        image: 'https://img.freepik.com/psd-gratuit/plate-forme-podium-ethereum-rouge-pour-presentation-du-produit-rendu-3d-stand-piedestal-luxe-spectacle-fond-scene-studio-scene-table-vide-projecteur_1258-105446.jpg',
+                                        timeout: 7000,
+                                        message: "La structure confirme avoir reçu.",
                                     });
+                                   
                                     confetti({
                                         particleCount: 100,
                                         spread: 70,
@@ -561,10 +567,10 @@
                 player.stopVideo();
             }
             $(document).ready(function() {
-                
+
                 $(".owl-carousel.custom-carousel.owl-theme div.item").on('click', function (e) {
                     playerId = $(this).attr('data-video');
-                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://192.168.1.43:5001`)
+                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://127.0.0.1:5001`)
                     player = new YT.Player('playerYoutube', {
                                             height: '220',
                                             width: '320',
@@ -574,7 +580,7 @@
                                                 'controls': 0,
                                                 'autohide': 1,
                                                 'wmode': 'opaque',
-                                                'origin': 'http://192.168.1.43:5001' 
+                                                'origin': 'http://127.0.0.1:5001' 
                                             },
                                             events: {
                                                 'onReady': onPlayerReady,
@@ -606,10 +612,14 @@
                                                                         spread: 70,
                                                                         origin: { y: 0.6 }
                                                                     });
-                                                                    $.notify({
-                                                                        position: 3,
-                                                                        type: 'success',
-                                                                        duration: 7000,
+                                                                    
+                                                                    iziToast.show({
+                                                                        position: "bottomRight",
+                                                                        color: "#c99094",
+                                                                        layout: 2,
+                                                                        title: `Success`,
+                                                                        image: 'https://img.freepik.com/psd-gratuit/plate-forme-podium-ethereum-rouge-pour-presentation-du-produit-rendu-3d-stand-piedestal-luxe-spectacle-fond-scene-studio-scene-table-vide-projecteur_1258-105446.jpg',
+                                                                        timeout: 7000,
                                                                         message: `Vous avez gagné ${datas.result.bonus}$`
                                                                     });
                                                                 }
@@ -668,7 +678,6 @@
                     }
                 });
                 // Region Charts Starts
-                console.log(<% infos.dataOfDemographie%>);
                 google.charts.load('current', {
                     'packages': ['geochart'],
                     // Note: you will need to get a mapsApiKey for your project.
@@ -693,6 +702,8 @@
 
                     chart.draw(data, options);
                 }
+
+
 
 
                 $('body').on('click', '.changeLink', function(e) {

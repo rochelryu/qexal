@@ -134,11 +134,9 @@ export class UsersController {
 					//TODO verifyInfo of txHash
 					const amountValid = demande.amount - 1;
 					const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountValid);
-					this.logger.log(verifyTxHashInfo);
 					if(forfait.result.min - 2 <= verifyTxHashInfo.result.montant_net_send && verifyTxHashInfo.result.montant_net_send <= forfait.result.max) {
 						//Create Demande of Client
 						const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, verifyTxHashInfo.result.montant_net_send, forfait.result.commissionTotal, demande.txHash.trim());
-						this.logger.log(initDemande);
 						const {etat, error} = await this.service.setDemande(initDemande);
 						await this.service.updateUser(user.result.id, {soldeGain: 0, soldeInvestissement: demande.amount + user.result.soldeGain});
 						if(etat) {
@@ -216,7 +214,6 @@ export class UsersController {
 
 			const soldeGain = demande.result.cumulPercentage + (differenceDay * demande.result.commissionDay) <= demande.result.percentageTotal ?
 			user.result.soldeGain + (differenceDay * demande.result.commissionDay * demande.result.amount) : user.result.soldeGain + ((demande.result.percentageTotal - demande.result.cumulPercentage) * demande.result.amount);
-			this.logger.log({ cumulPercentage,diffInSecond ,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay), differenceDay, soldeGain});
 			await this.service.updateDemande(demandeId, { cumulPercentage,  etatid : cumulPercentage === demande.result.percentageTotal ? 3: 2, last_date_payement: addDays(new Date(demande.result.last_date_payement), differenceDay)});
 			await this.service.updateUser(user.result.id, {soldeGain});
 		}
@@ -450,7 +447,6 @@ export class UsersController {
   ) {
 		if (req.session.qexal) {
 			const user = await this.service.updateUser(req.session.qexal.id, {haveVote: true, vote:parseInt(infos.response, 10)});
-			this.logger.error(user);
 			res.redirect('/users/reprise');
 		} else {
 			res.redirect('/users/login');
@@ -856,8 +852,14 @@ export class UsersController {
 
 	@Get('/testTransaction')
 	async testTransaction(@Request() req, @Res() res: Response) {
-		const verifyTxHashInfo = await this.service.verifyTxHash(1, "0xa0d4e4aed7f651256b777169ece4b6303f1318877eda88afda6108dcf747068f", 5, "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450");
-		res.json(verifyTxHashInfo);
+		//const verifyTxHashInfo = await this.service.verifyTxHash(1, "0xa0d4e4aed7f651256b777169ece4b6303f1318877eda88afda6108dcf747068f", 5, "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450");
+		const lastTransaction = await this.service.getLatestTransactions();
+		// this.logger.debug(lastTransaction);
+		// if(lastTransaction.etat) {
+		// 	const amount_usd = await this.service.convertEthToUsd(parseFloat(lastTransaction.result.amount));
+		// 	lastTransaction.result = {...lastTransaction.result, amount_usd: amount_usd.result}
+		//   }
+		res.json(lastTransaction);
 	}
 
 	
