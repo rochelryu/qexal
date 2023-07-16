@@ -570,7 +570,7 @@
 
                 $(".owl-carousel.custom-carousel.owl-theme div.item").on('click', function (e) {
                     playerId = $(this).attr('data-video');
-                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=http://127.0.0.1:5001`)
+                   //$("#playerYoutube").attr("src", `https://www.youtube.com/embed/${src}?enablejsapi=1&origin=https://qexal.globalbch.cloud`)
                     player = new YT.Player('playerYoutube', {
                                             height: '220',
                                             width: '320',
@@ -580,7 +580,7 @@
                                                 'controls': 0,
                                                 'autohide': 1,
                                                 'wmode': 'opaque',
-                                                'origin': 'http://127.0.0.1:5001' 
+                                                'origin': 'https://qexal.globalbch.cloud' 
                                             },
                                             events: {
                                                 'onReady': onPlayerReady,
