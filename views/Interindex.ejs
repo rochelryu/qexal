@@ -8,22 +8,22 @@
                         <div class="card card-statistics">
                             <div class="card-body p-0">
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-3">
+                                    <div class="col-md-6 col-lg-4">
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.countAllUser + 3123 %>
+                                                    <%= infos.countAllUser + 9411 %>
                                                 </h1>
                                                 <p class="text-muted mb-0">Total users</p>
                                             </div>
-                                            <i class="icon-pin text-primary icon-lg"></i>
+                                            <i class="icon-people text-primary icon-lg"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-3">
+                                    <div class="col-md-6 col-lg-4">
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.countUserActif + 1820 %>
+                                                    <%= infos.countUserActif + 8958 %>
                                                 </h1>
                                                 <p class="text-muted mb-0" id="resultPayement">Total active users</p>
                                             </div>
@@ -34,18 +34,7 @@
                                         <div class="d-flex justify-content-between border-right card-statistics-item">
                                             <div>
                                                 <h1>
-                                                    <%= infos.newInscrit + 86 %>
-                                                </h1>
-                                                <p class="text-muted mb-0">New users today</p>
-                                            </div>
-                                            <i class="icon-people text-primary icon-lg"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-3">
-                                        <div class="d-flex justify-content-between border-right card-statistics-item">
-                                            <div>
-                                                <h1>
-                                                    > +32.000
+                                                    > +57.000
                                                 </h1>
                                                 <p class="text-muted mb-0">Total requests paid</p>
                                             </div>
@@ -342,24 +331,54 @@
                         <br>
                         Enter your investment amount : 👇
                         </p>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></span>
-                                </div>
-                                <input type="number" ng-change="performOperation()" name="amount" ng-maxlength="<%= forfait.max.toString().length %>" ng-model="amoutInvest" ng-max="<%= forfait.max %>" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" class="form-control" placeholder="Invest Amount" required>
+                        
+
+
+                          <div id="exTab3" class="container">	
+                            <ul  class="nav nav-pills">
+                                        <li class="active">
+                                        <a  href="#1b" data-toggle="tab" class="active">ETH</a>
+                                        </li>
+                                        <li><a href="#2b" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Orange</a>
+                                        </li>
+                                        <li><a href="#3b" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Mtn</a>
+                                        </li>
+                                      <li><a href="#4a" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Moov</a>
+                                        </li>
+                                    </ul>
                             
-                            </div>
-                        </div>
-                        <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %> && amoutInvest >= <%= user.soldeInvestissement %>">
-                            <p>You'll have to pay 🧑‍🏫 👨‍⚖️</p>
-                        </div>
-                          <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>">
-                            <div class="row">
-                                <div class="col-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
-                                <div class="col-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
-                            </div>
-                          </div>
+                                        <div class="tab-content clearfix">
+                                          <div class="tab-pane active" id="1b">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></span>
+                                                    </div>
+                                                    <input type="number" ng-change="performOperation()" name="amount" ng-maxlength="<%= forfait.max.toString().length %>" ng-model="amoutInvest" ng-max="<%= forfait.max %>" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" class="form-control" placeholder="Invest Amount" required>
+                                                
+                                                </div>
+                                            </div>
+                                            <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %> && amoutInvest >= <%= user.soldeInvestissement %>">
+                                                <p>You'll have to pay 🧑‍🏫 👨‍⚖️</p>
+                                            </div>
+                                              <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>">
+                                                <div class="row">
+                                                    <div class="col-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
+                                                    <div class="col-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="tab-pane" id="2b">
+                                      <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+                                            </div>
+                                    <div class="tab-pane" id="3b">
+                                      <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+                                            </div>
+                                      <div class="tab-pane" id="4b">
+                                      <h3>We use css to change the background color of the content to be equal to the tab</h3>
+                                            </div>
+                                        </div>
+                              </div>
                           
                     </div>
                     <div class="modal-footer">
@@ -636,6 +655,11 @@
                     stopVideo();
                     $("#movieModalPlay .modal-footer").html('<button type="button" class="btn btn-secondary close" data-mdb-dismiss="modal">Close</button>');
                     $("#movieModalPlay .modal-body").html('<div id="playerYoutube"></div>');
+                });
+                $('#exTab3 .nav-pills > li > a').on('click',function () {
+                   const idTapPane = $(this).attr('href')
+                   $('#exTab3 .tab-content .tab-pane').fadeOut().removeClass('active');
+                   $(idTapPane).addClass('active').fadeIn();
                 });
                 $(".tabs-menu").on('click', function (e) {
                     e.preventDefault();

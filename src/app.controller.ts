@@ -6,6 +6,7 @@ import { countriesData } from './common/constant/currenciesData';
 import { generateRecoveryForHelp } from './common/functions/helper';
 import { User } from './users/user.dto';
 import { UsersService } from './users/users.service';
+import { WALLET_CONNECT_VERIFY_DOMAIN } from './common/constant/constant';
 
 @Controller()
 export class AppController {
@@ -54,15 +55,20 @@ export class AppController {
 
   @Get('/api/v1/countries')
   async countries(@Request() req, @Res() res: Response) {
-	  
+
 	  res.json({etat: true, result:countriesData});
-}
+  }
+
+  @Get('.well-known/walletconnect.txt')
+  async walletConnect(@Request() req, @Res() res: Response) {
+	  res.send(WALLET_CONNECT_VERIFY_DOMAIN);
+  }
 
 @Get('/api/v1/detailsCountries/:name')
 async detailsCountries(@Request() req, @Res() res: Response, @Param() params) {
 	let info = {};
 	for (let index = 0; index < countriesData.length; index++) {
-	  
+
 		const element = countriesData[index];
 		if(element.name === params.name.trim()) {
 			info = element;
@@ -80,7 +86,7 @@ async chargerProfil(@Request() req, @Res() res: Response, @Query('id') id: strin
 		} else {
 			res.json({etat: user.etat, error: user.error.message});
 		}
-	
+
 }
 
 @Get('/api/v1/chargerSuggestion')
@@ -92,7 +98,7 @@ async chargerSuggestion(@Request() req, @Res() res: Response, @Query('id') id: s
 		} else {
 			res.json({etat: user.etat, error: user.error.message});
 		}
-	
+
 }
 
 
@@ -101,7 +107,7 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 	let info = {};
 	let etat = false;
 	for (let index = 0; index < countriesData.length; index++) {
-	  
+
 		const element = countriesData[index];
 		if(element.callingCodes.indexOf(params.code.trim())!== -1) {
 			info = element;

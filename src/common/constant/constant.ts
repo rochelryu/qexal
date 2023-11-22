@@ -44,7 +44,7 @@ export const POURCENTAGE_EXCHANGE_STABLE_COIN = 1.2; // commission prise par l'a
 export const POURCENTAGE_STOP_PAYEMENT_START_UP = 1.3; // commission prise par l'administration exchange pour les stablecoins;
 export const POURCENTAGE_EXCHANGE_SHIT_COIN = 1.5; // commission prise par l'administration exchange pour les shitCoins;
 export const POURCENTAGE_BUSINESS = 0.8; // pourcentage de l'argent qui rentre dans la caisse lors de l'inscription de chaque membre
-export const POURCENTAGE_PAYNET = 0.9; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash par Liquidités 
+export const POURCENTAGE_PAYNET = 0.9; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash par Liquidités
 export const POURCENTAGE_PAYNET_EXCHANGE = 0.85; //pourcentage a payer a l'utilisateur lorsqu'il vend sa crypto
 export const ALPHABET = "qwertyuiopkmjnhbgvfcdxsazAQWZSXEDCRFVTGBYHNUJKIOLPM1234567890"; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash
 
@@ -52,6 +52,7 @@ export const ADDRESS_qexal_INVESTMENT = "0x1880868d5617ba08975803ee1ea6d7e0d1be8
 export const ADDRESS_qexal_EXCHANGE = "0x0704228829e671958a3271e58c71e0cc7f2ddacb";
 export const ADDRESS_ANONYMOUS_INVESTMENT = "bc1qh5g3jhy8aajgrcs690ufue4eufm8g9swf5ufu4";
 export const ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION = "1Fp1JtyeVWGH95diPG5oe4TcuipbwE3boR";
+export const WALLET_CONNECT_VERIFY_DOMAIN = "e79d3053-a360-42bd-8a0f-fcd69138ad95=b29696bf638fa494fcac5f3742e4679c0e34ed089680a9bbd6dab5a9510fbe90";
 
 
 // NEW SYSTEME
@@ -68,7 +69,7 @@ export const ALL_ENTITY = [
 		TypeOrmModule.forFeature([ SerialUserEntity ]),
 		TypeOrmModule.forFeature([ WithdrawEntity ]),
 
-		// Exchange 
+		// Exchange
 		TypeOrmModule.forFeature([ ControlCodeEntity ]),
 
 		//BET

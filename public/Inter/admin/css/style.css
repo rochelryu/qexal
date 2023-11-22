@@ -33213,3 +33213,24 @@ span.boule:hover {
 .text-end {
     text-align: end;
 }
+
+.nav-pills {
+    min-width: 100%;
+}
+
+#exTab3 .nav-pills > li > a {
+    border-radius: 4px 4px 0 0 ;
+    padding: 10px;
+    margin-right: 10px;
+    height: 40px;
+    color: #000;
+  }
+#exTab3 .nav-pills > li > a.active {
+  background-color: #fdbab1;
+  color: #fff;
+}
+  
+  #exTab3 .tab-content {
+    padding: 25px 10px;
+    background: #d39e97bf;
+  }

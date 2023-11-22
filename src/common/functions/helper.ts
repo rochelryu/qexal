@@ -369,9 +369,9 @@ export const messageOfExchangeDone = (nameCrypto:string,receptionid:number, date
           <br>
           type transaction: ${typeTransaction}
           </p>
-        
+
       </div>
-      
+
     </div>
   </div>
 </div>
@@ -404,12 +404,12 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
         td {
             color: #000000;
         }
-        
+
         a {
             color: #0000ee;
             text-decoration: underline;
         }
-        
+
         @media (max-width: 480px) {
             #u_content_image_5 .v-src-width {
                 width: auto !important;
@@ -418,7 +418,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                 max-width: 22% !important;
             }
         }
-        
+
         @media only screen and (min-width: 620px) {
             .u-row {
                 width: 600px !important;
@@ -433,7 +433,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                 width: 600px !important;
             }
         }
-        
+
         @media (max-width: 620px) {
             .u-row-container {
                 max-width: 100% !important;
@@ -455,32 +455,32 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                 margin: 0 auto;
             }
         }
-        
+
         body {
             margin: 0;
             padding: 0;
         }
-        
+
         table,
         tr,
         td {
             vertical-align: top;
             border-collapse: collapse;
         }
-        
+
         p {
             margin: 0;
         }
-        
+
         .ie-container table,
         .mso-container table {
             table-layout: fixed;
         }
-        
+
         * {
             line-height: inherit;
         }
-        
+
         a[x-apple-data-detectors='true'] {
             color: inherit !important;
             text-decoration: none !important;
@@ -522,7 +522,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -609,7 +609,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -655,7 +655,7 @@ export const messageOfExchangeForUserBuy = (nameCrypto:string,receptionid:number
                                                                     <!--[if (mso)|(IE)]><table width="36" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:36px;"><tr><![endif]-->
 
 
-                                                                    
+
 
 
                                                                     <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
@@ -717,12 +717,12 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
         td {
             color: #000000;
         }
-        
+
         a {
             color: #0000ee;
             text-decoration: underline;
         }
-        
+
         @media (max-width: 480px) {
             #u_content_image_5 .v-src-width {
                 width: auto !important;
@@ -731,7 +731,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                 max-width: 22% !important;
             }
         }
-        
+
         @media only screen and (min-width: 620px) {
             .u-row {
                 width: 600px !important;
@@ -746,7 +746,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                 width: 600px !important;
             }
         }
-        
+
         @media (max-width: 620px) {
             .u-row-container {
                 max-width: 100% !important;
@@ -768,32 +768,32 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                 margin: 0 auto;
             }
         }
-        
+
         body {
             margin: 0;
             padding: 0;
         }
-        
+
         table,
         tr,
         td {
             vertical-align: top;
             border-collapse: collapse;
         }
-        
+
         p {
             margin: 0;
         }
-        
+
         .ie-container table,
         .mso-container table {
             table-layout: fixed;
         }
-        
+
         * {
             line-height: inherit;
         }
-        
+
         a[x-apple-data-detectors='true'] {
             color: inherit !important;
             text-decoration: none !important;
@@ -835,7 +835,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -920,7 +920,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -966,7 +966,7 @@ export const messageOfExchangeForUserSell = (nameCrypto:string,receptionid:numbe
                                                                     <!--[if (mso)|(IE)]><table width="36" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:36px;"><tr><![endif]-->
 
 
-                                                                    
+
 
 
                                                                     <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
@@ -1028,12 +1028,12 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
         td {
             color: #000000;
         }
-        
+
         a {
             color: #0000ee;
             text-decoration: underline;
         }
-        
+
         @media (max-width: 480px) {
             #u_content_image_5 .v-src-width {
                 width: auto !important;
@@ -1042,7 +1042,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                 max-width: 22% !important;
             }
         }
-        
+
         @media only screen and (min-width: 620px) {
             .u-row {
                 width: 600px !important;
@@ -1057,7 +1057,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                 width: 600px !important;
             }
         }
-        
+
         @media (max-width: 620px) {
             .u-row-container {
                 max-width: 100% !important;
@@ -1079,32 +1079,32 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                 margin: 0 auto;
             }
         }
-        
+
         body {
             margin: 0;
             padding: 0;
         }
-        
+
         table,
         tr,
         td {
             vertical-align: top;
             border-collapse: collapse;
         }
-        
+
         p {
             margin: 0;
         }
-        
+
         .ie-container table,
         .mso-container table {
             table-layout: fixed;
         }
-        
+
         * {
             line-height: inherit;
         }
-        
+
         a[x-apple-data-detectors='true'] {
             color: inherit !important;
             text-decoration: none !important;
@@ -1146,7 +1146,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -1233,7 +1233,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                                                     <tr>
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
-                                                            
+
 
                                                         </td>
                                                     </tr>
@@ -1279,7 +1279,7 @@ export const messageOfExchangeForUserDone = (nameCrypto:string,receptionid:numbe
                                                                     <!--[if (mso)|(IE)]><table width="36" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:36px;"><tr><![endif]-->
 
 
-                                                                    
+
 
 
                                                                     <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
@@ -1362,13 +1362,13 @@ export const fakeDataCountry = (country:string, value:number): (string|number)[]
         case 'IN':
             return [country, 21 + value];
         case 'KE':
-            return [country, 16 + value];             
+            return [country, 16 + value];
         default:
             return [country, value];
     }
 }
 
-const arrayTime = [5000, 15000, 23000, 2000, 6000, 10000, 31000, 32000, 75000, 10000, 20000, 13000, 23000, 34000,41000,54000,6600, 7100, 8900,9200];
+const arrayTime = [50000, 15000, 23000, 20000, 60000, 100000, 310000, 320000, 750000, 100000, 200000, 103000, 230000, 340000,41000,54000,66000, 71000, 89000,92000];
 
 export const randomTime = () => arrayTime[Math.floor(Math.random() * arrayTime.length)];
 

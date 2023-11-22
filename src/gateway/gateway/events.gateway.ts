@@ -53,7 +53,7 @@ import { UsersService } from 'src/users/users.service';
         const amount_usd = await this.userService.convertEthToUsd(parseFloat(lastTransaction.result.amount));
         const result = {...lastTransaction.result, amount_usd: amount_usd.result}
         
-        if(Math.floor(result.amount_usd) > 0) {
+        if(Math.floor(result.amount_usd) >= 50) {
           this.server.emit("receiveInfo", result);
         }
       }
