@@ -164,13 +164,13 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 		} else {
 			const {etat, result:client, error} = await this.usersService.getUserByItem({numberClient: user.numberTel, addressCrypto: user.addressCrypto})
 			if(etat){
-        const {result: newClient} = await this.usersService.regeneratePasswordUser(client.id);
+        await this.usersService.regeneratePasswordUser(client.id);
 				req.session.qexal = client;
 				res.redirect('/viewGeneratedPassword');
 			}
 			else {
 				req.session.flash = [error.message]
-				res.redirect('/login');
+				res.redirect('/forgotPassword');
 			}
 		}
 	}
