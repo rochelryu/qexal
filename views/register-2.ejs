@@ -191,7 +191,6 @@
             if(session.topic) {
                 
                 const account = session.namespaces.eip155.accounts[0].slice(9);
-                console.log(account);
                 $("#addressCrypto").val(account);
                 $("#registerSign").submit();
             }

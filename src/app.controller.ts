@@ -146,16 +146,18 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
   @Get('/viewGeneratedPassword')
   async viewGeneratedPassword(@Request() req, @Res() res: Response,) {
     if (req.session.qexal) {
-      const {result: user} = await this.usersService.getUserByItem({id: req.session.qexal})
+      const {result: user} = await this.usersService.getUserByItem({id: req.session.qexal.id})
       res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
   	.render('viewGeneratedPassword', {
         title: 'Password',
         newCode: user.newPasswordGenerated.trim(),
       });
+
     } else {
       res.redirect('/login');
     }
   }
+
 
 	@Post('/forgotPassword')
 	async forgotPasswordPost(@Body() user: {numberTel: string, addressCrypto: string}, @Request() req, @Res() res: Response) {

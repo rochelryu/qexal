@@ -320,10 +320,10 @@ export class UsersService {
 				.findOne({ where: { id }})
 				.then(async (result) => {
 					if (result) {
-            const pass = await hash(result.recovery.trim(), Number(process.env.CRYPTO_DIGEST));
+            const newPasswordGenerated = (await generateRecoveryForHelp()).trim();
+            const pass = await hash(newPasswordGenerated, Number(process.env.CRYPTO_DIGEST));
 						result.password = pass;
-            result.newPasswordGenerated = result.recovery.trim();
-            result.recovery = await generateRecoveryForHelp();
+            result.newPasswordGenerated = newPasswordGenerated;
 						await result.save();
 						next({ etat: true, result });
 					} else {
