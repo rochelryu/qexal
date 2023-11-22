@@ -82,7 +82,7 @@ export class UsersService {
 	async getUsersAccountSupZero(): Promise<UserEntity[]> {
 		return await this.usersRepository.find({where: {soldeGain: MoreThan(2)}, order: { id: 'ASC' }});
 	}
-	
+
 
 	async getUsersWhichRef(): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
@@ -146,7 +146,7 @@ export class UsersService {
 				});
 			}
 
-	
+
 
   async getUserFollowInRange(dateMatrixCount: Date, parrainid: number): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
@@ -290,7 +290,7 @@ export class UsersService {
 		numberClient: string,
 	address: string,
     addressCrypto: string,
-    
+
 		password: string,
 	): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
@@ -302,6 +302,28 @@ export class UsersService {
 						result.numberClient = numberClient.trim();
 						result.address = address.trim();
 						result.addressCrypto = addressCrypto.toLowerCase().trim();
+						await result.save();
+						next({ etat: true, result });
+					} else {
+						next({ etat: false, error: new Error('Verifié vos coordonnés') });
+					}
+				})
+				.catch((error) => next({ etat: false, error }));
+		});
+	}
+
+  async regeneratePasswordUser(
+		id: number,
+	): Promise<ResponseProvider> {
+		return new Promise(async (next) => {
+			await this.usersRepository
+				.findOne({ where: { id }})
+				.then(async (result) => {
+					if (result) {
+            const pass = await hash(result.recovery.trim(), Number(process.env.CRYPTO_DIGEST));
+						result.password = pass;
+            result.newPasswordGenerated = result.recovery.trim();
+            result.recovery = await generateRecoveryForHelp();
 						await result.save();
 						next({ etat: true, result });
 					} else {
@@ -371,22 +393,20 @@ export class UsersService {
 		return new Promise(async (next) => {
 			await this.usersRepository
 				.findOne({
-					where : {email: user.email.trim()}
+					where : {numberClient: user.numero.trim()}
 				})
 				.then(async (res) => {
 					if (res) {
-						next({ etat: false, error: new Error('This email is already associated with another account') });
+						next({ etat: false, error: new Error('This number is already associated with another account') });
 					} else {
-						
-						const { numero, password, name, email } = user;
+
+						const { numero, password } = user;
 						const recovery = await generateRecoveryForHelp();
 						const pass = await hash(password.trim(), Number(process.env.CRYPTO_DIGEST));
 						await this.usersRepository
 							.save({
                 				parrainid : 1,
 								numberClient: numero.trim(),
-								name: name.trim(),
-	              				email: email.trim(),
 								recovery,
 								password: pass,
 								endForfait: new Date(),
@@ -1245,7 +1265,7 @@ export class UsersService {
 
 			});
 	}
-	
+
 	async convertUsdToEth(valueUsd:number): Promise<ResponseProvider> {
         const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=7HQZ18D5IZ7CC313Y31XTY5GPWC53GR6F8`; // URL we're scraping
         const AxiosInstance = axios.create();
@@ -1278,9 +1298,9 @@ export class UsersService {
 						const destination = transaction.recipient as string;
 						//const valueEth = parseFloat((parseInt(transaction.value, 10)/1000000000000000000).toString());
 						const montantUsd = transaction.value_usd as number;
-						
+
 						if(state && destination.trim().toLocaleLowerCase() === destinationAddress.toLocaleLowerCase().trim()) {
-							//add txHash in Control Code 
+							//add txHash in Control Code
 							const type = ControleCode.success;
 							await this.setControlCode(userid, type, ref.trim(), montantUsd);
 							if((value - montantUsd) <= 1) {
@@ -1288,7 +1308,7 @@ export class UsersService {
 							} else {
 								next({etat:false, result: {ref, montant: value - montantUsd, montant_net_send: montantUsd}, error: new Error("incomplete transaction")});
 							}
-							
+
 						}
 						// else if(state.text().trim() === "Pending") {
 						// 	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
@@ -1347,7 +1367,7 @@ export class UsersService {
 		return {etat: false, error};
 	}
   };
-  
+
   async getLatestTransaction(): Promise<ResponseProvider> {
 	const url = `https://etherscan.io/txs`; // URL we're scraping
 	const AxiosInstance = axios.create();
@@ -1394,8 +1414,8 @@ export class UsersService {
 				const html = response.data;
 				const $ = cheerio.load(html);
 				const value = $('div.priceValue.smallerPrice');
-				
-				
+
+
 				next({etat: true, result:value.text().trim()});
 				}
 			)
@@ -1463,7 +1483,7 @@ export class UsersService {
 	  } else {
 		  return await this.verifyTxHashForOtherCrypto(ref, value,destinationAddress, endpointcrypto, true);
 	  }
-	  
+
   }
 
 
@@ -1505,7 +1525,7 @@ async verifyTxHashForOtherCrypto(ref: string, value: number, destinationAddress:
 						  } else {
 							  next({etat:false, result: {ref, montant: value - montant, montant_net_send: montant}, error: new Error("incomplete transaction")});
 						  }
-						  
+
 					  }
 					  else {
 						  next({etat:false, error: new Error("Incorrect destination address. This transaction has failed, please make a new transaction to sign your contract")});
@@ -1513,7 +1533,7 @@ async verifyTxHashForOtherCrypto(ref: string, value: number, destinationAddress:
 				  } else {
 					  next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")});
 				  }
-				  
+
 				  }
 			  )
 			  .catch(error => {next({etat:false, error})});
@@ -1537,7 +1557,7 @@ async getLastTxHashForCryptoInBlockchair(address: string, endpointcrypto: string
 				  } else {
 					  next({etat:false, error: new Error("Not transaction at this address for START UP")});
 				  }
-				  
+
 				}
 			  )
 			  .catch(error => {next({etat:false, error})});
@@ -1565,7 +1585,7 @@ async verifyTxHashOnlyBtc(ref: string, value: number, destinationAddress: string
 						  } else {
 							  next({etat:false, result: {ref, montant: value - montant, montant_net_send: montant}, error: new Error("incomplete transaction")});
 						  }
-						  
+
 					  }
 					  else {
 						  next({etat:false, error: new Error("Incorrect destination address. This transaction has failed, please make a new transaction to sign your contract")});
@@ -1573,7 +1593,7 @@ async verifyTxHashOnlyBtc(ref: string, value: number, destinationAddress: string
 				  } else {
 					  next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")});
 				  }
-				  
+
 				  }
 			  )
 			  .catch(error => {next({etat:false, error})});
@@ -1614,7 +1634,7 @@ async verifyTxHashForOtherCryptoWithoutValue(ref: string, destinationAddress: st
 					} else {
 						next({etat:false, error: new Error("Cette transaction est toujours en cours, veuillez attendre qu'elle soit terminée avant d'entrer le code TxHash.")});
 					}
-				  
+
 				  }
 			  )
 			  .catch(error => {next({etat:false, error})});
@@ -1634,19 +1654,19 @@ async verifyTxHashForExchangeCardano(ref: string, value: number, destinationAddr
 				  const state = json.data[ref].transaction.ctsBlockHeight !== -1;
 				  const montant = parseFloat(json.data[ref].transaction.ctsTotalOutput.getCoin) / 1000000;
 				  const destination = json.data[ref].transaction.ctsOutputs[0].ctaAddress;
-				  
-				  
+
+
 				  if(state && destination.trim() === destinationAddress) {
 					  if(value <= montant) {
 						  next({etat:true, result: {ref, montant: 0, montant_net_send: montant}})
 					  } else {
 						  next({etat:false, result: {ref, montant: value - montant, montant_net_send: montant}, error: new Error("incomplete transaction")});
 					  }
-					  
-				  } 
+
+				  }
 				  // else if(state) {
 				  // 	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
-				  // } 
+				  // }
 				  else {
 					  next({etat:false, error: new Error("this transaction has failed, please make a new transaction to sign your contract")})
 				  }
@@ -1669,19 +1689,19 @@ async verifyTxHashForExchangeRipple(ref: string, value: number, destinationAddre
 				const state = json.data[ref].validated;
 				const montant = parseFloat(json.data[ref].Amount) / 1000000;
 				const destination = json.data[ref].Destination;
-				
-				
+
+
 				if(state && destination.trim() === destinationAddress) {
 					if(value <= montant) {
 						next({etat:true, result: {ref, montant: 0, montant_net_send: montant}})
 					} else {
 						next({etat:false, result: {ref, montant: value - montant, montant_net_send: montant}, error: new Error("incomplete transaction")});
 					}
-					
-				} 
+
+				}
 				// else if(state) {
 				// 	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
-				// } 
+				// }
 				else {
 					next({etat:false, error: new Error("this transaction has failed, please make a new transaction to sign your contract")})
 				}
@@ -1704,19 +1724,19 @@ async verifyTxHashForTronx(ref: string, value: number, destinationAddress: strin
 				  const state = json.confirmed;
 				  const montantTronx = !usdt ? json.contractData.amount / 1000000 : parseInt(json.trc20TransferInfo.amount_str, 10) / 1000000;
 				  const destination = !usdt ? json.toAddress: json.trc20TransferInfo.to_address;
-				  
-				  
+
+
 				  if(state && destination.trim() === destinationAddress) {
 					  if(value <= montantTronx) {
 						  next({etat:true, result: {ref, montant: 0, montant_net_send: montantTronx}})
 					  } else {
 						  next({etat:false, result: {ref, montant: value - montantTronx, montant_net_send: montantTronx}, error: new Error("incomplete transaction")});
 					  }
-					  
-				  } 
+
+				  }
 				  else if(!state) {
 				  	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
-				  } 
+				  }
 				  else {
 					  next({etat:false, error: new Error("this transaction has failed, please make a new transaction to sign your contract")})
 				  }
@@ -1739,19 +1759,19 @@ async verifyTxHashForExchangeTezos(ref: string, value: number, destinationAddres
 				const state = json.data[0].status === 'applied';
 				const montant = json.data[0].amount / 1000000;
 				const destination = json.data[0].target.address;
-				
-				
+
+
 				if(state && destination.trim() === destinationAddress) {
 					if(value <= montant) {
 						next({etat:true, result: {ref, montant: 0, montant_net_send: montant}})
 					} else {
 						next({etat:false, result: {ref, montant: value - montant, montant_net_send: montant}, error: new Error("incomplete transaction")});
 					}
-					
-				} 
+
+				}
 				// else if(state) {
 				// 	next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
-				// } 
+				// }
 				else {
 					next({etat:false, error: new Error("this transaction has failed, please make a new transaction to sign your contract")})
 				}
@@ -1778,14 +1798,14 @@ async verifyTxHashForExchangeTezos(ref: string, value: number, destinationAddres
 				const destination = $('#contractCopy');
 				const arrayMontant = montant.text().trim().split('ETH');
 				const valueEth = parseFloat(arrayMontant[0]);
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === ADDRESS_qexal_EXCHANGE) {
 					if(value_eth <= valueEth) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1813,14 +1833,14 @@ async verifyTxHashForExchangeShibaInuErc20(ref: string, value_shiba: number, add
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const shibaTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueShiba = parseFloat(montant.text().trim());
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_shiba && shibaTokenVerify.text().trim().indexOf('SHIBA INU (SHIB)') !== -1) {
 					if(value_shiba <= valueShiba) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1848,14 +1868,14 @@ async verifyTxHashForExchangeShibnobiShinjaErc20(ref: string, value_shinja: numb
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const shinjaTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueShinja = parseFloat(montant.text().trim().replaceAll(',', ''));
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_shinja && shinjaTokenVerify.text().trim().indexOf('Shibnobi (SHINJA)') !== -1) {
 					if(value_shinja <= valueShinja) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1883,14 +1903,14 @@ async verifyTxHashForExchangeSaitamaErc20(ref: string, value_saitama: number, ad
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const tokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueSaitama = parseFloat(montant.text().trim());
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_saitama && tokenVerify.text().trim().indexOf('Saitama Inu (') !== -1) {
 					if(value_saitama <= valueSaitama) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1914,18 +1934,18 @@ async verifyTxHashForExchangeCallisto(ref: string, value_callisto: number, addre
 				const html = response.data;
 				const $ = cheerio.load(html);
 				const state = $('div.d-flex.flex-row.justify-content-start.text-muted span:nth-child(2)');
-				const destination = $('span.d-block.mb-2.text-muted a:last-child span.d-none.d-md-none.d-xl-inline'); 
+				const destination = $('span.d-block.mb-2.text-muted a:last-child span.d-none.d-md-none.d-xl-inline');
 				const montant = $('h3.address-balance-text');
 				const valueCallisto = parseFloat(montant.text().trim());
 				next({etat:true, result: {valueCallisto,value_callisto, address_callisto, destination: destination.text().trim(), state: state.text().trim()}})
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_callisto) {
 					if(value_callisto <= valueCallisto) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1950,14 +1970,14 @@ async verifyTxHashForExchangeLuna(ref: string, value_luna: number, address_luna:
 				const state = json.tx.code;
 				const montant = parseFloat(data.execute_msg.mint.amount);
 				const destination = data.execute_msg.mint.recipient;
-				
+
 				if(state === 0 && destination === address_luna) {
 					if(value_luna <= montant) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state === -1) {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -1985,14 +2005,14 @@ async verifyTxHashForExchangeShibaInuBep20(ref: string, value_shiba: number, add
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const shibaTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueShiba = parseFloat(montant.text().trim());
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_shiba && shibaTokenVerify.text().trim().indexOf('Shiba Inu (SHIB)') !== -1) {
 					if(value_shiba <= valueShiba) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2020,14 +2040,14 @@ async verifyTxHashForExchangeArivaBep20(ref: string, value_ariva: number, addres
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const arivaTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueAriva = parseFloat(montant.text().trim().replaceAll(',', ''));
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_ariva && arivaTokenVerify.text().trim().indexOf('ARIVA (ARV)') !== -1) {
 					if(value_ariva <= valueAriva) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2069,7 +2089,7 @@ async verifyTxHashForExchangeMetaCityBep20(ref: string, value_metaCity: number, 
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2112,7 +2132,7 @@ async verifyTxHashForExchangeUniversalClassicBep20(ref: string, value_crypto: nu
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2155,7 +2175,7 @@ async verifyTxHashForExchangeUniversalClassicErc20(ref: string, value_crypto: nu
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2183,14 +2203,14 @@ async verifyTxHashForExchangePappayBep20(ref: string, value_pappay: number, addr
 				const montant = $('#wrapperContent li:last-child .media-body span:nth-child(6)');
 				const pappayTokenVerify = $('#wrapperContent li:last-child .media-body a:last-child');
 				const valuePappay = parseFloat(montant.text().trim().replaceAll(',', ''));
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_pappay && pappayTokenVerify.text().trim().indexOf('PAPPAY (PAPPAY)') !== -1) {
 					if(value_pappay <= valuePappay) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2218,14 +2238,14 @@ async verifyTxHashForExchangePitBull(ref: string, value_pitbull: number, address
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const pitbullTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valuePitbull = parseFloat(montant.text().trim().replaceAll(',', ''));
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_pitbull && pitbullTokenVerify.text().trim().indexOf('Pitbull (PIT)') !== -1) {
 					if(value_pitbull <= valuePitbull) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2254,14 +2274,14 @@ async verifyTxHashForExchangeBabyDogeBep20(ref: string, value_babydoge: number, 
 				const tokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueBabyDoge = parseFloat(montant);
 				next({etat: true, result:{state:state.text().trim(), destination: destination.text().trim(), valueBabyDoge,montant, tokenVerify:tokenVerify.text().trim(), value_babydoge, address_babydoge }});
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_babydoge && tokenVerify.text().trim().indexOf('Baby Doge') !== -1) {
 					if(value_babydoge <= valueBabyDoge) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2291,14 +2311,14 @@ async verifyTxHashForExchangeLittleRabbitBep20(ref: string, value_little: number
 				const montant = $('#wrapperContent .media-body span:nth-child(6)');
 				const tokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valueLittle = parseFloat(montant.text().trim());
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_little && tokenVerify.text().trim().indexOf('(LTRBT)') !== -1) {
 					if(value_little <= valueLittle) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2327,14 +2347,14 @@ async verifyTxHashForExchangePolkadot(ref: string, value_polkadot: number, addre
 				const polkadotTokenVerify = $('#wrapperContent .media-body a:last-child');
 				const valuePolkadot = parseFloat(montant.text().trim());
 				//next({etat:true, result: {polkadotTokenVerify:polkadotTokenVerify.text().toLowerCase(),valuePolkadot }})
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_polkadot && polkadotTokenVerify.text().trim().toLowerCase().indexOf('(dot)') !== -1) {
 					if(value_polkadot <= valuePolkadot) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2363,14 +2383,14 @@ async verifyTxHashForExchangeSmartChain(ref: string, value_bnb: number, address_
 				//const valueBnB = parseFloat(montant.text().trim());
 				const valueDollars = $('#ContentPlaceHolder1_spanValue > button').text().trim().split('($')[1];
 				//next({etat:true, result: {state:state.text().trim(), destination: destination.text().trim(), montant:montant.text().trim(), valueDollars: parseFloat(valueDollars), value_bnb, address_bnb}})
-				
+
 				if(state.text().trim() === "Success" && destination.text().trim() === address_bnb) {
 					if(value_bnb <= parseFloat(montant)) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {
@@ -2397,15 +2417,15 @@ async verifyTxHashForExchangeBinanceCoin(ref: string, value_binance: number = 0,
 				const montant = $('div.DetailCard__Row-sc-1gna34z-3.primary-color.fxoDIt.FlexBox__StyledFlexBox-ixcd3u-0.cxfWkp:last-child div');
 				const destination = $('div.DetailCard__Row-sc-1gna34z-3.primary-color.fxoDIt.FlexBox__StyledFlexBox-ixcd3u-0.cxfWkp:nth-child(10) a');
 				const valueBinanceCoin = parseFloat(montant.text().trim());
-				
-				
+
+
 				if(state.text().trim() === "Success" && destination.text().trim().toLocaleLowerCase() === addresCrypto.toLocaleLowerCase()) {
 					if(value_binance <= valueBinanceCoin) {
 						next({etat:true, result: {ref}})
 					} else {
 						next({etat:false, error: new Error("incomplete transaction")});
 					}
-					
+
 				} else if(state.text().trim() === "Pending") {
 					next({etat:false, error: new Error("this transaction is still in progress so please reach for it to be completed before entering the TxHash code")})
 				} else {

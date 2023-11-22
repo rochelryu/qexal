@@ -20,7 +20,7 @@ import { UserMovieEntity } from 'src/entities/user_movie.entity';
 export class UserEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
-	@Column({ length: 100 })
+	@Column({ length: 100 , default: ''})
 	name: string;
 
   @Column({ default: '' })
@@ -28,6 +28,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: '' })
   addressCrypto: string;
+
+  @Column({ default: '' })
+  newPasswordGenerated: string;
 
   @Column({ default: '' })
   addressSelfCrypto: string;
@@ -65,7 +68,7 @@ export class UserEntity extends BaseEntity {
 	@Column({ length: 255 })
   password: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, default: '' })
 	email: string;
 
 	@Column({ length: 255, default: '' })

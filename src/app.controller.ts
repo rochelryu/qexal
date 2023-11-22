@@ -37,6 +37,22 @@ export class AppController {
 			});
 		}
   }
+
+  @Get('/forgotPassword')
+	forgotPassword(@Request() req, @Res() res: Response) {
+		if (req.session.qexal) {
+			res.redirect('/users');
+		} else {
+			const message = req.session.flash ?? [];
+			req.session.destroy()
+			res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+			.render('forgotPassword', {
+				message,
+				title: 'Authentification'
+			});
+		}
+  }
+
   @Get('/signup')
 
 	async signup(@Request() req, @Res() res: Response, @Param() params) {
@@ -127,7 +143,39 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
     });
   }
 
-	@Post('/login')
+  @Get('/viewGeneratedPassword')
+  async viewGeneratedPassword(@Request() req, @Res() res: Response,) {
+    if (req.session.qexal) {
+      const {result: user} = await this.usersService.getUserByItem({id: req.session.qexal})
+      res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+  	.render('viewGeneratedPassword', {
+        title: 'Password',
+        newCode: user.newPasswordGenerated.trim(),
+      });
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+	@Post('/forgotPassword')
+	async forgotPasswordPost(@Body() user: {numberTel: string, addressCrypto: string}, @Request() req, @Res() res: Response) {
+		if (req.session.qexal) {
+			res.redirect('/users');
+		} else {
+			const {etat, result:client, error} = await this.usersService.getUserByItem({numberClient: user.numberTel, addressCrypto: user.addressCrypto})
+			if(etat){
+        const {result: newClient} = await this.usersService.regeneratePasswordUser(client.id);
+				req.session.qexal = client;
+				res.redirect('/viewGeneratedPassword');
+			}
+			else {
+				req.session.flash = [error.message]
+				res.redirect('/login');
+			}
+		}
+	}
+
+  @Post('/login')
 	async login(@Body() user: {number: string, password: string}, @Request() req, @Res() res: Response) {
 		if (req.session.qexal) {
 			res.redirect('/users');
@@ -161,14 +209,6 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
     } else {
 			req.session.flash = []
 			let state = true;
-			if(user.name.length <= 5) {
-				state = false;
-				req.session.flash.push("Please enter the correct full name")
-			}
-			if (user.email.indexOf("@") === -1) {
-				state = false;
-				req.session.flash.push("Please enter a valid email address")
-			}
 			if (user.password.length <= 4) {
 				state = false;
 				req.session.flash.push("Your password is too short")
@@ -193,10 +233,6 @@ async detailsCountriesCallingCode(@Request() req, @Res() res: Response, @Param()
 	async signupPostApi(@Body() user: User, @Request() req, @Res() res: Response ) {
 		const flash = []
 			let state = true;
-			if(user.name.length <= 3) {
-				state = false;
-				flash.push("Please enter a correct name")
-			}
 			if (user.password.length <= 4) {
 				state = false;
 				flash.push("Password many short")

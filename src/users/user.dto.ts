@@ -1,8 +1,6 @@
 export interface User {
-	name: string;
 	password: string;
 	numero: string;
-	email: string;
   addressCrypto: string;
   country: string;
   alpha2code: string;

@@ -178,9 +178,6 @@
                 socket.on('connect', function() {
                     console.log('Connected');
                 });
-                socket.emit('identity', {
-                    email: '<%= user.email %>'
-                })
 
                 socket.on('reponseExchangeReception', function(data) {
                     $.notify({
