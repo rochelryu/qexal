@@ -95,7 +95,7 @@
                     <option value="" disabled>Select your country</option>
                     <script>
                       $.ajax({
-                          url: 'http://localhost:5001/api/v1/countries',
+                          url: `${window.origin}/api/v1/countries`,
                           type: 'get',
                           success: function(data) {
                             data.map(value => {
@@ -194,7 +194,7 @@
             $("#country").on("change", function() {
                 const value = $(this).val();
                 $.ajax({
-                    url: 'http://localhost:5001/api/v1/detailsCountries/' + value,
+                    url: `${window.origin}/api/v1/detailsCountries/${value}`,
                     type: 'get',
                     success: function(data) {
                         $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));

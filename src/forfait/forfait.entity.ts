@@ -14,6 +14,9 @@ import { UserEntity } from 'src/users/user.entity';
 export class ForfaitEntity extends BaseEntity {
 	@PrimaryGeneratedColumn() id: number;
 
+	@Column({length: '255', default:''})
+	name: string;
+
 	@Column({ default: 30, type: 'int' })
 	limit: number;
 
@@ -25,6 +28,9 @@ export class ForfaitEntity extends BaseEntity {
 
 	@Column({ type: 'double', default: 1.3 })
 	commissionTotal: number;
+
+	@Column({ type: 'double', default: 0.0 })
+	percentageWithdraw: number;
 
 	@Column({ type: 'double', default: 1 })
 	min: number;

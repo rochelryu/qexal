@@ -956,7 +956,7 @@ export class UsersService {
 	async getLastDemandeForSuivieByItem(item): Promise<ResponseProvider> {
 		return new Promise(async (next) => {
 			await this.demandesRepository
-				.findOne({ where: item, order: { id: 'DESC' } })
+				.findOne({ where: item, order: { id: 'DESC' }, relations: ['forfaits'] })
 				.then((res) => {
 					if (res) {
 						next({ etat: true, result: res });

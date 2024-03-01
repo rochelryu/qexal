@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  qexal_docker_service:
+    restart: always
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+      - "${SOCKET_PORT}:${SOCKET_PORT}"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    env_file:
+      - .env

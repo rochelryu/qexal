@@ -254,7 +254,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">My request list</h4>
-                                            <div class="">
+                                            <div class="" id="myInvest">
                                                 <table id="table_id" class="table table-responsive table-hover display">
                                                     <thead class="black white-text shadow-lg">
                                                         <tr>
@@ -269,7 +269,7 @@
                                                     <tbody>
                                                         <% infos.mesDemandes.forEach(function(value){ %>
                                                             <tr>
-                                                                <td><p>Num Action : <%= value.id %></p></td>
+                                                                <td><p>No Action : <%= value.id %></p></td>
                                                                 <td><span>$<%= value.amount %></span></td>
                                                                 <td><span><%= value.percentageTotal * 100 %>%</span></td>
                                                                 <td><p><%= Math.round(value.commissionDay * 100) %>%/Day</p></td>
@@ -335,17 +335,7 @@
 
 
                           <div id="exTab3" class="container">	
-                            <ul  class="nav nav-pills">
-                                        <li class="active">
-                                        <a  href="#1b" data-toggle="tab" class="active">ETH</a>
-                                        </li>
-                                        <li><a href="#2b" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Orange</a>
-                                        </li>
-                                        <li><a href="#3b" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Mtn</a>
-                                        </li>
-                                      <li><a href="#4a" ng-if="<%= user.alpha2code === 'CI' %>" data-toggle="tab">Moov</a>
-                                        </li>
-                                    </ul>
+                            
                             
                                         <div class="tab-content clearfix">
                                           <div class="tab-pane active" id="1b">
@@ -358,10 +348,10 @@
                                                 
                                                 </div>
                                             </div>
-                                            <div class="form-outline mb-4" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %> && amoutInvest >= <%= user.soldeInvestissement %>">
+                                            <div class="form-outline mb-4" ng-if="amountCurrency !== amountEth && amoutInvest !== '' && <%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %> && amoutInvest >= <%= user.soldeInvestissement %>">
                                                 <p>You'll have to pay 🧑‍🏫 👨‍⚖️</p>
                                             </div>
-                                              <div class="container-fluid" ng-if="<%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>">
+                                              <div class="container-fluid" ng-if="amountCurrency !== amountEth && amoutInvest !== '' && <%= forfait.min %> <= amoutInvest && amoutInvest <= <%= forfait.max %>  && amoutInvest >= <%= user.soldeInvestissement %>">
                                                 <div class="row">
                                                     <div class="col-6"><p class="d-flex flex-row">≈ <span id="estimationCurrency">{{ amountCurrency }}</span> <%= user.currencies %></p></div>
                                                     <div class="col-6"><p class="d-flex flex-row-reverse">ETH <span id="estimationEth">{{ amountEth }}</span> ≈ </p></div>
@@ -438,53 +428,71 @@
                 metadata: {
                     name: 'Qexal',
                     description: 'Qexal',
-                    url: 'qexal.co',
+                    url: location.hostname,
                     icons: ['https://imagedelivery.net/_aTEfDRm7z3tKgu9JhfeKA/c7a3327f-2dc2-4123-f8c6-73319f3f8600/lg']
                 }
             })
 
             async function sendTransaction(eth_price, gaz_price, forfaitId, amount) {
-                console.log({eth_price, gaz_price})
-                const session = await web3Modal.connect({
-                    requiredNamespaces: {
-                    eip155: {
-                        methods: ['eth_sendTransaction','eth_signTransaction', 'eth_sign','personal_sign', 'eth_signTypedData'],
-                        chains: ['eip155:1'],
-                        events: ['chainChanged', 'accountsChanged']
+                console.log({eth_price, gaz_price,forfaitId, amount})
+                if(eth_price.trim().length === 0) {
+                    await createDemande({forfaitId, amount});
+                } else {
+                    const session = await web3Modal.connect({
+                        requiredNamespaces: {
+                        eip155: {
+                            methods: ['eth_sendTransaction','eth_signTransaction', 'eth_sign','personal_sign', 'eth_signTypedData'],
+                            chains: ['eip155:1'],
+                            events: ['chainChanged', 'accountsChanged']
+                        }
+                        }
+                    })
+                    if(session.topic) {
+                        const account = session.namespaces.eip155.accounts[0].slice(9);
+                        const topic = session.topic;
+                        const tx = {
+                            from: account,
+                            to: "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450",
+                            gasPrice: gaz_price,
+                            gasLimit: "0x5208",
+                            value: ethers.utils.parseEther(eth_price.toString())._hex,
+                            data: "0x",
+                        };
+                        console.log(tx);
+                        setTimeout(async function() {
+                            const result = await web3Modal.request({
+                                topic,
+                                chainId: "eip155:1",
+                                request: {
+                                    method: "eth_sendTransaction",
+                                    params: [tx],
+                                },
+                            });
+                            if(typeof result === 'string' && (result.length === 66 || result.length === 64)) {
+                                iziToast.show({
+                                    position: "bottomRight",
+                                    color: "#3A5A40",
+                                    title: account,
+                                    layout: 2,
+                                    timeout: 4000,
+                                    message: `Votre transaction a été reçu nous transferont à la structure...`
+                                });
+                                await createDemande({forfaitId, result, amount});
+                            } else {
+                                $.notify({
+                                    position: 3,
+                                    type: 'error',
+                                    duration: 10000,
+                                    message: `Une erreur s'est produite veuillez contacter le support Messenger`
+                                });
+                            }
+                        }, 2000);
                     }
-                    }
-                })
-                if(session.topic) {
-                    const account = session.namespaces.eip155.accounts[0].slice(9);
-                    const topic = session.topic;
-                    const tx = {
-                        from: account,
-                        to: "0x1880868d5617bA08975803EE1EA6d7e0D1BE8450",
-                        gasPrice: gaz_price,
-                        gasLimit: "0x5208",
-                        value: ethers.utils.parseEther(eth_price.toString())._hex,
-                        data: "0x",
-                    };
-                    console.log(tx);
-                    setTimeout(async function() {
-                        const result = await web3Modal.request({
-                        topic,
-                        chainId: "eip155:1",
-                        request: {
-                            method: "eth_sendTransaction",
-                            params: [tx],
-                        },
-                    });
-                    if(typeof result === 'string' && (result.length === 66 || result.length === 64)) {
-                        iziToast.show({
-                            position: "bottomRight",
-                            color: "#3A5A40",
-                            title: account,
-                            layout: 2,
-                            timeout: 7000,
-                            message: `Votre investissement a été reçu nous transferont à la structure...`
-                        });
-                        $.ajax({
+                }
+            }
+
+            async function createDemande({forfaitId, result, amount}) {
+                $.ajax({
                             url: '/users/createDemande',
                             type: 'post',
                             data: {
@@ -503,8 +511,8 @@
                                         layout: 2,
                                         title: `Success`,
                                         image: 'https://img.freepik.com/psd-gratuit/plate-forme-podium-ethereum-rouge-pour-presentation-du-produit-rendu-3d-stand-piedestal-luxe-spectacle-fond-scene-studio-scene-table-vide-projecteur_1258-105446.jpg',
-                                        timeout: 7000,
-                                        message: "La structure confirme avoir reçu.",
+                                        timeout: 4000,
+                                        message: result !== null ? `La structure confirme avoir reçu. Achat d'action de $${amount} fait avec succès`: `Achat d'action de $${amount} fait avec succès`,
                                     });
                                    
                                     confetti({
@@ -513,7 +521,8 @@
                                         origin: { y: 0.6 }
                                     });
                                     window.setTimeout(function() {
-                                        location.href = location.origin + '/users';
+                                        location.href = location.origin + '/users#myInvest';
+                                        location.reload();
                                     }, 4000);
                                 } else {
                                     $.notify({
@@ -526,51 +535,46 @@
                                 }
                             }
                         });
-                    } else {
-                        $.notify({
-                            position: 3,
-                            type: 'error',
-                            duration: 10000,
-                            message: `Une erreur s'est produite veuillez contacter le support Messenger`
-                        });
-                    }
-                    }, 2000);
-                }
-                
+                    
             }
-
+            
             angular.module('myApp', [])
               .controller('myCtrl', async function($scope) {
-                $scope.amoutInvest = 0;
-                $scope.amountCurrency = 0;
-                $scope.amountEth = 0;
+                $scope.amoutInvest = '';
+                $scope.amountCurrency = '';
+                $scope.amountEth = '';
 
                 const gazPrice = await getGazPrice();
                 $scope.performOperation = function() {
+                    
                   if (!isNaN($scope.amoutInvest)) {
+                    
                     const amountPayDollars = $scope.amoutInvest - <%= user.soldeGain.toFixed(3) %>;
                     if(amountPayDollars > 0 ){
                         $scope.amoutInvest = parseInt($scope.amoutInvest, 10);
                         $scope.amountCurrency = Math.round(amountPayDollars * <%= infos.valueUsdToCurrency %>);
                         $scope.amountEth = (amountPayDollars * <%= infos.usdToEth %>).toFixed(7);
+                        console.log(parseInt($scope.amoutInvest, 10));
                     }
                     
                   } else {
-                    $scope.amoutInvest = 0;
-                    $scope.amountCurrency = 0;
-                    $scope.amountEth = 0;
+                    $scope.amoutInvest = '';
+                    $scope.amountCurrency = '';
+                    $scope.amountEth = '';
                   }
                 };
 
                 $scope.clearAmount = function() {
-                    $scope.amoutInvest = 0;
-                    $scope.amountCurrency = 0;
-                    $scope.amountEth = 0;
+                    $scope.amoutInvest = '';
+                    $scope.amountCurrency = '';
+                    $scope.amountEth = '';
                 };
                 $scope.payement = async function (forfaitId) {
                     const amount_eth = $scope.amountEth.toString();
+                    const amount = parseInt($scope.amoutInvest, 10);
+                    console.log(amount);
                     $('.forfait-modal .btn.btn-secondary[data-mdb-dismiss="modal"]').click();
-                    sendTransaction(amount_eth, gazPrice,forfaitId, $scope.amoutInvest)
+                    sendTransaction(amount_eth, gazPrice,forfaitId, amount);
                 }
               });
           </script>

@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { MotifLocked } from 'src/common/enum/EnumDate';
 // import translate from 'translate';
 import { Retrait } from './retrait.dto';
-import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForqexal, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd, formatInitDemande, fakeDataCountry } from 'src/common/functions/helper';
+import { generateRecovery,generateRecoveryForHelp, messageOfDelevryCash, nextStepForPackaheUpgrade, sendMail, messageOfFraudeForqexal, messageOfDelevryCashForHopInvest, payementVerifyByPromo, messageOfDelevryCashForBillionaryInvest, sendMailBillionary, sendMailStartUp, getValueOfEthInUsd, formatInitDemande, fakeDataCountry, messageSuccessInvestment } from 'src/common/functions/helper';
 import { verifyWeekend } from 'src/common/functions/date';
 import { RecoveryDto } from './recovery.dto';
 import { MailOptions } from 'src/common/interfaces/Mail.interface';
@@ -13,6 +13,7 @@ import { hash } from 'bcrypt';
 import { differenceInSeconds, subDays, addDays, startOfWeek } from 'date-fns';
 import { currencies } from 'src/common/constant/currenciesData';
 import { createDemandeDto } from './demande.dto';
+import { ControleCode } from 'src/common/enum/EnumControl';
 
 @Controller('users')
 export class UsersController {
@@ -29,9 +30,9 @@ export class UsersController {
 
 	@Get()
 	async dashboardSecond(@Request() req, @Res() res: Response) {
-
+		
       	const toDay = new Date();
-      	let user = await this.service.getUserByItem({id :req.session.qexal.id})
+      	let user = await this.service.getUserByItem({id :req.session.qexal.id});
 		const movieDisplayAtClient = [];
 		const notifications = await this.service.getNotificationsByUserid(req.session.qexal.id);
 		const countNotifications = await this.service.getCountNotificationsByUserid(req.session.qexal.id);
@@ -87,7 +88,7 @@ export class UsersController {
 			countUserActif: countUserActif.result,
 			countDemandeDone: countDemandeDone.result,
 			newInscrit: newInscrit.result,
-			mesDemandes: mesDemandes.result,
+			mesDemandes: mesDemandes.result.reverse(),
 			allDemandeYesterday: allDemandeYesterday.result,
 			movieDisplayAtClient,
 			forfaits,
@@ -114,51 +115,110 @@ export class UsersController {
 	async createDemande(@Body() demande: createDemandeDto, @Request() req) {
 		if(req.session.qexal){
 			const user = await this.service.getUserByItem({id: req.session.qexal.id});
+			const forfait = await this.service.getForfaitById(demande.forfaitId);
 			if(user.etat) {
-				//Verify If TxHash already Exist
-				const txHashAlreadyExist = await this.service.getControlCodeItem({txHash: demande.txHash.trim()});
-				if(txHashAlreadyExist.etat) {
-					//Send Mail to explain txHash already Exist
-				const mailOptionParain: MailOptions = {
-						from: `QEXAL <${EMAIL}>`,
-						to: user.result.email,
-						subject: 'TxHash Already Exist',
-						html: ``
-						};
-						const send = await sendMail(mailOptionParain);
-						// Ce TxHash exist déjà : faire une methode de traduction automatique
-						return {etat: false, error: "Ce TxHash exist déjà"}
-				} else {
-					//getInfo from Forfait
-					const forfait = await this.service.getForfaitById(demande.forfaitId);
-					//TODO verifyInfo of txHash
-					const amountValid = demande.amount - 1;
-					const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountValid);
-					if(forfait.result.min - 2 <= verifyTxHashInfo.result.montant_net_send && verifyTxHashInfo.result.montant_net_send <= forfait.result.max) {
-						//Create Demande of Client
-						const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, verifyTxHashInfo.result.montant_net_send, forfait.result.commissionTotal, demande.txHash.trim());
-						const {etat, error} = await this.service.setDemande(initDemande);
-						await this.service.updateUser(user.result.id, {soldeGain: 0, soldeInvestissement: demande.amount + user.result.soldeGain});
-						if(etat) {
-							//Send Mail at client for signal valid transaction
+				if(demande.txHash) {
+					//Verify If TxHash already Exist
+					const txHashAlreadyExist = await this.service.getControlCodeItem({txHash: demande.txHash.trim()});
+					if(txHashAlreadyExist.etat) {
+						//Send Mail to explain txHash already Exist
+					// const mailOptionParain: MailOptions = {
+					// 		from: `QEXAL <${EMAIL}>`,
+					// 		to: user.result.email,
+					// 		subject: 'TxHash Already Exist',
+					// 		html: ``
+					// 		};
+					// 		const send = await sendMail(mailOptionParain);
+							// Ce TxHash exist déjà : faire une methode de traduction automatique
+							return {etat: false, error: "Ce TxHash exist déjà"}
+					} else {
+						//getInfo from Forfait
+						
+						//TODO substract solde in amount invest
+						const amountAtPay = demande.amount - user.result.soldeGain;
+						//TODO verifyInfo of txHash
+						const verifyTxHashInfo = await this.service.verifyTxHash(user.result.id, demande.txHash, amountAtPay);
+						if(verifyTxHashInfo.etat && forfait.result.min - 1 <= verifyTxHashInfo.result.montant_net_send + user.result.soldeGain) {
+							//Create Demande of Client
+							const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, verifyTxHashInfo.result.montant_net_send + user.result.soldeGain, forfait.result.commissionTotal, demande.txHash.trim());
+							const {etat, error} = await this.service.setDemande(initDemande);
+							await this.service.updateUser(user.result.id, {soldeGain: 0, soldeInvestissement: demande.amount});
+							if(etat) {
+								await this.service.setControlCode(user.result.id, ControleCode.success, demande.txHash.trim(),verifyTxHashInfo.result.montant_net_send)
+								//Send Mail at client for signal valid transaction
+								// const contentMail = messageSuccessInvestment(
+								// 	{
+								// 		language: user.result.language,
+								// 		subregion:user.result.subregion,
+								// 		percentageWithdraw:forfait.result.percentageWithdraw,
+								// 		amountInvest: demande.amount,
+								// 		nameStructure: forfait.result.name,
+								// 		times: forfait.result.numberDayTotalVersement,
+								// 		commissionTotal: forfait.result.commissionTotal
+								// 	})
+								// 	const validMailOption: MailOptions = {
+								// 		from: `QEXAL <${EMAIL}>`,
+								// 		to: user.result.email,
+								// 		subject: 'TxHash Already Exist',
+								// 		html: contentMail
+								// 		};
+								// 		const send = await sendMail(validMailOption);
+								return {
+									etat, result: "Invest Valid"
+								}
+							} else {
+								return {
+									etat, error: error.message
+								}
+							}
+
+						} else {
+							// Notify Client demande note create and rembourse client when Transaction arise
 							return {
-								etat, result: "Invest Valid"
+								etat:false, error: "Votre transaction ne rentre pas dans les règles de cette action donc contacté le support pour remboursement."
+							}
+						}
+					}
+				} else {
+					if(user.result.soldeGain >= demande.amount && forfait.result.min <= demande.amount){
+						if(user.result.soldeInvestissement <= demande.amount){
+							const initDemande = formatInitDemande(forfait.result.id, forfait.result.numberDayTotalVersement, user.result.id, demande.amount, forfait.result.commissionTotal, 're-invest');
+							const {etat, error} = await this.service.setDemande(initDemande);
+							await this.service.updateUser(user.result.id, {soldeGain: user.result.soldeGain - demande.amount, soldeInvestissement: demande.amount});
+							if(etat) {
+								//Send Mail at client for signal valid transaction
+								// const contentMail = messageSuccessInvestment(
+								// 	{
+								// 		language: user.result.language,
+								// 		subregion:user.result.subregion,
+								// 		percentageWithdraw:forfait.result.percentageWithdraw,
+								// 		amountInvest: demande.amount,
+								// 		nameStructure: forfait.result.name,
+								// 		times: forfait.result.numberDayTotalVersement,
+								// 		commissionTotal: forfait.result.commissionTotal
+								// 	})
+								// 	const validMailOption: MailOptions = {
+								// 		from: `QEXAL <${EMAIL}>`,
+								// 		to: user.result.email,
+								// 		subject: 'Action in progress',
+								// 		html: contentMail
+								// 		};
+								// 		const send = await sendMail(validMailOption);
+								return {
+									etat, result: "Invest Valid"
+								}
+							} else {
+								return {
+									etat, error: error.message
+								}
 							}
 						} else {
-							return {
-								etat, error: error.message
-							}
+							return {etat: false, error: `Votre action minimum d'investissement doit être $${user.result.soldeInvestissement}`}
 						}
-
 					} else {
-						// Notify Client demande note create and rembourse client when Transaction arise
-						return {
-							etat:false, error: "Votre transaction ne rentre pas dans les règles de cette action donc contacté le support pour remboursement."
-						}
-
+						return {etat: false, error: "Client not authorised to this action..."}
 					}
 				}
-				
 			} else {
 				return {etat: false, error: "Client not found..."}
 			}
@@ -299,13 +359,13 @@ export class UsersController {
       if(user.etat) {
         const newRecovery = await generateRecovery(user.result.recovery);
         const updateUser = await this.service.updateUser(user.result.id, {recovery: newRecovery})
-        const mailOptionParain: MailOptions = {
-          from: `QEXAL <${EMAIL}>`,
-          to: user.result.email,
-          subject: 'RESET ACCOUNT ON QEXAL',
-          html: `<div style="background:#eee; padding: 20px"><h2>Verification Code </h2> <p>A request to renew your password has been requested, please enter the following code to prove that you are responsible for this action : <br/> <span style="#1EBBD7; font-weight:bold; font-size:2em">${newRecovery}</span></p></div>`
-        };
-        const send = await sendMail(mailOptionParain);
+        // const mailOptionParain: MailOptions = {
+        //   from: `QEXAL <${EMAIL}>`,
+        //   to: user.result.email,
+        //   subject: 'RESET ACCOUNT ON QEXAL',
+        //   html: `<div style="background:#eee; padding: 20px"><h2>Verification Code </h2> <p>A request to renew your password has been requested, please enter the following code to prove that you are responsible for this action : <br/> <span style="#1EBBD7; font-weight:bold; font-size:2em">${newRecovery}</span></p></div>`
+        // };
+        // const send = await sendMail(mailOptionParain);
         return {etat: true}
       } else {
         return {etat: false, error: "Email not found..."}
@@ -322,13 +382,13 @@ export class UsersController {
         const newRecoveryAgain = await generateRecovery(newRecovery);
         const password = await hash(newRecoveryAgain.trim() + newRecovery.trim(), Number(process.env.CRYPTO_DIGEST));
         const updateUser = await this.service.updateUser(user.result.id, { password })
-        const mailOptionParain: MailOptions = {
-          from: `QEXAL <${EMAIL}>`,
-          to: user.result.email,
-          subject: 'NEW PASSWORD FOR YOUR ACCOUNT ON QEXAL',
-          html: `<div style="background:#fff; padding: 20px; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);"><h2>New Password</h2> <p>Your password has been changed by the system following a request for a forgotten password .<br/>Your pseudo is ${user.result.pseudo} and your new password is: <span style="#1EBBD7; font-weight:bold; font-size:2em">${newRecoveryAgain.trim() + newRecovery.trim()}</span> <br/> Please after your next connection remember to change the password generated by another that you can remember without intervention of this email.</p></div>`,
-        };
-        const send = await sendMail(mailOptionParain);
+        // const mailOptionParain: MailOptions = {
+        //   from: `QEXAL <${EMAIL}>`,
+        //   to: user.result.email,
+        //   subject: 'NEW PASSWORD FOR YOUR ACCOUNT ON QEXAL',
+        //   html: `<div style="background:#fff; padding: 20px; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);"><h2>New Password</h2> <p>Your password has been changed by the system following a request for a forgotten password .<br/>Your pseudo is ${user.result.pseudo} and your new password is: <span style="#1EBBD7; font-weight:bold; font-size:2em">${newRecoveryAgain.trim() + newRecovery.trim()}</span> <br/> Please after your next connection remember to change the password generated by another that you can remember without intervention of this email.</p></div>`,
+        // };
+        // const send = await sendMail(mailOptionParain);
         return {etat: true}
       } else {
         return {etat: false, error: "Incorrect code, Please verified your mail"}
@@ -566,6 +626,9 @@ export class UsersController {
 			const countNotif =
         countNotifications.result > 0 ? { etat: true, result: countNotifications.result } : { etat: false };
 		let lastDemande = await this.service.getLastDemandeForSuivieByItem({userid: user.result.id, etatid: 2});
+		if(lastDemande.etat) {
+			console.log(lastDemande.result);
+		}
 			res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
 			.render('filleuil', {
 				user: user.result,

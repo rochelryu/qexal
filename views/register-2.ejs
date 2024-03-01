@@ -65,7 +65,7 @@
                     <option value="" disabled>Select your country</option>
                     <script>
                       $.ajax({
-                          url: 'https://qexal.globalbch.cloud/api/v1/countries',
+                          url: `${window.origin}/api/v1/countries`,
                           type: 'get',
                           success: function(data) {
                             console.log(data);
@@ -204,7 +204,7 @@
             $("#country").on("change", function() {
                 const value = $(this).val();
                 $.ajax({
-                    url: 'https://qexal.globalbch.cloud/api/v1/detailsCountries/' + value,
+                    url: `${window.origin}/api/v1/detailsCountries/${value}`,
                     type: 'get',
                     success: function(data) {
                         $("#prefixSpan").html("+" + data.callingCodes[0].replace("00", ""));

@@ -81,10 +81,10 @@ export class UserEntity extends BaseEntity {
   roleid: number;
 
   @Column({ default: 0, type: 'double' })
-  soldeGain: number;
+  soldeGain: number; //solde a retirié
 
   @Column({ default: 0, type: 'double' })
-  soldeInvestissement: number;
+  soldeInvestissement: number; //montant investi
 
 	@Column({ type: 'int', default: 0 })
 	parrainid: number;

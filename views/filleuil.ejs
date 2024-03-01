@@ -22,8 +22,8 @@
                                                 <li class="text-danger">Balance must be over $50</li>
                                                 <% } if (!isVerifyWeekend) { %>
                                                     <li class="text-danger">Available at weekends</li>
-                                                    <% } if (lastDemande.etat) { %>
-                                                        <li class="text-danger">At the end of your current action, you must reach</li>
+                                                    <% } if (lastDemande.etat && lastDemande.result.cumulPercentage > lastDemande.result.forfaits.percentageWithdraw) { %>
+                                                        <li class="text-danger">this action can be withdrawn if you have won at least <%= user.soldeInvestissement * lastDemande.result.forfaits.percentageWithdraw %> </li>
                                                     <% } if(user.soldeGain >= 50 && isVerifyWeekend && !lastDemande.etat) { %>
                                                             <li class="text-success">You can withdraw</li>
                                                     <% } %>
