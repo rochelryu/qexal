@@ -32,7 +32,7 @@ async function bootstrap() {
 
 	//app.use(helmet());
 	app.useGlobalPipes(new ValidationPipe());
-	// app.useGlobalFilters(new AuthExceptionFilter());
+	app.useGlobalFilters(new AuthExceptionFilter());
 	app.enableCors();
 
 	// Session initialise
