@@ -9,7 +9,10 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+yarn.lock*
 lerna-debug.log*
+
+qexal.sql
 
 # OS
 .DS_Store
