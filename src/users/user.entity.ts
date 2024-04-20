@@ -1,15 +1,15 @@
 import { SerialUserEntity } from './../message/serial-user.entity';
 import { NotificationEntity } from './../notification/notification.entity';
 import {
-	Entity,
-	Column,
-	PrimaryGeneratedColumn,
-	CreateDateColumn,
-	UpdateDateColumn,
-	BaseEntity,
-	JoinColumn,
-	ManyToOne,
-	OneToMany
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BaseEntity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { RoleEntity } from '../role/role.entity';
 import { DemandeEntity } from 'src/demande/demande.entity';
@@ -18,10 +18,10 @@ import { WithdrawEntity } from 'src/withdraw/withdraw.entity';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
 @Entity()
 export class UserEntity extends BaseEntity {
-	@PrimaryGeneratedColumn() id: number;
+  @PrimaryGeneratedColumn() id: number;
 
-	@Column({ length: 100 , default: ''})
-	name: string;
+  @Column({ length: 100, default: '' })
+  name: string;
 
   @Column({ default: '' })
   address: string;
@@ -35,7 +35,7 @@ export class UserEntity extends BaseEntity {
   @Column({ default: '' })
   addressSelfCrypto: string;
 
-	@Column({ length: 50 })
+  @Column({ length: 50 })
   numberClient: string;
 
   @Column({ length: 50 })
@@ -59,25 +59,25 @@ export class UserEntity extends BaseEntity {
   @Column({ length: 50 })
   language: string;
 
-	@Column({ default: '' })
+  @Column({ default: '' })
   iso639_1: string;
 
   @Column({ length: 50, default: '' })
-	currencies: string;
+  currencies: string;
 
-	@Column({ length: 255 })
+  @Column({ length: 255 })
   password: string;
 
   @Column({ length: 255, default: '' })
-	email: string;
+  email: string;
 
-	@Column({ length: 255, default: '' })
+  @Column({ length: 255, default: '' })
   motif: string;
 
-	@Column({ length: 25 })
-	recovery: string;
+  @Column({ length: 25 })
+  recovery: string;
 
-	@Column({ default: 1 })
+  @Column({ default: 1 })
   roleid: number;
 
   @Column({ default: 0, type: 'double' })
@@ -86,18 +86,18 @@ export class UserEntity extends BaseEntity {
   @Column({ default: 0, type: 'double' })
   soldeInvestissement: number; //montant investi
 
-	@Column({ type: 'int', default: 0 })
-	parrainid: number;
+  @Column({ type: 'int', default: 0 })
+  parrainid: number;
 
-	@ManyToOne(() => RoleEntity, (role) => role.users)
-	@JoinColumn({ name: 'roleid' })
+  @ManyToOne(() => RoleEntity, (role) => role.users)
+  @JoinColumn({ name: 'roleid' })
   role: RoleEntity;
 
-	@OneToMany(() => DemandeEntity, (demandes) => demandes.userid)
+  @OneToMany(() => DemandeEntity, (demandes) => demandes.userid)
   demandes: DemandeEntity[];
 
   @OneToMany(() => UserMovieEntity, (userMovie) => userMovie.userid)
-	userMovies: UserMovieEntity[];
+  userMovies: UserMovieEntity[];
 
   @OneToMany(() => WithdrawEntity, (withdraw) => withdraw.userid)
   withdraws: WithdrawEntity[];
@@ -105,21 +105,20 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => ControlCodeEntity, (controlCode) => controlCode.userid)
   controlCodes: ControlCodeEntity[];
 
-	@OneToMany(() => NotificationEntity, (notifications) => notifications.userid)
-	notifications: NotificationEntity[];
+  @OneToMany(() => NotificationEntity, (notifications) => notifications.userid)
+  notifications: NotificationEntity[];
 
-	@OneToMany(() => SerialUserEntity, (fraude) => fraude.usersFraude)
-	userFraude: SerialUserEntity[];
+  @OneToMany(() => SerialUserEntity, (fraude) => fraude.usersFraude)
+  userFraude: SerialUserEntity[];
 
   @OneToMany(() => SerialUserEntity, (victime) => victime.usersVictime)
-	userVictime: SerialUserEntity[];
+  userVictime: SerialUserEntity[];
 
-	@Column({ default: true })
+  @Column({ default: true })
   isActive: boolean;
 
   @Column({ default: true })
   isWelcome: boolean;
-
 
   /* colone inscription :
      0 pour quelqu'un qui vient de s'inscrire alors redirect sur choiceforfait
@@ -130,16 +129,16 @@ export class UserEntity extends BaseEntity {
 
 
   */
-	@Column({default: 0})
+  @Column({ default: 0 })
   inscription: number;
 
-  @Column({default: 0})
-	retraitInWait: number;
+  @Column({ default: 0 })
+  retraitInWait: number;
 
-	@CreateDateColumn() create_at: Date;
+  @CreateDateColumn() create_at: Date;
 
-	@UpdateDateColumn() updated_at: Date;
+  @UpdateDateColumn() updated_at: Date;
 
-	@Column({default: null}) validEntryInSysteme: Date; //date de versement adhesion
-	@Column({default: null}) dateRetry: Date; //date de versement adhesion
+  @Column({ default: null }) validEntryInSysteme: Date; //date de versement adhesion
+  @Column({ default: null }) dateRetry: Date; //date de versement adhesion
 }

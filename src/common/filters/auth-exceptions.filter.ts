@@ -14,7 +14,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    console.log(exception)
+    console.log(exception);
     if (
       exception instanceof UnauthorizedException ||
       exception instanceof ForbiddenException
@@ -22,7 +22,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
       request.flash('loginError', "S'il vous plait connectez-vous");
       response.redirect('/login');
     } else {
-      console.log('pour le 404')
+      console.log('pour le 404');
       response.redirect('/404');
     }
   }

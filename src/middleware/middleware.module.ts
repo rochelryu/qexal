@@ -1,13 +1,12 @@
-
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { VerifyOutDelay } from './VerifyOutDelay.middleware';
 import { UsersService } from 'src/users/users.service';
 
-import {ALL_ENTITY} from 'src/common/constant/constant';
+import { ALL_ENTITY } from 'src/common/constant/constant';
 
 @Module({
   imports: ALL_ENTITY,
-  providers: [ UsersService ],
+  providers: [UsersService],
 })
 export class MiddlewareModule {
   configure(consumer: MiddlewareConsumer) {
@@ -24,4 +23,3 @@ export class MiddlewareModule {
     );
   }
 }
-

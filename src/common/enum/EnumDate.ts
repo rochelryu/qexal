@@ -11,10 +11,8 @@ export enum TypeSectionEntrie {
   Params = 'Params',
 }
 
-
 export enum MotifLocked {
   NotReinvest = 'Pas Réinvestie',
   NotPay = 'Refus Paiement',
   DelayOutForFinishedStepDemande = 'Delais depassé pour validation des étapes',
-  
 }

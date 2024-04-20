@@ -1,34 +1,34 @@
 import {
-	Entity,
-	Column,
-	PrimaryGeneratedColumn,
-	CreateDateColumn,
-	BaseEntity,
-	OneToMany,
-	UpdateDateColumn
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  BaseEntity,
+  OneToMany,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserMovieEntity } from 'src/entities/user_movie.entity';
 
 @Entity()
 export class MovieEntity extends BaseEntity {
-	@PrimaryGeneratedColumn() id: number;
-	
-	@Column()
-	title: string;
+  @PrimaryGeneratedColumn() id: number;
 
-	@Column()
-	subtitle: string;
+  @Column()
+  title: string;
 
-	@Column({length: '255', type: 'varchar'})
-	cover: string;
+  @Column()
+  subtitle: string;
 
-	@Column({ type: 'varchar' })
-	linkId: string;
+  @Column({ length: '255', type: 'varchar' })
+  cover: string;
 
-	@OneToMany(() => UserMovieEntity, (userMovie) => userMovie.movieid)
-	userMovies: UserMovieEntity[];
+  @Column({ type: 'varchar' })
+  linkId: string;
 
-	@CreateDateColumn() create_at: Date;
+  @OneToMany(() => UserMovieEntity, (userMovie) => userMovie.movieid)
+  userMovies: UserMovieEntity[];
 
-	@UpdateDateColumn() updated_at: Date;
+  @CreateDateColumn() create_at: Date;
+
+  @UpdateDateColumn() updated_at: Date;
 }

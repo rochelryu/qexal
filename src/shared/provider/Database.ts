@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common'
-import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import 'dotenv/config'
+import { Injectable } from '@nestjs/common';
+import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import 'dotenv/config';
 
 @Injectable()
 export class DatabaseConnectionService implements TypeOrmOptionsFactory {
-
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       name: 'default',
@@ -18,6 +17,6 @@ export class DatabaseConnectionService implements TypeOrmOptionsFactory {
       dropSchema: false,
       logging: true,
       entities: ['dist/**/*.entity.js'],
-    }
+    };
   }
 }

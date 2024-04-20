@@ -46,31 +46,36 @@ export const POURCENTAGE_EXCHANGE_SHIT_COIN = 1.5; // commission prise par l'adm
 export const POURCENTAGE_BUSINESS = 0.8; // pourcentage de l'argent qui rentre dans la caisse lors de l'inscription de chaque membre
 export const POURCENTAGE_PAYNET = 0.9; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash par Liquidités
 export const POURCENTAGE_PAYNET_EXCHANGE = 0.85; //pourcentage a payer a l'utilisateur lorsqu'il vend sa crypto
-export const ALPHABET = "qwertyuiopkmjnhbgvfcdxsazAQWZSXEDCRFVTGBYHNUJKIOLPM1234567890"; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash
+export const ALPHABET =
+  'qwertyuiopkmjnhbgvfcdxsazAQWZSXEDCRFVTGBYHNUJKIOLPM1234567890'; //pourcentage a payer a l'utilisateur lorsqu'il demande son argent en cash
 
-export const ADDRESS_qexal_INVESTMENT = "0x1880868d5617ba08975803ee1ea6d7e0d1be8450";
-export const ADDRESS_qexal_EXCHANGE = "0x0704228829e671958a3271e58c71e0cc7f2ddacb";
-export const ADDRESS_ANONYMOUS_INVESTMENT = "bc1qh5g3jhy8aajgrcs690ufue4eufm8g9swf5ufu4";
-export const ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION = "1Fp1JtyeVWGH95diPG5oe4TcuipbwE3boR";
-export const WALLET_CONNECT_VERIFY_DOMAIN = "e79d3053-a360-42bd-8a0f-fcd69138ad95=52a85b477a586c79d3c8e43812cb912bc2eb51bbc068163e147dd5de1b2fa002e79d3053-a360-42bd-8a0f-fcd69138ad95=ea7354a6f0eecab57dc18675563dd36088e512b9c1e2853aa12c2cffd4e65cd8";
-
+export const ADDRESS_qexal_INVESTMENT =
+  '0x1880868d5617ba08975803ee1ea6d7e0d1be8450';
+export const ADDRESS_qexal_EXCHANGE =
+  '0x0704228829e671958a3271e58c71e0cc7f2ddacb';
+export const ADDRESS_ANONYMOUS_INVESTMENT =
+  'bc1qh5g3jhy8aajgrcs690ufue4eufm8g9swf5ufu4';
+export const ADDRESS_BILLIONARY_INVESTMENT_FOR_SUBSRIPTION =
+  '1Fp1JtyeVWGH95diPG5oe4TcuipbwE3boR';
+export const WALLET_CONNECT_VERIFY_DOMAIN =
+  'e79d3053-a360-42bd-8a0f-fcd69138ad95=52a85b477a586c79d3c8e43812cb912bc2eb51bbc068163e147dd5de1b2fa002e79d3053-a360-42bd-8a0f-fcd69138ad95=ea7354a6f0eecab57dc18675563dd36088e512b9c1e2853aa12c2cffd4e65cd8';
 
 // NEW SYSTEME
 export const POURCENTAGE_TOTAL_RECEIVE = 2; //pourcentage total a payer a l'utilisateur pour la durré d'une action contrat 1.9 pour signifier 190%
 
 export const ALL_ENTITY = [
-		TypeOrmModule.forFeature([ UserEntity ]),
-		TypeOrmModule.forFeature([ DemandeEntity ]),
-		TypeOrmModule.forFeature([ ForfaitEntity ]),
-		TypeOrmModule.forFeature([ NotificationEntity ]),
-		TypeOrmModule.forFeature([ MovieEntity ]),
-		TypeOrmModule.forFeature([ SchoolarshipEntity ]),
-		TypeOrmModule.forFeature([ UserMovieEntity ]),
-		TypeOrmModule.forFeature([ SerialUserEntity ]),
-		TypeOrmModule.forFeature([ WithdrawEntity ]),
+  TypeOrmModule.forFeature([UserEntity]),
+  TypeOrmModule.forFeature([DemandeEntity]),
+  TypeOrmModule.forFeature([ForfaitEntity]),
+  TypeOrmModule.forFeature([NotificationEntity]),
+  TypeOrmModule.forFeature([MovieEntity]),
+  TypeOrmModule.forFeature([SchoolarshipEntity]),
+  TypeOrmModule.forFeature([UserMovieEntity]),
+  TypeOrmModule.forFeature([SerialUserEntity]),
+  TypeOrmModule.forFeature([WithdrawEntity]),
 
-		// Exchange
-		TypeOrmModule.forFeature([ ControlCodeEntity ]),
+  // Exchange
+  TypeOrmModule.forFeature([ControlCodeEntity]),
 
-		//BET
-	];
+  //BET
+];

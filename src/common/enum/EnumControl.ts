@@ -1,6 +1,5 @@
 export enum ControleCode {
-    success = 'Success',
-    pending = 'Pending',
-    error = 'Error',
+  success = 'Success',
+  pending = 'Pending',
+  error = 'Error',
 }
-  

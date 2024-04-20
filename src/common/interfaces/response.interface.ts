@@ -1,5 +1,5 @@
 export interface ResponseProvider {
-	etat: boolean;
-	result?: any;
-	error?: Error;
+  etat: boolean;
+  result?: any;
+  error?: Error;
 }

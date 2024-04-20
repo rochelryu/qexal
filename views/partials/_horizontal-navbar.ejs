@@ -17,12 +17,12 @@
         <%= user.name %>
     </title>
     <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/simple-line-icon/css/simple-line-icons.css">
-    <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.addons.css">
+    <!-- <link rel="stylesheet" href="../Inter/admin/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css"> -->
+    <!-- <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../Inter/admin/vendors/css/vendor.bundle.addons.css"> -->
 
     <link rel="stylesheet" href="../Inter/admin/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../Inter/admin/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="../Inter/admin/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="../Inter/admin/css/mdb.min.css">
     <link rel="stylesheet" href="../Inter/admin/css/datatables.min.css">
     <link rel="stylesheet" href="../Inter/admin/css/owl.carousel.min.css">
@@ -46,6 +46,14 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
     <script>
+
+        function formatString(str) {
+            if (str.length > 14) {
+                document.write(str.substring(0, 7) + '...' + str.substring(str.length - 7));
+            } else {
+                document.write(str);
+            }
+        }
         function formatDate(date) {
             const data = new Date(date);
             document.write(`${data.toLocaleDateString()} ${data.toLocaleTimeString()}`)
@@ -55,6 +63,7 @@
             const data = new Date(date);
             document.write(data.toLocaleDateString())
         }
+
 
         function formatDateToPay(date) {
             const oldDate = new Date(date);
@@ -130,14 +139,13 @@
                                         </a>
                                         <a href="/users/statistique" class="dropdown-item">
                                             <i class="icon-settings text-primary mr-2"></i> Statistique SUI
-                                        </a>
-                                        <a href="/exchange/cryptoGestion" class="dropdown-item">
-                                            <i class="icon-eye text-primary mr-2"></i> Gestion Crypto
-                                        </a>
-                                        
+                                        </a>                                        
                                         <% } %>
                                         <a href="/users/withdraw" class="dropdown-item">
                                             <i class="icon-wallet text-primary mr-2"></i> Withdraw
+                                        </a>
+                                        <a href="/exchange/cryptoGestion" class="dropdown-item">
+                                            <i class="icon-eye text-primary mr-2"></i> Sponsorship
                                         </a>
                                             
                                                             <!--a href="mailto:qexalvip@gmail.com" class="dropdown-item">

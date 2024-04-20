@@ -21482,7 +21482,7 @@ pre {
 }
 
 ul {
-    width: 80% !important;
+    /* width: 80% !important; */
     word-wrap: break-word;
     list-style: none;
     padding: 0px !important;
@@ -33234,3 +33234,10 @@ span.boule:hover {
     padding: 25px 10px;
     background: #d39e97bf;
   }
+
+  .trailing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

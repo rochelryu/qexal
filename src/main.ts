@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express';
+import {
+  NestExpressApplication,
+  ExpressAdapter,
+} from '@nestjs/platform-express';
 import session from 'express-session';
 import flash = require('connect-flash');
 import passport from 'passport';
@@ -19,49 +22,53 @@ const logger = new Logger('App Main');
 // };
 const server = express();
 async function bootstrap() {
-	const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(server));
-	// static file
-	app.useStaticAssets(join(__dirname, '..', 'public'));
-	app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(server),
+  );
+  // static file
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
-	// chose engine template
-	// hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
-	// hbs.registerHelper(helpersHbs);
-	app.setViewEngine('ejs');
-	//app.set('view options', { layout: 'main' });
+  // chose engine template
+  // hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+  // hbs.registerHelper(helpersHbs);
+  app.setViewEngine('ejs');
+  //app.set('view options', { layout: 'main' });
 
-	//app.use(helmet());
-	app.useGlobalPipes(new ValidationPipe());
-	app.useGlobalFilters(new AuthExceptionFilter());
-	app.enableCors();
+  //app.use(helmet());
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new AuthExceptionFilter());
+  app.enableCors();
 
-	// Session initialise
+  // Session initialise
 
-	app.use(
-		session({
-			secret: process.env.SESSION_SECRET,
-			resave: false,
-			saveUninitialized: false
-		})
-	);
-	app.use(passport.initialize());
-	app.use(passport.session());
-	app.use(flash());
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(flash());
 
-	await app.init();
+  await app.init();
 
-	http
-		.createServer(server)
-		.listen(process.env.APP_PORT, () =>
-			logger.verbose(`run server on ${process.env.APP_HOST}:${process.env.APP_PORT}`)
-		);
-	// https.createServer(httpsOptions, server).listen(8443, () =>
-    //                     logger.verbose(`run server on https`));
+  http
+    .createServer(server)
+    .listen(process.env.APP_PORT, () =>
+      logger.verbose(
+        `run server on ${process.env.APP_HOST}:${process.env.APP_PORT}`,
+      ),
+    );
+  // https.createServer(httpsOptions, server).listen(8443, () =>
+  //                     logger.verbose(`run server on https`));
 
-	// Listen app
-	/*await app.listen(process.env.APP_PORT, () =>
+  // Listen app
+  /*await app.listen(process.env.APP_PORT, () =>
 		logger.verbose(`run server on ${process.env.APP_HOST}:${process.env.APP_PORT}`)
 	);*/
 }
 bootstrap();
-
