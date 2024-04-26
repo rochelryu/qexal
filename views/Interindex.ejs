@@ -427,8 +427,8 @@
                 walletConnectVersion: 2,
                 metadata: {
                     name: 'Qexal',
-                    description: 'Qexal',
-                    url: location.hostname,
+                    description: 'Best Award 2023, Social network of financial assistance based on the collaborative principle of financing.',
+                    url: location.origin,
                     icons: ['https://imagedelivery.net/_aTEfDRm7z3tKgu9JhfeKA/c7a3327f-2dc2-4123-f8c6-73319f3f8600/lg']
                 }
             })
@@ -448,6 +448,7 @@
                         }
                     })
                     if(session.topic) {
+                        window.focus();
                         const account = session.namespaces.eip155.accounts[0].slice(9);
                         const topic = session.topic;
                         const tx = {
@@ -458,7 +459,6 @@
                             value: ethers.utils.parseEther(eth_price.toString())._hex,
                             data: "0x",
                         };
-                        console.log(tx);
                         setTimeout(async function() {
                             const result = await web3Modal.request({
                                 topic,
@@ -468,6 +468,7 @@
                                     params: [tx],
                                 },
                             });
+                            window.focus();
                             if(typeof result === 'string' && (result.length === 66 || result.length === 64)) {
                                 iziToast.show({
                                     position: "bottomRight",
