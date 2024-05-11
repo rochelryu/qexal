@@ -20148,9 +20148,7 @@ pre {
 }
 
 .navbar.horizontal-layout .nav-top .navbar-brand-wrapper .navbar-brand img {
-    max-width: 100%;
-    height: 100px;
-    margin-top: -32px;
+    height: 40px;
     vertical-align: middle;
 }
 

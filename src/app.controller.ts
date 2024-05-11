@@ -215,7 +215,7 @@ export class AppController {
 
   @Post('/forgotPassword')
   async forgotPasswordPost(
-    @Body() user: { numberTel: string; addressCrypto: string },
+    @Body() body: { numberTel: string; addressCrypto: string },
     @Request() req,
     @Res() res: Response,
   ) {
@@ -227,8 +227,8 @@ export class AppController {
         result: client,
         error,
       } = await this.usersService.getUserByItem({
-        numberClient: user.numberTel,
-        addressCrypto: user.addressCrypto,
+        numberClient: body.numberTel,
+        addressCrypto: body.addressCrypto,
       });
       if (etat) {
         await this.usersService.regeneratePasswordUser(client.id);

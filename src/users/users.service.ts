@@ -296,6 +296,7 @@ export class UsersService {
   }
 
   async getUserByItem(item): Promise<ResponseProvider> {
+    this.logger.debug(item);
     return new Promise(async (next) => {
       await this.usersRepository
         .findOne({ where: item })

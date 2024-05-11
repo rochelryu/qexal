@@ -768,26 +768,6 @@ export class UsersController {
     }
   }
 
-  @Post('reprise')
-  async reprisePost(
-    @Body()
-    infos: {
-      response: string;
-    },
-    @Request() req,
-    @Res() res: Response,
-  ) {
-    if (req.session.qexal) {
-      const user = await this.service.updateUser(req.session.qexal.id, {
-        haveVote: true,
-        vote: parseInt(infos.response, 10),
-      });
-      res.redirect('/users/reprise');
-    } else {
-      res.redirect('/users/login');
-    }
-  }
-
   @Post('setting')
   async settingsPostForPassword(
     @Body() demande: { oldPass: string; newpass: string; confirm: string },
@@ -928,6 +908,48 @@ export class UsersController {
           isVerifyWeekend,
           lastDemande,
           allWithdraws,
+          withdrawInAwait,
+          title: `${req.session.qexal.name} - Filleul`,
+        });
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+  @Get('/filleul')
+  async filleul(@Request() req, @Res() res: Response) {
+    if (req.session.qexal) {
+      const user = await this.service.getUserByItem({
+        id: req.session.qexal.id,
+      });
+      const {result:filleuils = []} = await this.service.getUsersByItem({
+        parrainid: req.session.qexal.id,
+      });
+    let withdrawInAwait;
+	  const allFilleuils = filleuils.map((filleuil) => {
+	
+		const {id, soldeInvestissement, email, alpha2code} = filleuil;
+		return {id, soldeInvestissement, email, alpha2code};
+	  });
+    for (const filleuil of allFilleuils) {
+      let lastDemande = await this.service.getLastDemandeForSuivieByItem({
+        userid: filleuil.id,
+        etatid: 2,
+      });
+      const info = {...filleuil, }
+    }
+      let lastDemande = await this.service.getLastDemandeForSuivieByItem({
+        userid: user.result.id,
+        etatid: 2,
+      });
+      res
+        .set(
+          'Content-Security-Policy',
+          "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'",
+        )
+        .render('filleuil', {
+          user: user.result,
+          lastDemande,
           withdrawInAwait,
           title: `${req.session.qexal.name} - Filleul`,
         });
