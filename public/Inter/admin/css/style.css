@@ -21463,7 +21463,9 @@ pre {
 .doc-credits ul li a {
     margin-left: .25rem;
 }
-
+.logo {
+    width: 40px !important;
+}
 .demo-vector-map {
     width: 100%;
     height: 500px;
