@@ -214,11 +214,8 @@ export async function generateRecoveryForHelp(): Promise<string> {
         ALPHABET[Math.floor(Math.random() * ALPHABET_ARRAY.length - 1)],
     )
     .join('');
-  const crypt = await coreEncode(
-    recovery.trim(),
-    Number(process.env.CRYPTO_DIGEST),
-  );
-  return new Promise((next) => next(crypt));
+  
+  return new Promise((next) => next(recovery));
 }
 
 export const imageFileFilter = (req, file, callback) => {

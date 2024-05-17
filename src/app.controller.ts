@@ -77,11 +77,12 @@ export class AppController {
   }
 
   @Get('/signup')
-  async signup(@Request() req, @Res() res: Response, @Param() params) {
+  async signup(@Request() req, @Res() res: Response, @Param() params, @Query('link') link: string) {
     if (req.session.qexal) {
       res.redirect('/users');
     } else {
       const message = req.session.flash ?? [];
+      const parrain = await this.usersService.getUserByItem({link: link ? link.trim(): ''});
       req.session.destroy();
       res
         .set(
@@ -90,6 +91,7 @@ export class AppController {
         )
         .render('register-2', {
           message,
+          parrainid: parrain.etat ? parrain.result.id : 1,
           title: 'Authentification',
         });
     }
@@ -141,6 +143,15 @@ export class AppController {
     } else {
       res.json({ etat: user.etat, error: user.error.message });
     }
+  }
+
+  @Get('/admin/generateAllLink')
+  async generateAllLink(
+    @Request() req,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.regeneratePasswordNewLinkForAllUser();
+    res.json(user);
   }
 
   @Get('/api/v1/chargerSuggestion')
@@ -212,6 +223,8 @@ export class AppController {
       res.redirect('/login');
     }
   }
+
+
 
   @Post('/forgotPassword')
   async forgotPasswordPost(

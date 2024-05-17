@@ -49,6 +49,7 @@
                                 <a class="btn get-started-btn" href="/login">SIGN IN</a>
                             </div>
                             <form action="/signup" id="registerSign" method="post">
+                                <input type="hidden" name="parrainid" value="<%= parrainid %>" id="parrainid" />
                                 <input type="hidden" name="prefix" value="+93" id="prefix" />
                                 <input type="hidden" name="iso639_1" value="ps" id="iso639_1" />
                                 <input type="hidden" name="region" value="Asia" id="region" />

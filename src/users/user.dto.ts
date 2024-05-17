@@ -1,5 +1,6 @@
 export interface User {
   password: string;
+  parrainid: string;
   numero: string;
   addressCrypto: string;
   country: string;

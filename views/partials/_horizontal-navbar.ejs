@@ -90,15 +90,28 @@
             /* Get the text field */
             var copyText = document.getElementById("myInput");
 
-            /* Select the text field */
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+            copyText.removeAttribute('disabled');
+            copyText.readOnly = false;
 
-            /* Copy the text inside the text field */
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+            // Copy the text inside the text field
             document.execCommand("copy");
 
-            document.querySelector(".copieCode").setAttribute("title", "copied address: " + copyText.value)
-            $('[data-toggle="tooltip"]').tooltip();
+            // Revert the input field to readonly and disabled
+            copyText.readOnly = true;
+            copyText.disabled = true;
+
+            iziToast.show({
+                position: "bottomRight",
+                color: "#c99094",
+                layout: 1,
+                title: `Link Copied`,
+                timeout: 4000,
+                message: `${copyText.value}`
+            });
         }
     </script>
 </head>

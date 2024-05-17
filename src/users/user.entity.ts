@@ -86,8 +86,11 @@ export class UserEntity extends BaseEntity {
   @Column({ default: 0, type: 'double' })
   soldeInvestissement: number; //montant investi
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 1 })
   parrainid: number;
+
+  @Column({ length: 255, default: '' })
+  link: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'roleid' })

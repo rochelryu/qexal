@@ -52,6 +52,7 @@ import { differenceInSeconds, subDays, addDays, startOfWeek, format } from 'date
 import { currencies } from 'src/common/constant/currenciesData';
 import { createDemandeDto } from './demande.dto';
 import { ControleCode } from 'src/common/enum/EnumControl';
+import { Not } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -903,13 +904,13 @@ export class UsersController {
           'Content-Security-Policy',
           "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'",
         )
-        .render('filleuil', {
+        .render('withdraw', {
           user: user.result,
           isVerifyWeekend,
           lastDemande,
           allWithdraws,
           withdrawInAwait,
-          title: `${req.session.qexal.name} - Filleul`,
+          title: `${req.session.qexal.name} - Withdraw`,
         });
     } else {
       res.redirect('/login');
@@ -924,24 +925,22 @@ export class UsersController {
       });
       const {result:filleuils = []} = await this.service.getUsersByItem({
         parrainid: req.session.qexal.id,
+        id: Not(req.session.qexal.id)
       });
-    let withdrawInAwait;
+    const allFilleuls = [];
 	  const allFilleuils = filleuils.map((filleuil) => {
 	
-		const {id, soldeInvestissement, email, alpha2code} = filleuil;
-		return {id, soldeInvestissement, email, alpha2code};
-	  });
+		const {id, soldeInvestissement, email, alpha2code,prefix, numberClient } = filleuil;
+		return {id, soldeInvestissement, email, alpha2code,prefix, numberClient};
+	  }).reverse();
+
     for (const filleuil of allFilleuils) {
       let lastDemande = await this.service.getLastDemandeForSuivieByItem({
         userid: filleuil.id,
-        etatid: 2,
       });
-      const info = {...filleuil, }
+      const info = {...filleuil, lastDemande: lastDemande.etat ? [lastDemande.result]: []}
+      allFilleuls.push(info);
     }
-      let lastDemande = await this.service.getLastDemandeForSuivieByItem({
-        userid: user.result.id,
-        etatid: 2,
-      });
       res
         .set(
           'Content-Security-Policy',
@@ -949,8 +948,7 @@ export class UsersController {
         )
         .render('filleuil', {
           user: user.result,
-          lastDemande,
-          withdrawInAwait,
+          allFilleuls,
           title: `${req.session.qexal.name} - Filleul`,
         });
     } else {

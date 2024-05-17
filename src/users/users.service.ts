@@ -388,6 +388,21 @@ export class UsersService {
     });
   }
 
+  async regeneratePasswordNewLinkForAllUser(): Promise<ResponseProvider> {
+    return new Promise(async (next) => {
+      await this.usersRepository
+        .find()
+        .then(async (result) => {
+          for (const user of result) {
+            user.link = (await generateRecoveryForHelp()).trim()
+            await user.save();
+          }
+          next({ etat: true });
+        })
+        .catch((error) => next({ etat: false, error }));
+    });
+  }
+
   async getUserForChangePass(
     id: number,
     newPass: string,
@@ -471,13 +486,14 @@ export class UsersService {
           } else {
             const { numero, password } = user;
             const recovery = await generateRecoveryForHelp();
+            const link = (await generateRecoveryForHelp()).trim()
             const pass = await hash(
               password.trim(),
               Number(process.env.CRYPTO_DIGEST),
             );
             await this.usersRepository
               .save({
-                parrainid: 1,
+                parrainid: parseInt(user.parrainid, 10),
                 numberClient: numero.trim(),
                 recovery,
                 password: pass,
@@ -487,6 +503,7 @@ export class UsersService {
                 region: user.region,
                 subregion: user.subregion,
                 country: user.country,
+                link,
                 flag: '',
                 language: user.language,
                 addressCrypto: user.addressCrypto.trim(),

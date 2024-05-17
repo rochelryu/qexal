@@ -6,21 +6,68 @@
                     <div class="col-md-6 grid-margin">
                         <div class="card">
                             <div class="card-body p-2">
+                                
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="col-12 pt-3">
                                         <div class="d-md-flex">
-                                            <h2 class="card-title mb-0">YOUR LINK
-                                        </h2>
-                                            
+                                            <h2 class="card-title mb-0">YOUR BALANCE $<%= user.soldeGain.toFixed(2) %></h2>
+                                            <span class='pricing-currency'></span>
                                         </div>
-                                        <div class="inboxLink">
-                                            <div class="form-outline">
-                                                <input type="url" class="form-control form-control-lg" readonly disabled value="https://www.qexal.online/signup?follow=<%= user.link %>" id="myInput">
-                                            </div>
-                                            <button type="button" onclick="copieText()" class="btn btn-outline-success" data-mdb-ripple-init>
-                                                <i class="fas fa-copy"></i>
-                                              </button>
-                                        </div>
+                                        <ol>
+                                            <% if (user.soldeGain < 50) { %>
+                                                <li class="text-danger">Balance must be over $50</li>
+                                                <% } if (!isVerifyWeekend) { %>
+                                                    <li class="text-danger">Available at weekends</li>
+                                                    <% } if (lastDemande.etat && lastDemande.result.cumulPercentage > lastDemande.result.forfaits.percentageWithdraw) { %>
+                                                        <li class="text-danger">this action can be withdrawn if you have won at least <%= user.soldeInvestissement * lastDemande.result.forfaits.percentageWithdraw %> </li>
+                                                    <% } if(user.soldeGain >= 50 && isVerifyWeekend && !lastDemande.etat) { %>
+                                                        
+                                                            <li>
+                                                                <div>
+                                                                    <form id="loginForm" action="/withdraw" method="post">
+                                                                        <h3 class="mr-auto">You can withdraw</h3>
+                                                                        <p class="mb-5 mr-auto">All your funds can be withdrawn without hassle.</p>
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text"><i class="icon-wallet"></i></span>
+                                                                                </div>
+                                                                                <% if(withdrawInAwait) { %>
+                                                                                <input type="text" value="<%= withdrawInAwait.addressDestinate %>" class="form-control" disabled>
+                                                                                <% } else { %>
+                                                                                    <input type="text" name="addressDestinate" class="form-control" placeholder="Your ETH address">
+                                                                                <% } %>
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></span>
+                                                                                </div>
+                                                                                <% if(withdrawInAwait) { %>
+                                                                                    <input type="number" value="<%= withdrawInAwait.amount %>" class="form-control" disabled>
+                                                                                    <% } else { %>
+                                                                                        <input type="number" name="amount" class="form-control" placeholder="The amount to be withdrawn">
+                                                                                    <% } %>
+                                                                                
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <% if(withdrawInAwait) { %>
+                                                                                <p class="mb-5 mr-auto">🏦 👨🏻‍💼 Withdrawal requests are processed in order of amount and take a maximum of 36 hours. 🏧</p>
+                                                                                <% } else { %>
+                                                                                    <button type="submit" class="btn btn-primary submit-btn">START REMOVAL</button>
+                                                                                <% } %>
+                                                                            
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </li>
+                                                        
+                                                    <% } %>
+                                        </ol>                                        
                                     </div>
                                 </div>
                             </div>
@@ -31,20 +78,32 @@
                             <div class="card-body">
                                 <h4 class="card-title mb-0">Withdraw</h4>
                                 <ul class="list-group list-group-light">
-                                    <% allFilleuls.forEach(function(filleul, index){ %>
+                                    <% allWithdraws.forEach(function(withdraw, index){ %>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <img src="https://flagsapi.com/<%= filleul.alpha2code %>/flat/64.png" class="flag-rofil" alt="profile" />
+                                              <img src="../../Inter/admin/images/money-management-<%= withdraw.etatid === 3 ? '':'in'%>active.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
                                               <div class="ms-3">
-                                                <p class="fw-bold mb-1">Last Invest Amount: <span class="badge rounded-pill badge-info">$<%= filleul.soldeInvestissement %></span>
+                                                <p class="fw-bold mb-1">Ref:
+                                                    <a href="https://etherscan.io/tx/<%= withdraw.ref %>" target="_blank" rel="noopener noreferrer">
+                                                        <script>formatString("<%= withdraw.ref === '' ? 'N/A': withdraw.ref %>")</script>
+                                                        
+                                                    </a>
                                                 </p>
-                                                
                                                 <p class="text-muted mb-0">
-                                                    Contact: <span> <%= filleul.prefix %> <%= filleul.numberClient %></span>
+                                                    To: <span>
+                                                            <a href="https://etherscan.io/address/<%= withdraw.addressDestinate %>" target="_blank" rel="noopener noreferrer">
+                                                                <script>formatString("<%= withdraw.addressDestinate %>")</script>
+                                                            </a>
+                                                        </span>
+                                                        <br />
+                                                        <span class="badge rounded-pill badge-info">$<%= withdraw.amount %></span>
                                                 </p>
                                               </div>
                                             </div>
-                                            
+                                            <div class="trailing">
+                                                    <span class="badge rounded-pill <%= withdraw.etatid === 3 ? 'badge-success': 'badge-warning' %> badge-success"> <%= withdraw.etatid === 3 ? 'Received': 'Pending' %></span>
+                                                    <span class="text-muted mt-2"><%= withdraw.create_at %></span>
+                                            </div>
                                           </li>
                                     <% }); %>
                                 </ul>

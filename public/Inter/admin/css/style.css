@@ -21470,7 +21470,12 @@ pre {
     width: 100%;
     height: 500px;
 }
-
+.inboxLink {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: space-between;
+}
 #finishSignin {
     width: 80%;
 }
