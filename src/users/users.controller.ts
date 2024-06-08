@@ -942,7 +942,7 @@ export class UsersController {
             amount: parseInt(demande.amount, 10),
             userid: req.session.qexal.id,
             etatid: 1,
-            addressDestinate: demande.amount.trim()
+            addressDestinate: demande.addressDestinate.trim()
           });
           await this.service.updateUser(req.session.qexal.id, {retraitInWait: 1});
           res.redirect('/users/withdraw');
