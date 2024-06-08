@@ -3682,6 +3682,21 @@ export class UsersService {
     });
   }
 
+  async setWithdrawsByItem(withdraw: {amount: number, userid: number, etatid:number, addressDestinate:string}): Promise<ResponseProvider> {
+    return new Promise(async (next) => {
+      await this.withdrawRepository
+        .save({ ...withdraw })
+        .then((result) => {
+          if (result) {
+            next({ etat: true, result });
+          } else {
+            next({ etat: false, error: new Error('Verifié vos items') });
+          }
+        })
+        .catch((error) => next({ etat: false, error }));
+    });
+  }
+
   // For Movie Entity
   async getAllMoviesByItem(item): Promise<ResponseProvider> {
     return new Promise(async (next) => {

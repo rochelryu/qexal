@@ -24,7 +24,7 @@ export class WithdrawEntity extends BaseEntity {
   @Column({ type: 'int' })
   userid: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 1 })
   etatid: number;
 
   @Column({ default: '' })

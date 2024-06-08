@@ -916,6 +916,44 @@ export class UsersController {
       res.redirect('/login');
     }
   }
+  @Post('/withdraw')
+  async postWithdraw(@Body() demande: { addressDestinate: string, amount:string }, @Request() req, @Res() res: Response) {
+    if (req.session.qexal) {
+      const isVerifyWeekend = verifyWeekend();
+      if(isVerifyWeekend) {
+        const user = await this.service.getUserByItem({
+          id: req.session.qexal.id,
+        });
+        const {result:withdraws = []} = await this.service.getAllWithdrawsByItem({
+          userid: req.session.qexal.id,
+        });
+      let withdrawInAwait;
+        withdraws.map((withdraw) => {
+    
+        const {id, ref, amount, userid, etatid, addressDestinate, etat, create_at, updated_at} = withdraw;
+        if(etatid === 1) {
+          withdrawInAwait = {id, ref, amount, userid, etatid, addressDestinate, etat, create_at: formatDateAndTime(create_at), updated_at: formatDateAndTime(updated_at)};
+        }
+      })
+        if(withdrawInAwait) {
+          res.redirect('/users/withdraw');
+        }else {
+          await this.service.setWithdrawsByItem({
+            amount: parseInt(demande.amount, 10),
+            userid: req.session.qexal.id,
+            etatid: 1,
+            addressDestinate: demande.amount.trim()
+          });
+          await this.service.updateUser(req.session.qexal.id, {retraitInWait: 1});
+          res.redirect('/users/withdraw');
+        }
+      } else  {
+        res.redirect('/users/withdraw');
+      }
+    } else {
+      res.redirect('/login');
+    }
+  }
 
   @Get('/filleul')
   async filleul(@Request() req, @Res() res: Response) {
