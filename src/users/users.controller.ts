@@ -53,6 +53,7 @@ import { currencies } from 'src/common/constant/currenciesData';
 import { createDemandeDto } from './demande.dto';
 import { ControleCode } from 'src/common/enum/EnumControl';
 import { Not } from 'typeorm';
+import { MAX_NUMBER_VIEW_MOOVIE } from 'src/utils/constants/static_data';
 
 @Controller('users')
 export class UsersController {
@@ -362,7 +363,7 @@ export class UsersController {
         linkId: body.playerId.trim(),
       });
       //verify if user and movie exist
-      if (user.etat && movie.etat && user.result.inscription <= 50) {
+      if (user.etat && movie.etat && user.result.inscription <= MAX_NUMBER_VIEW_MOOVIE) { // 35 est le nombre de fois max qu'on peut regarder des videos et etre renumeré.
         const userAlreadyViewMovie =
           await this.service.verifyIfUserAlreadySeeMovie(
             movie.result.id,
@@ -405,7 +406,7 @@ export class UsersController {
         return {
           etat: false,
           error:
-            user.etat && user.result.inscription <= 50
+            user.etat && user.result.inscription <= MAX_NUMBER_VIEW_MOOVIE
               ? 'Vous avez déjà atteint votre quota de vidéo'
               : 'User not found...',
         };
@@ -541,19 +542,30 @@ export class UsersController {
 
   @Get('startRetrait')
   async startRetrait(@Request() req, @Res() res: Response) {
+
     if (req.session.qexal && req.session.qexal.roleid === 3) {
       const user = await this.service.getUserByItem({
         id: req.session.qexal.id,
       });
-      const notifications = await this.service.getNotificationsByUserid(
-        req.session.qexal.id,
-      );
-      const countNotifications =
-        await this.service.getCountNotificationsByUserid(req.session.qexal.id);
-      const countNotif =
-        countNotifications.result > 0
-          ? { etat: true, result: countNotifications.result }
-          : { etat: false };
+      const paycheckDemande = [];
+      const allWithDrawUser = await this.service.getUsersInWaitPayement();
+      this.logger.debug(allWithDrawUser)
+      for (const userWithdraw of allWithDrawUser.result) {
+        const {result} = await this.service.getLastWithdrawByItem({userid: userWithdraw.id});
+        paycheckDemande.push({
+
+          withdrawId: result.id,
+          userId: userWithdraw.id,
+          addressAccount: userWithdraw.addressCrypto,
+          addressDestinate: result.addressDestinate,
+          soldeGain:userWithdraw.soldeGain,
+          soldeInvestissement:userWithdraw.soldeInvestissement,
+          amount:result.amount,
+          etat:result.etat.name,
+          etatId:result.etat.id,
+          create_at:result.create_at,
+        });
+      }
       res
         .set(
           'Content-Security-Policy',
@@ -561,10 +573,8 @@ export class UsersController {
         )
         .render('retraitClient2', {
           user: user.result,
-          paycheckDemande: [],
-          countNotif,
-          notifications,
-          title: `${req.session.qexal.name} - retrait`,
+          paycheckDemande,
+          title: `${req.session.qexal.name} - List retrait retrait`,
         });
     } else {
       res.redirect('/login');
@@ -679,6 +689,29 @@ export class UsersController {
           error:
             'You cannot request a withdrawal because your subscription has expired, please refresh this page.',
         };
+      }
+    } else {
+      return { etat: false, error: 'You are not authorized' };
+    }
+  }
+
+  @Post('videCompte')
+  async videCompte(@Body() demande: { ref: string, id:number, idtraitement:number, amount: string }, @Request() req) {
+    if (req.session.qexal && req.session.qexal.roleid === 3) {
+      const id = parseInt(demande.ref, 10);
+      
+      const user = await this.service.getUserByItem({id: demande.id});
+      if (user.etat) {
+        try {
+          const soldeGain = user.result.soldeGain - parseFloat(demande.amount) - 1;
+          await this.service.updateUser(user.result.id, {retraitInWait: 0, soldeGain});
+          await this.service.updateWithdrawByItem(demande.idtraitement, {etatid: 3, ref: demande.ref })
+          return { etat: user.etat, result: 'Compte débité avec succèss' };
+        } catch (error) {
+          return { etat: false, result: error.message };
+        }
+      } else {
+        return { etat: user.etat, error: user.error.message };
       }
     } else {
       return { etat: false, error: 'You are not authorized' };
@@ -944,7 +977,7 @@ export class UsersController {
             etatid: 1,
             addressDestinate: demande.addressDestinate.trim()
           });
-          await this.service.updateUser(req.session.qexal.id, {retraitInWait: 1});
+          await this.service.updateUser(req.session.qexal.id, {retraitInWait: 1, dateRetry: new Date()});
           res.redirect('/users/withdraw');
         }
       } else  {
@@ -994,34 +1027,23 @@ export class UsersController {
     }
   }
 
-  @Get('view')
-  async view(@Request() req, @Res() res: Response, @Query() query) {
+  @Get('viewContrat')
+  async viewContrat(@Request() req, @Res() res: Response, @Query() query) {
     const user = await this.service.getUserByItem({ id: parseInt(query.id) });
     if (user.etat) {
-      if (req.session.qexal.roleid === 3) {
-        const notifications = await this.service.getNotificationsByUserid(
-          req.session.qexal.id,
-        );
-        const countNotifications =
-          await this.service.getCountNotificationsByUserid(
-            req.session.qexal.id,
-          );
-        const countNotif =
-          countNotifications.result > 0
-            ? { etat: true, result: countNotifications.result }
-            : { etat: false };
-        const allRetraitInfo = { result: [] }; // await this.service.getAllTraitementByUserId(user.result.id);
+      if (req.session.qexal && req.session.qexal.roleid === 3) {
+        const allRetraitInfo = await this.service.getAllWithdrawsByItem({userid : user.result.id});
         const mesDemandes = await this.service.getAllDemandeByUserid(
           parseInt(user.result.id),
         );
         const soldeCumul = mesDemandes.result.reduce((total, element) => {
           if (element.etatid === 3) {
-            return total + element.monatnt.montant * POURCENTAGE_PAY_BY_WEEK;
+            return total + (element.amount * element.cumulPercentage);
           } else return total;
         }, 0);
         const retraitCumul = allRetraitInfo.result.reduce((total, element) => {
           if (element.etatid === 3) {
-            return total + element.monatnt;
+            return total + element.amount;
           } else return total;
         }, 0);
         const filleul = await this.service.getUsersByItem({
@@ -1035,10 +1057,8 @@ export class UsersController {
           .render('otherCount2', {
             users: user.result,
             user: req.session.qexal,
-            countNotif,
-            notifications,
             inWait: allRetraitInfo.result[0],
-            title: `${user.result.name} - View`,
+            title: `${user.result.name} - View User`,
             infos: {
               filleul: filleul.result,
               allRetraitInfo: allRetraitInfo.result,

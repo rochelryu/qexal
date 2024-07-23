@@ -1,0 +1,1 @@
+export const MAX_NUMBER_VIEW_MOOVIE = 35;

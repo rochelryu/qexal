@@ -133,7 +133,7 @@ export class UserEntity extends BaseEntity {
 
   */
   @Column({ default: 0 })
-  inscription: number;
+  inscription: number; // nombre de fois qu'on regarde des videos renumerés
 
   @Column({ default: 0 })
   retraitInWait: number;
@@ -143,5 +143,5 @@ export class UserEntity extends BaseEntity {
   @UpdateDateColumn() updated_at: Date;
 
   @Column({ default: null }) validEntryInSysteme: Date; //date de versement adhesion
-  @Column({ default: null }) dateRetry: Date; //date de versement adhesion
+  @Column({ default: null }) dateRetry: Date; //date de demande retrait 
 }

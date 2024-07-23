@@ -3682,6 +3682,35 @@ export class UsersService {
     });
   }
 
+  async getLastWithdrawByItem(item): Promise<ResponseProvider> {
+    return new Promise(async (next) => {
+      await this.withdrawRepository
+        .findOne({
+          where: item,
+          relations: ['etat'],
+          order: { id: 'DESC' },
+        })
+        .then((res) => {
+          if (res) {
+            next({ etat: true, result: res });
+          } else {
+            next({
+              etat: false,
+              error: new Error('Aucune Demande Trouvé'),
+            });
+          }
+        })
+        .catch((error) =>
+          next({
+            etat: false,
+            error: new Error(
+              'Server side error has occurred, please try again later',
+            ),
+          }),
+        );
+    });
+  }
+
   async setWithdrawsByItem(withdraw: {amount: number, userid: number, etatid:number, addressDestinate:string}): Promise<ResponseProvider> {
     return new Promise(async (next) => {
       await this.withdrawRepository
@@ -3694,6 +3723,23 @@ export class UsersService {
           }
         })
         .catch((error) => next({ etat: false, error }));
+    });
+  }
+  async updateWithdrawByItem(id: number, result: any): Promise<ResponseProvider> {
+    return new Promise(async (next) => {
+      await this.withdrawRepository
+        .update(id, result)
+        .then((result) => {
+          next({ etat: true, result });
+        })
+        .catch((error) =>
+          next({
+            etat: false,
+            error: new Error(
+              "l'enregistrement de l'utilisateur a échoué, veuillez ressayer plutard",
+            ),
+          }),
+        );
     });
   }
 
