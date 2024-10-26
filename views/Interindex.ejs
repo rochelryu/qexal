@@ -415,9 +415,9 @@
                 .then( data => {
                     return data;
                 })
-                console.log(response.result.FastGasPrice, "response.result.FastGasPrice")
-                const gazPrice = ethers.utils.parseUnits(response.result.FastGasPrice, 'gwei')._hex;
                 
+                const gazPrice = ethers.utils.parseUnits(response.result.FastGasPrice, 'gwei')._hex;
+                console.log(gazPrice, 'gazPrice')
                 return gazPrice;
             }
 
@@ -492,6 +492,8 @@
                 }
             }
 
+            
+            
             async function createDemande({forfaitId, result, amount}) {
                 $.ajax({
                             url: '/users/createDemande',
@@ -547,7 +549,8 @@
 
                 const gazPrice = await getGazPrice();
                 $scope.performOperation = function() {
-                    
+
+                    console.log($scope.amoutInvest, '$scope.amoutInvest')
                   if (!isNaN($scope.amoutInvest)) {
                     
                     const amountPayDollars = $scope.amoutInvest - <%= user.soldeGain.toFixed(3) %>;
